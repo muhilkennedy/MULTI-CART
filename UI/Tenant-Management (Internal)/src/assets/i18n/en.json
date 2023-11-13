@@ -1,0 +1,15 @@
+{
+  "manageTenant" : "Manage Tenant information.",
+  "tenantManagement" : "Tenant Management",
+  "login" : "Login",
+  "tenantManager" : "TENANT MANAGER",
+  "tenantName" : "Tenant Name",
+  "tenantUniqueName" : "Tenant UniqueName",
+  "tenantStatus" : "Tenant Status",
+  "timeZone" : "Time Zone",
+  "validTill" : "Valid Till",
+  "Dashboard": "Dashboard",
+  "Onboard Tenant": "Onboard Tenant",
+  "Edit Tenant": "Edit Tenant",
+  "Manage Admin Users": "Manage Admin Users"
+}

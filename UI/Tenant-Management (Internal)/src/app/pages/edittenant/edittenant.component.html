@@ -1,0 +1,134 @@
+<div class=" content">
+  <div class=" row">
+      <div class=" card">
+        <div class=" card-header"><h5 class=" title">Edit Tenant</h5></div>
+        <div class=" card-body">
+          <form>
+            <div class="row">
+              <div class=" col-md-6">
+                <div class=" form-group">
+                  <label>Select Realm</label>
+                  <mat-select style="border-style: dashed;" [(ngModel)]="selectedRealm" name="realm" (selectionChange)="getRealmData($event.value)">
+                    <mat-option *ngFor="let realm of realms" [value]="realm.rootId">
+                      {{realm.name}}
+                    </mat-option>
+                  </mat-select>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class=" card" *ngIf="isRealmSelected">
+        <div class=" card-header"><h5 class=" title">Renew Tenant</h5></div>
+        <div class=" card-body">
+          <form>
+            <div class="row">
+              <div class=" col-md-6">
+                <div class=" form-group">
+                      <label>Effective - Expiry (Tenant Validity)</label>
+                      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" placeholder="Start date">
+                        <input matEndDate formControlName="end" placeholder="End date">
+                      </mat-date-range-input>
+                      <mat-datepicker-toggle style="color: burlywood;" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker>
+                      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                </div>
+              </div>
+              <div class=" col-md-6">
+                <label> Current subscription history : </label>
+                <table>
+                  <th>Start Date</th>
+                  <th> - </th>
+                  <th>End Date</th>
+                  <tr [ngClass]="{'validsub' : sub.active}" *ngFor="let sub of subscriptions">
+                    <td>{{ sub.startdate | date }}</td>
+                    <td> - </td>
+                    <td>{{ sub.enddate | date}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class=" card-footer">
+          <button class=" btn btn-fill btn-danger" type="submit" (click)="onRenew()">Renew</button>
+        </div>
+      </div>
+
+      <div class=" card" *ngIf="isRealmSelected">
+        <div class=" card-header"><h5 class=" title">Tenant Storage</h5></div>
+        <div class=" card-body">
+          <form>
+            <div class="row">
+              <div class=" col-md-6">
+                <div class=" form-group">
+                  <label> Storage TYPE </label>
+                  <input
+                    class=" form-control"
+                    placeholder="(GCP/AWS)"
+                    type="text"
+                    [(ngModel)]="storage"
+                    required="true"
+                  />
+                </div>
+              </div>
+              <div class=" col-md-6">
+                <div class=" form-group">
+                  <label> Config Value </label>
+                  <input
+                    class=" form-control"
+                    placeholder="Base64 endcoded"
+                    type="text"
+                    [(ngModel)]="storageConfig"
+                    required="true"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class=" col-md-6">
+                <div class=" form-group">
+                  <label> Default Bucket </label>
+                  <input
+                    class=" form-control"
+                    placeholder="default storage bucket"
+                    type="text"
+                    [(ngModel)]="bucket"
+                    required="true"
+                  />
+                </div>
+              </div>
+              <div class=" col-md-6">
+                <div class=" form-group">
+                  <button class=" btn btn-fill btn-danger" type="submit" (click)="onConfigUpdate()">Update</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class=" card" *ngIf="isRealmSelected">
+        <div class=" card-header"><h5 class=" title">Tenant Logo</h5></div>
+        <div class=" card-body">
+          <form>
+            <div class="row">
+              <div class=" col-md-6">
+                <input class="form-control" type="file" (change)="selectFile($event)"> 
+                <button (click)="onUpload()"  
+                    class="btn btn-success"> 
+                    Upload 
+                </button> 
+              </div>
+              <div class=" col-md-6">
+                <img [src]="getLogo()" alt="Logo" />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
+</div>

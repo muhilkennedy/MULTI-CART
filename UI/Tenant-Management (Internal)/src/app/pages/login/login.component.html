@@ -1,0 +1,24 @@
+<div class="box-form">
+    <div class="left">
+      <div class="overlay">
+      <h1>{{ 'tenantManagement' | translate}}</h1>
+      <p>{{ 'manageTenant' | translate }}</p>
+      <span>
+        <!-- <p>login with social media</p>
+        <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+        <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i> Login with Twitter</a> -->
+        <img src="../../../assets/img/logo_mken.png"/>
+      </span>
+      </div>
+    </div>
+    <div class="right">
+      <h5>Login</h5>
+      <div class="inputs">
+        <input type="text" placeholder="user name" [(ngModel)]="email">
+        <br>
+        <input type="password" placeholder="password" [(ngModel)]="password">
+      </div>
+      <br/>
+      <button style="cursor: default;" (click)="login()">{{ 'login'  | translate}}</button>
+    </div>
+ </div>

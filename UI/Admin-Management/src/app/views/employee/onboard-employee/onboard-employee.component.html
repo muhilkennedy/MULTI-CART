@@ -1,0 +1,135 @@
+<mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="basicFormGroup">
+        <app-spinner></app-spinner>
+        <form [formGroup]="basicFormGroup">
+            <ng-template matStepLabel>{{"Basic Employee Details" | translate}}</ng-template>
+            <c-row>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"First Name" | translate}}</mat-label>
+                        <input matInput name="LastName" placeholder="First name" formControlName="fname" required>
+                        <mat-error *ngIf="hasError(basicFormGroup, 'fname')">{{getError(basicFormGroup,
+                            'fname')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Last Name" | translate}}</mat-label>
+                        <input matInput name="lname" placeholder="Last name" formControlName="lname" required>
+                        <mat-error *ngIf="hasError(basicFormGroup, 'lname')">{{getError(basicFormGroup,
+                            'lname')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+            </c-row>
+            <c-row>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Email Id" | translate}}</mat-label>
+                        <input matInput name="emailId" placeholder="emailid@mken.com" formControlName="emailId"
+                            required>
+                        <mat-error *ngIf="hasError(basicFormGroup, 'emailId')">{{getError(basicFormGroup,
+                            'emailId')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Mobile Number" | translate}}</mat-label>
+                        <input matInput name="mobile" placeholder="Mobile Number" formControlName="mobile" required>
+                        <mat-error *ngIf="hasError(basicFormGroup, 'mobile')">{{getError(basicFormGroup,
+                            'mobile')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+            </c-row>
+            <c-row>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Date of Birth" | translate}}</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="dob">
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error *ngIf="hasError(basicFormGroup, 'dob')">{{getError(basicFormGroup,
+                            'dob')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+                <c-col xs="6">
+                    <mat-radio-group aria-labelledby="gender" [value]="gender">
+                        <mat-radio-button *ngFor="let gen of genders" [value]="gen">
+                            {{gen}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </c-col>
+            </c-row>
+            <c-row>
+                <c-col xs="6"></c-col>
+                <c-col xs="6">
+                    <button cButton class="me-1" variant="outline" size="sm" matStepperNext
+                        (click)="basicStepCompleteAction()"> {{"NEXT" | translate}}</button>
+                </c-col>
+            </c-row>
+        </form>
+    </mat-step>
+
+    <mat-step [stepControl]="advFormGroup">
+        <app-spinner></app-spinner>
+        <form [formGroup]="advFormGroup">
+            <ng-template matStepLabel>{{"Additional Employee Details" | translate}}</ng-template>
+            <c-row>
+                <c-col xs="6">
+                    <mat-label>{{"Employee Address Proof" | translate}}</mat-label>
+                    <button cButton class="me-1" variant="outline" size="sm" (click)="fileInput.click()" color="info">
+                        <svg cIcon class="me-2" name="cil-file"></svg>
+                        {{"Choose File" | translate}}
+                    </button>
+                    <input hidden (change)="onFileSelected($event)" #fileInput type="file" formControlName="file">
+                    <span class="file-name">{{getFileName()}}</span>
+                    <mat-error *ngIf="hasError(advFormGroup, 'file')">{{getError(advFormGroup, 'file')}}</mat-error>
+                </c-col>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Employee Roles"}}</mat-label>
+                        <mat-select name="roles" multiple formControlName="roles">
+                            <mat-select-trigger style="color: blueviolet;">
+                                {{advFormGroup.controls['roles'].value?.[0] || ''}}
+                                <span *ngIf="(advFormGroup.controls['roles'].value?.length || 0) > 1">
+                                    (+{{(advFormGroup.controls['roles'].value?.length || 0) - 1}}
+                                    {{advFormGroup.controls['roles'].value?.length === 2 ? 'other' : 'others'}})
+                                </span>
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let rl of allRoles" [value]="rl.rolename">{{rl.rolename}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="hasError(advFormGroup, 'roles')">{{getError(advFormGroup,
+                            'roles')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+            </c-row>
+            <c-row>
+                <c-col xs="6"></c-col>
+                <c-col xs="3">
+                    <button cButton class="me-1" variant="outline" size="sm" matStepperPrevious> {{"PREVIOUS" |
+                        translate}}</button>
+                </c-col>
+                <c-col xs="3">
+                    <button cButton class="me-1" variant="outline" size="sm" matStepperNext> {{"NEXT" |
+                        translate}}</button>
+                </c-col>
+            </c-row>
+        </form>
+    </mat-step>
+
+    <mat-step>
+        <app-spinner></app-spinner>
+        <ng-template matStepLabel>{{"Summary" | translate}}</ng-template>
+        <c-row>
+            <c-col xs="6"></c-col>
+            <c-col xs="3">
+                <button cButton class="me-1" variant="outline" size="sm" matStepperPrevious> {{"PREVIOUS" |
+                    translate}}</button>
+            </c-col>
+            <c-col xs="3">
+                <button cButton class="me-1" variant="outline" size="sm" color="success" matStepperNext> {{"CREATE" |
+                    translate}}</button>
+            </c-col>
+        </c-row>
+    </mat-step>
+</mat-stepper>

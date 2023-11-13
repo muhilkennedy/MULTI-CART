@@ -1,0 +1,33 @@
+<ng-container>
+    <c-toast-header [closeButton]="closeButton">
+      <ng-container *ngIf="isDanger() ;else warning">
+        <svg class="rounded me-2" focusable="false" height="20" preserveAspectRatio="xMidYMid slice"
+        role="img" width="20">
+        <rect fill="#dc3545" height="100%" width="100%"></rect>
+      </svg>
+      </ng-container>
+      <ng-template #warning>
+        <ng-container *ngIf="isWarning();else info">
+          <svg class="rounded me-2" focusable="false" height="20" preserveAspectRatio="xMidYMid slice"
+          role="img" width="20">
+            <rect fill="#ffc107" height="100%" width="100%"></rect>
+          </svg>
+        </ng-container>
+      </ng-template>
+      <ng-template #info>
+        <svg class="rounded me-2" focusable="false" height="20" preserveAspectRatio="xMidYMid slice"
+          role="img" width="20">
+            <rect fill="#0d6efd" height="100%" width="100%"></rect>
+        </svg>
+      </ng-template>
+      <strong>{{title}}</strong>
+    </c-toast-header>
+    <c-toast-body #toastBody [cToastClose]="toastBody.toast">
+      <p class="mb-1">{{message}}</p>
+      <ng-content></ng-content>
+      <c-progress thin height="1" *ngIf="autohide">
+        <c-progress-bar [value]="25*(toastBody.toast?.clock ?? 1)" color="color"></c-progress-bar>
+      </c-progress>
+    </c-toast-body>
+</ng-container>
+  

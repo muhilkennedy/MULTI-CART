@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "/tmproxy": {
+      "target": "http://localhost:8081/tm",
+      "changeOrigin": true,
+      "secure": false,
+      "logLevel": "info",
+      "pathRewrite": {
+        "^/tmproxy": ""
+      }
+    }
+}

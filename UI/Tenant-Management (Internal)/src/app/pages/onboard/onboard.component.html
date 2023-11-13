@@ -1,0 +1,98 @@
+<div class=" content">
+    <div class=" row">
+      <!-- <div class=" col-md-8"> -->
+        <div class=" card">
+          <div class=" card-header"><h5 class=" title">Edit Profile</h5></div>
+          <div class=" card-body">
+            <form>
+              <div class=" row">
+                <div class=" col-md-12">
+                  <div class=" form-group">
+                    <label> Tenant Name </label>
+                    <input
+                      class=" form-control"
+                      placeholder="Tenant Name"
+                      type="text"
+                      [(ngModel)]="tenantName"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class=" row">
+                <div class=" col-md-12">
+                    <div class=" form-group">
+                      <label> Tenant Unique Name </label>
+                      <input
+                        class=" form-control"
+                        placeholder="UniqueName"
+                        type="text"
+                        [(ngModel)]="uniqueName"
+                        required="true"
+                      />
+                    </div>
+                  </div>
+              </div>
+              <div class=" row">
+                <div class=" col-md-8">
+                  <div class=" form-group">
+                    <label> Tag Line </label>
+                    <textarea
+                      class=" form-control"
+                      cols="80"
+                      placeholder="One liner about tenant tag line"
+                      rows="1"
+                      [(ngModel)]="tagLine">
+                    </textarea>
+                  </div>
+                </div>
+                <div class=" col-md-4">
+                  <div class=" form-group">
+                    <label>Effective - Expiry (Tenant Validity)</label>
+                      <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" placeholder="Start date">
+                        <input matEndDate formControlName="end" placeholder="End date">
+                      </mat-date-range-input>
+                      <mat-datepicker-toggle style="color: burlywood;" matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-date-range-picker #picker></mat-date-range-picker>
+                      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                  </div>
+                </div>
+              </div>
+              <div class=" row">
+                <div class=" col-md-12">
+                    <div class=" form-group">
+                      <label> Tenant Contact </label>
+                      <input
+                        class=" form-control"
+                        placeholder="Tenant Contact"
+                        type="text"
+                        [(ngModel)]="tenantContact"
+                        required="true"
+                      />
+                    </div>
+                  </div>
+              </div>
+              <div class=" row">
+                <div class=" col-md-12">
+                    <div class=" form-group">
+                      <label> Tenant Email </label>
+                      <input
+                        class=" form-control"
+                        placeholder="Tenant Email"
+                        type="text"
+                        [(ngModel)]="tenantEmail"
+                        required="true"
+                      />
+                    </div>
+                  </div>
+              </div>
+            </form>
+          </div>
+          <div class=" card-footer">
+            <button class=" btn btn-fill btn-danger" type="submit" (click)="onSave()">Save</button>
+          </div>
+        </div>
+      <!-- </div> -->
+    </div>
+  </div>
