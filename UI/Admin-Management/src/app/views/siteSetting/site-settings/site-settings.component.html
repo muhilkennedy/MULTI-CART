@@ -1,0 +1,57 @@
+<app-spinner></app-spinner>
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{"Basic Settings" | translate}}</strong>
+        </c-card-header>
+        <c-card-body>
+            <mat-tab-group>
+                <mat-tab label="{{'Tenant Information' | translate}}">
+                    <ng-container *ngTemplateOutlet="tinfo"></ng-container>
+                </mat-tab>
+                <mat-tab label="{{'Tenant Security' | translate}}">
+                    <ng-container *ngTemplateOutlet="tsecurity"></ng-container>
+                </mat-tab>
+            </mat-tab-group>
+        </c-card-body>
+      </c-card>
+    </c-col>
+</c-row>
+
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{"Advanced Settings" | translate}}</strong>
+          <small><b>(Changing configuration will modify site behaviour)</b></small>
+        </c-card-header>
+        <c-card-body>
+            <mat-tab-group>
+                <mat-tab label="{{'Email Configuration' | translate}}">
+                    <ng-container *ngTemplateOutlet="emailConfig"></ng-container>
+                </mat-tab>
+                <mat-tab label="{{'Storage Configuration' | translate}}">
+                    <ng-container *ngTemplateOutlet="storageConfig"></ng-container>
+                </mat-tab>
+            </mat-tab-group>
+        </c-card-body>
+      </c-card>
+    </c-col>
+</c-row>
+
+<ng-template #tinfo>
+    <p>TODO</p>
+</ng-template>
+
+<ng-template #tsecurity>
+    <p>TODO</p>
+</ng-template>
+
+<ng-template #emailConfig>
+    <p>TODO</p>
+</ng-template>
+
+<ng-template #storageConfig>
+    <p>TODO</p>
+</ng-template>

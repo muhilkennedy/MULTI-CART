@@ -1,0 +1,64 @@
+
+<div class=" content">
+  <div class=" row">
+    <div class=" col-md-12">
+      <div class=" card">
+        <div class=" card-header">
+          <h4 class=" card-title">Tenants Detail</h4>
+        </div>
+        <div class=" card-body">
+          <div class=" table-responsive">
+            <table class=" table tablesorter" id="">
+              <thead class=" text-primary">
+                <tr>
+                  <th>{{ 'tenantName' | translate }}</th>
+                  <th>{{ 'tenantUniqueName' | translate }}</th>
+                  <th class=" text-center">{{ 'tenantStatus' | translate }}</th>
+                  <th>{{ 'timeZone' | translate }}</th>
+                  <th>{{ 'validTill' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let tr of tenantsResponse">
+                  <td>{{tr.name}}</td>
+                  <td>{{tr.tenantUniqueName}}</td>
+                  <td class=" text-center">
+                    <mat-slide-toggle
+                      [color]="accent"
+                      [checked]="tr.active"
+                      (change)="toggleActive($event, tr.tenantUniqueName)"
+                      [disabled]="shouldDisable(tr)">
+                    </mat-slide-toggle>
+                  </td>
+                  <td>
+                    {{tr.timezone}}
+                  </td>
+                  <td>
+
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class=" col-md-12" >
+      <mat-expansion-panel (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false" style="background: transparent; color: #673ab7; border-width: thin; border-style: solid;">
+        <mat-expansion-panel-header>
+        <mat-panel-title style="color: #673ab7;">
+        Scheduled Task Manager
+        </mat-panel-title>
+        <mat-panel-description style="color: darkcyan;">
+        {{panelOpenState ? 'Close' : 'Expand To Monitor BGWork'}}
+        </mat-panel-description>
+        </mat-expansion-panel-header>
+        <iframe *ngIf="panelOpenState" [src]="getJobRunnrUrl()" width="100%" height="1000"></iframe>
+      </mat-expansion-panel>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+{
+  "manageTenant" : "குத்தகைதாரர் தகவலை நிர்வகிக்கவும்",
+  "tenantManagement" : "குத்தகைதாரர் மேலாண்மை",
+  "login" : "உள்நுழை",
+  "tenantManager" :  "குத்தகைதாரர் மேலாளர்",
+  "tenantName" : "குத்தகைதாரர் பெயர்",
+  "tenantUniqueName" : "குத்தகைதாரர் தனிப்பட்ட பெயர்",
+  "tenantStatus" : "நிலை",
+  "timeZone" : "நேரம் மண்டலம்",
+  "validTill" : "காலாவதி தேதி",
+  "Dashboard": "டாஷ்போர்டு",
+  "Onboard Tenant": "குத்தகைதாரர் சேர்க்கவும்",
+  "Edit Tenant": "குத்தகைதாரர் திருத்தவும்",
+  "Manage Admin Users": "நிர்வாக பயனரை நிர்வகிக்கவும்"
+}
