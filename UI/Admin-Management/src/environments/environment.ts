@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  backendProxy: "/tmproxy",
+  backendProxy: "http://localhost:8081/tm",
   jobrunrUI:"http://localhost:9091",
   tenantId:"devTenant",
   tenant:"Dev Tenant"

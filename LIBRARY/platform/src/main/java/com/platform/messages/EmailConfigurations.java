@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 public enum EmailConfigurations {
 			
 	MAIL_SMTP_HOST("mail.smtp.host"), 
+	MAIL_SMTP_SSL_TRUST("mail.smtp.ssl.trust"),
 	MAIL_SMTP_PORT("mail.smtp.port"),
 	MAIL_TRANSPORT_PROTOCOL("mail.transport.protocol"),
 	MAIL_SMTP_AUTH("mail.smtp.auth"),

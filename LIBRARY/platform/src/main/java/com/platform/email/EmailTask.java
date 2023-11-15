@@ -61,6 +61,7 @@ public class EmailTask implements Runnable {
 		this.subject = subject;
 		this.body = body;
 		this.inlineImages = inlineImages;
+		this.tenantId = tenantId;
 	}
 
 	public EmailTask(Long tenantId, List<String> recipientEmail, String subject, String body,
@@ -70,6 +71,7 @@ public class EmailTask implements Runnable {
 		this.body = body;
 		this.inlineImages = inlineImages;
 		this.attachments = attachments;
+		this.tenantId = tenantId;
 	}
 
 	public EmailTask(Long tenantId, List<String> recipientEmail, List<String> carbonCopy, String subject, String body,
@@ -80,6 +82,7 @@ public class EmailTask implements Runnable {
 		this.body = body;
 		this.inlineImages = inlineImages;
 		this.attachments = attachments;
+		this.tenantId = tenantId;
 	}
 
 	public Long getTenantId() {
@@ -177,7 +180,8 @@ public class EmailTask implements Runnable {
 			props = EmailCache.getInstance().get(tenantId);
 			businessEmail = props.getProperty(EmailConfigurations.MAIL_USER_ID.getProperty());
 			businessPassword = props.getProperty(EmailConfigurations.MAIL_USER_PASSWORD.getProperty());
-		} else {
+		}
+		if(StringUtils.isAllBlank(businessEmail)) {
 			Log.platform.debug("Loaded default email config");
 			businessEmail = PlatformPropertiesUtil.getDefaultEmail();
 			businessPassword = PlatformPropertiesUtil.getDefaultEmailPassword();

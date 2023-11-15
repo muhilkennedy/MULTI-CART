@@ -61,7 +61,7 @@ export class TenantService {
   }
 
   createStorageConfig(body, tenant): Observable<any> {
-    return this.http.post<any>(`${environment.backendProxy}/admin/tenant/storage/addconfig`, body, {
+    return this.http.post<any>(`${environment.backendProxy}/admin/tenant/storage/config`, body, {
       params: {
         tenantId: tenant
       }

@@ -16,8 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import com.platform.util.Log;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "com.base.*", "com.i18n", "com.tenant.*", "com.user.*", "com.service.*" })
-@ConfigurationPropertiesScan(basePackages = { "com.base.*", "com.i18n", "com.tenant.*", "com.user.*", "com.service.*" })
+@ComponentScan(basePackages = { "com.base.*", "com.i18n.*", "com.tenant.*", "com.user.*", "com.service.*" })
+@ConfigurationPropertiesScan(basePackages = { "com.base.*", "com.i18n.*", "com.tenant.*", "com.user.*", "com.service.*" })
 @EntityScan(basePackages = { "com.base.*", "com.tenant.*", "com.user.*", "com.service.*" })
 @EnableJpaRepositories(basePackages = { "com.base.jpa.*", "com.tenant.jpa.*", "com.user.jpa.*"})
 @EnableR2dbcRepositories(basePackages = {"com.base.reactive.*", "com.tenant.reactive.*", "com.user.reactive.*"})

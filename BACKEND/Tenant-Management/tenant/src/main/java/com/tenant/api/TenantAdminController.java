@@ -15,18 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.base.entity.ConfigType;
-import com.base.messages.ConfigRequest;
-import com.base.service.ConfigurationService;
 import com.base.util.BaseUtil;
 import com.platform.annotations.UserPermission;
 import com.platform.annotations.ValidateUserToken;
-import com.platform.messages.ConfigurationType;
 import com.platform.messages.GenericResponse;
 import com.platform.messages.Response;
 import com.platform.user.Permissions;
 import com.tenant.entity.Tenant;
 import com.tenant.entity.TenantSubscription;
 import com.tenant.messages.StorageConfigRequest;
+import com.tenant.messages.TenantOriginRequest;
 import com.tenant.messages.TenantRequestBody;
 import com.tenant.service.TenantService;
 
@@ -101,6 +99,15 @@ public class TenantAdminController {
 			@RequestBody @Valid StorageConfigRequest configRequest) throws IOException{
 		GenericResponse<ConfigType> response = new GenericResponse<>();
 		tenantService.createStorageConfig(configRequest.getConfig(), configRequest.getBucket(), configRequest.getType());
+		return response.setStatus(Response.Status.OK).build();
+	}
+	
+	@UserPermission(values = Permissions.SUPER_USER)
+	@PostMapping(value = "/origins", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> addStorageConfig(@RequestParam("tenantId") Long tenantId,
+			@RequestBody @Valid TenantOriginRequest tenantRequest) throws IOException{
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		tenantService.updateAllowedOrigins(tenantRequest.getAdminUrl(), tenantRequest.getClientUrl());
 		return response.setStatus(Response.Status.OK).build();
 	}
 }

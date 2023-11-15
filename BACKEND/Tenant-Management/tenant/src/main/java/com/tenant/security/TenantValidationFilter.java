@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.base.server.BaseSession;
 import com.base.util.Log;
+import com.base.util.PropertiesUtil;
 import com.platform.util.PlatformUtil;
 import com.tenant.entity.Tenant;
 import com.tenant.entity.TenantDetails;
@@ -34,7 +36,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class TenantFilter extends OncePerRequestFilter{
+public class TenantValidationFilter extends OncePerRequestFilter{
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -56,7 +58,7 @@ public class TenantFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String requestUri = request.getRequestURI();
-		Log.tenant.info("Request URI - " + requestUri);
+		Log.tenant.info("Request URI - {} from address - {}", requestUri, request.getRemoteAddr());
 		//check for null tenant header
 		String tenantUniqueName = request.getHeader(PlatformUtil.TENANT_HEADER);
 		if(StringUtils.isBlank(tenantUniqueName)) {
@@ -70,10 +72,17 @@ public class TenantFilter extends OncePerRequestFilter{
 			return;
 		}
 		BaseSession.setTenant(tenant);
-		Log.base.info("Tenant Session For {} is setup", tenant.getUniquename());
+		Log.base.debug("Tenant Session For {} is setup for request {}", tenant.getUniquename(), requestUri);
 		TenantDetails td = tenant.getTenantDetail();
-		//TODO: check valid tenant origins		
-		// Set current session as new tenant
+		if(PropertiesUtil.isProdDeployment() && td.getDetails().isInitialSetUpDone()) {
+			String origin = request.getHeader(HttpHeaders.ORIGIN);
+			if (!(origin.equals(td.getDetails().getAdminUrl()) || origin.equals(td.getDetails().getClientUrl()))) {
+				Log.tenant.error("Invalid tenant origin");
+				response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Invalid tenant origin");
+				return;
+			}
+		}
+		// Set current session as new tenant (tenantId passed in parameter takes precedence here)
 		if (tenant.getParent() == null) {
 			String idParam = request.getParameter(PlatformUtil.TENANT_PARAM);
 			if (!StringUtils.isAllBlank(idParam)) {

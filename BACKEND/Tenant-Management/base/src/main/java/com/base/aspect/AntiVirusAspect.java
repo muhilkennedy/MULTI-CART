@@ -31,6 +31,7 @@ public class AntiVirusAspect {
 
 	}
 
+	//TODO: change to before
 	@Around(value = "endPointspointCut()")
 	public Object endPointspointCut(ProceedingJoinPoint joinPoint) throws Throwable {
 		Object[] arguments = joinPoint.getArgs();

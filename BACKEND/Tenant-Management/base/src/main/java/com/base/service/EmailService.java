@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,13 +17,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import com.base.entity.BaseEntity;
+import com.base.entity.ConfigType;
 import com.base.entity.EmailTemplate;
 import com.base.entity.FileStore;
 import com.base.jpa.repository.EmailTemplateRepository;
 import com.base.server.BaseSession;
 import com.base.util.EmailUtil;
 import com.base.util.Log;
+import com.platform.cache.EmailCache;
 import com.platform.email.EmailTask;
+import com.platform.messages.ConfigurationType;
 import com.platform.messages.StoreType;
 import com.platform.session.PlatformBaseSession;
 import com.platform.util.FileUtil;
@@ -48,6 +52,9 @@ public class EmailService {
 
 	@Autowired
 	private FileStoreService fileStore;
+	
+	@Autowired
+	private ConfigurationService configService;
 
 	@Value("${app.email.enabled}")
 	private boolean isEmailFeatureEnabled;
@@ -196,6 +203,24 @@ public class EmailService {
 	
 	public List<EmailTemplate> getAllTemplates() {
 		return templateRepository.findAll();
+	}
+	
+	public void loadEmailCacheForTenant() {
+		List<ConfigType> emailConfigs = configService.findAllConfig(ConfigurationType.EMAIL);
+		if(!emailConfigs.isEmpty()) {
+			Properties property = new Properties();
+			emailConfigs.stream().forEach(config -> {
+				property.put(EmailUtil.getPropertyKey(config.getName()), config.getVal());
+			});
+			if (EmailCache.getInstance().get(BaseSession.getTenantId()) != null) {
+				Log.base.warn("Evicted email config for tenant {}", BaseSession.getTenantId());
+				EmailCache.getInstance().evict(BaseSession.getTenantId());
+			}
+			EmailCache.getInstance().add(BaseSession.getTenantId(), property);
+		}
+		else {
+			Log.base.warn("No Email configs to load for tenant {}", BaseSession.getTenantId());
+		}
 	}
 
 }

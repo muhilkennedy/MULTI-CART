@@ -93,12 +93,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "Tenant-Management:build:production",
-              "proxyConfig": "prod-proxy.config.json"
+              "browserTarget": "Tenant-Management:build:production"
             },
             "development":{
-              "browserTarget": "Tenant-Management:build:development",
-              "proxyConfig": "dev-proxy.config.json"
+              "browserTarget": "Tenant-Management:build:development"
             }
           },
           "defaultConfiguration": "development"

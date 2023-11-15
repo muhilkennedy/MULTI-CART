@@ -49,7 +49,6 @@ public class StartupValidations {
 	private void postStartupProcessing() {
 		validateClassCode();
 		logRestEndpoints();
-		//clearCacheOnStartup();
 	}
 	
 	/**
@@ -83,10 +82,12 @@ public class StartupValidations {
 	@EventListener
 	private void onApplicationEvent(ApplicationReadyEvent event) throws PortUnreachableException {
 		clearInitialCaches();
-		if(PropertiesUtil.getBooleanProperty("app.security.clamav.enabled")) {
+		if (PropertiesUtil.getBooleanProperty("app.security.clamav.enabled")) {
 			pingClamAVService();
 		}
-		emailService.loadAllTemplatesToLocalStorage();
+		if (PropertiesUtil.getBooleanProperty("app.email.enabled")) {
+			emailService.loadAllTemplatesToLocalStorage();
+		}
 		Log.base.info("StartupValidations done!");
 	}
 
