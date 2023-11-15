@@ -126,7 +126,7 @@ export class PermissionsComponent implements OnInit {
           this.getAllRoles();
         },
         error: (err: any) => {
-          this.notification.fireAndWait({ title: `${err.error.errorCode}(${err.error.status})`, message: err.error.message }, NotificationType.DANGER);
+          this.notification.fireAndWait(CommonUtil.generateErrorNotificationFromResponse(err), NotificationType.DANGER);
         }
       }
       )

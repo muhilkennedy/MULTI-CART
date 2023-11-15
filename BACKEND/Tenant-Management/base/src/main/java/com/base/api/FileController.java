@@ -21,8 +21,10 @@ import com.base.service.FileStoreService;
 import com.base.util.BaseUtil;
 import com.platform.annotations.UserPermission;
 import com.platform.annotations.ValidateUserToken;
+import com.platform.messages.ConfigurationType;
 import com.platform.messages.GenericResponse;
 import com.platform.messages.Response;
+import com.platform.messages.StoreType;
 import com.platform.user.Permissions;
 import com.platform.util.FileUtil;
 
@@ -70,4 +72,13 @@ public class FileController {
 		}
 		return response.setStatus(Response.Status.NO_CONTENT).build();
 	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@GetMapping(value = "/gcp/configurationkeys", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<ConfigurationType> getGcpStorageConfigurationProperties() {
+		GenericResponse<ConfigurationType> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(ConfigurationType.STORAGE)
+				.setDataList(StoreType.GCP_CONSTANTS.stream().toList()).build();
+	}
+
 }

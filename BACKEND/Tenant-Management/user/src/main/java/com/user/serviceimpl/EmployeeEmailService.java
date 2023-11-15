@@ -7,9 +7,11 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.base.server.BaseSession;
 import com.base.service.EmailService;
 import com.base.util.Log;
 import com.platform.messages.EmailTemplateNames;
+import com.tenant.entity.Tenant;
 import com.user.entity.User;
 
 import freemarker.template.TemplateException;
@@ -31,6 +33,7 @@ public class EmployeeEmailService {
 		contentMap.put("password", String.valueOf(user.getUniqueId()));
 		contentMap.put("mobile", user.getMobile());
 		contentMap.put("email", user.getEmailid());
+		contentMap.put("tenantLogo", ((Tenant)BaseSession.getCurrentTenant()).getTenantDetail().getDetails().getLogoUrl());
 		try {
 			emailService.sendMail(user.getEmailid(), String.format("Welcome %s", user.getFname()),
 					emailService.constructEmailBody(EmailTemplateNames.EMPLOYEE_REGISTRATION.name(), contentMap), null);

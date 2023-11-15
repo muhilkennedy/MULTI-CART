@@ -11,6 +11,7 @@ public class TenantInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String adminUrl;
 	private String clientUrl;
+	private boolean initialSetUpDone;
 	private String fssai;
 	private String gstin;
 	private String gmapUrl;
@@ -71,6 +72,14 @@ public class TenantInfo implements Serializable {
 
 	public void setClientUrl(String clientUrl) {
 		this.clientUrl = clientUrl;
+	}
+
+	public boolean isInitialSetUpDone() {
+		return initialSetUpDone;
+	}
+
+	public void setInitialSetUpDone(boolean initialSetUpDone) {
+		this.initialSetUpDone = initialSetUpDone;
 	}
 
 }

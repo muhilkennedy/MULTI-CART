@@ -36,7 +36,7 @@ public class PermissionsAspect {
 	}
 
 	@Around(value = "userTokenPointCut ()")
-	public Object enableTenantFilter(ProceedingJoinPoint joinPoint) throws Throwable {
+	public Object validateUserPermissions(ProceedingJoinPoint joinPoint) throws Throwable {
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		Method method = signature.getMethod();
 		UserPermission annotation = method.getAnnotation(UserPermission.class);

@@ -169,15 +169,23 @@ public class TenantServiceImpl implements TenantService {
 	@Override
 	public void createStorageConfig(String config, String defaultBucket, String type) throws IOException {
 		if (StoreType.GCP.name().equalsIgnoreCase(type)) {
-			configService.createConfig(StoreType.constants.GCPCONFIG.name(), config, ConfigurationType.STORAGE);
-			configService.createConfig(StoreType.constants.GCPBUCKET.name(), defaultBucket, ConfigurationType.STORAGE);
+			configService.createConfig(StoreType.GCP_CONSTANTS.GCPCONFIG.name(), config, ConfigurationType.STORAGE);
+			configService.createConfig(StoreType.GCP_CONSTANTS.GCPBUCKET.name(), defaultBucket, ConfigurationType.STORAGE);
 			// Reload storage config
 			StorageService.getStorage(StoreType.GCP).updateTenantConfig(BaseSession.getTenantId(),
-					configService.getConfigValueIfPresent(StoreType.constants.GCPCONFIG.name(), ConfigurationType.STORAGE),
-					configService.getConfigValueIfPresent(StoreType.constants.GCPBUCKET.name(), ConfigurationType.STORAGE));
+					configService.getConfigValueIfPresent(StoreType.GCP_CONSTANTS.GCPCONFIG.name(), ConfigurationType.STORAGE),
+					configService.getConfigValueIfPresent(StoreType.GCP_CONSTANTS.GCPBUCKET.name(), ConfigurationType.STORAGE));
 		} else {
 			throw new UnsupportedOperationException("Unsupported Storage Type");
 		}
+	}
+
+	@Override
+	public Tenant updateAllowedOrigins(String adminUrl, String clientUrl) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().getDetails().setAdminUrl(adminUrl);
+		tenant.getTenantDetail().getDetails().setAdminUrl(clientUrl);
+		return (Tenant) tenantDao.saveAndFlush(tenant);
 	}
 	
 }

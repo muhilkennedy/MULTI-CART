@@ -6,12 +6,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.util.ResourceUtils;
 
+import com.platform.messages.EmailConfigurations;
 import com.platform.messages.StoreType;
 import com.platform.service.StorageService;
+
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * @author Muhil
@@ -71,6 +75,14 @@ public class EmailUtil {
 	public static File getLocalEmailTemplatesDirectory() {
 		return new File(
 				StorageService.getStorage(StoreType.NFS).getDefaultBucketKey() + File.separator + "EmailTemplates");
+	}
+	
+	public static String getPropertyKey(String name) {
+		Optional<EmailConfigurations> config = EmailConfigurations.getConfigByName(name);
+		if (config.isEmpty()) {
+			throw new NotFoundException();
+		}
+		return config.get().getProperty();
 	}
 
 }

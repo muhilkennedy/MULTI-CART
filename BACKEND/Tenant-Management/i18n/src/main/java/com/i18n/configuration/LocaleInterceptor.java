@@ -26,18 +26,19 @@ public class LocaleInterceptor implements WebRequestInterceptor {
 			BaseSession.setLocale(lang);
 		}
 		else {
-			Log.i18n.warn("No Locale information found in request");
+			Log.i18n.debug("No Locale information found in request");
 		}
 	}
 
 	@Override
 	public void postHandle(WebRequest request, ModelMap model) throws Exception {
-		// TODO Auto-generated method stub
+		//No-OP
 	}
 
 	@Override
 	public void afterCompletion(WebRequest request, Exception ex) throws Exception {
-		// TODO Auto-generated method stub
+		Log.i18n.debug("Session cleaned up for tenant : {} : {}", BaseSession.getTenantUniqueName(), request.toString());
+		BaseSession.clear();
 	}
 
 }

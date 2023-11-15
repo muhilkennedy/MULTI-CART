@@ -29,6 +29,18 @@ export class NotificationService {
     this.notify.next(props);
   }
 
+  public fireAndWaitError(props: any): void{
+    props.autohide = false;
+    props.color = NotificationType.DANGER,
+    this.notify.next(props);
+  }
+
+  public fireAndWaitWarn(props: any): void{
+    props.autohide = false;
+    props.color = NotificationType.WARNING,
+    this.notify.next(props);
+  }
+
   //Notification autohides in 5seconds
   public fireAndForget(props: any, type: NotificationType){
     props.autohide = true;

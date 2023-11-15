@@ -1,5 +1,7 @@
 package com.base.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,11 +34,22 @@ public class BaseController {
 	private ConfigurationService configService;
 
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
-	@PostMapping(value = "/addconfig", produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<ConfigType> addStorageConfig(@RequestParam("tenantId") Long tenantId,
+	@PostMapping(value = "/config", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<ConfigType> addConfig(@RequestParam(value = "tenantId", required = false) Long tenantId,
 			@RequestBody @Valid ConfigRequest config) {
 		GenericResponse<ConfigType> response = new GenericResponse<>();
 		configService.createConfig(config.getKey(), config.getValue(), config.getType());
+		return response.setStatus(Response.Status.OK).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PostMapping(value = "/configs", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<ConfigType> addConfigs(@RequestParam(value = "tenantId", required = false) Long tenantId,
+			@RequestBody @Valid List<ConfigRequest> configList) {
+		GenericResponse<ConfigType> response = new GenericResponse<>();
+		configList.stream().forEach(config -> {
+			configService.createConfig(config.getKey(), config.getValue(), config.getType());
+		});
 		return response.setStatus(Response.Status.OK).build();
 	}
 

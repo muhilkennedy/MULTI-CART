@@ -80,9 +80,9 @@ public class StorageConfiguration {
 	}
 
 	private void initGCPForTenants() throws IOException {
-		List<ConfigType> storageConfigs = configService.findByConfigNameAndType(StoreType.constants.GCPCONFIG.name(),
+		List<ConfigType> storageConfigs = configService.findByConfigNameAndType(StoreType.GCP_CONSTANTS.GCPCONFIG.name(),
 				ConfigurationType.STORAGE);
-		List<ConfigType> bucketConfigs = configService.findByConfigNameAndType(StoreType.constants.GCPBUCKET.name(),
+		List<ConfigType> bucketConfigs = configService.findByConfigNameAndType(StoreType.GCP_CONSTANTS.GCPBUCKET.name(),
 				ConfigurationType.STORAGE);
 		Map<Long, String> storageMap = storageConfigs.stream()
 				.collect(Collectors.toMap(ConfigType::getTenantid, ConfigType::getVal));

@@ -200,12 +200,12 @@ public class GoogleStorageService implements AbstractStorage {
 
 	@Override
 	public String getConfigKey() {
-		return StoreType.constants.GCPCONFIG.name();
+		return StoreType.GCP_CONSTANTS.GCPCONFIG.name();
 	}
 
 	@Override
 	public String getDefaultBucketKey() {
-		return StoreType.constants.GCPBUCKET.name();
+		return StoreType.GCP_CONSTANTS.GCPBUCKET.name();
 	}
 
 	@Override

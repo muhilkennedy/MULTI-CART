@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ import com.base.service.EmailService;
 import com.base.util.BaseUtil;
 import com.platform.annotations.UserPermission;
 import com.platform.annotations.ValidateUserToken;
+import com.platform.messages.ConfigurationType;
 import com.platform.messages.EmailConfigurations;
 import com.platform.messages.EmailTemplateNames;
 import com.platform.messages.GenericResponse;
@@ -73,9 +75,18 @@ public class EmailController {
 	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
 	@GetMapping(value = "/configurationkeys", produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<EmailConfigurations> getEmailConfigurationProperties() {
-		GenericResponse<EmailConfigurations> response = new GenericResponse<>();
-		return response.setStatus(Response.Status.OK).setDataList(EmailConfigurations.stream().toList()).build();
+	public GenericResponse<ConfigurationType> getEmailConfigurationProperties() {
+		GenericResponse<ConfigurationType> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(ConfigurationType.EMAIL)
+				.setDataList(EmailConfigurations.stream().toList()).build();
+	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PatchMapping(value = "/loadconfig", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<?> loadTenantEmailConfig() {
+		GenericResponse<?> response = new GenericResponse<>();
+		emailService.loadEmailCacheForTenant();
+		return response.setStatus(Response.Status.OK).build();
 	}
 
 }

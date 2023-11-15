@@ -36,5 +36,7 @@ public interface TenantService extends BaseService {
 	void checkAndRenewTenant();
 
 	void createStorageConfig(String config, String defaultBucket, String type) throws IOException;
+
+	Tenant updateAllowedOrigins(String adminUrl, String clientUrl);
 	
 }

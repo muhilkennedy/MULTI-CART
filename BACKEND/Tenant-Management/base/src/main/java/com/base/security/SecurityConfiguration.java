@@ -43,7 +43,7 @@ public class SecurityConfiguration { //implements WebMvcConfigurer {
 		// allowing all request patterns
 		return http.csrf((csrf) -> csrf.disable())
 				// .headers((header) -> header.frameOptions((frame) -> frame.disable()))
-				// .cors((cor) -> cor.configurationSource(corsConfigurationSource()))
+				 .cors((cor) -> cor.configurationSource(corsConfigurationSource()))
 				.authorizeHttpRequests(config -> {
 					config.anyRequest().permitAll();
 				})

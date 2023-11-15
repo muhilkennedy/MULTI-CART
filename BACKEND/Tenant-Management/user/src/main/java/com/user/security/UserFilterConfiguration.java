@@ -25,4 +25,5 @@ public class UserFilterConfiguration {
 		registration.addUrlPatterns(FilterUtil.getValidateUserTokenUrlPatterns());
 		return registration;
 	}
+
 }

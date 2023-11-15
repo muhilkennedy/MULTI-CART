@@ -34,6 +34,9 @@
                 <mat-tab label="{{'Storage Configuration' | translate}}">
                     <ng-container *ngTemplateOutlet="storageConfig"></ng-container>
                 </mat-tab>
+                <mat-tab label="{{'SMS Configuration' | translate}}">
+                    <ng-container *ngTemplateOutlet="smsConfig"></ng-container>
+                </mat-tab>
             </mat-tab-group>
         </c-card-body>
       </c-card>
@@ -49,9 +52,43 @@
 </ng-template>
 
 <ng-template #emailConfig>
-    <p>TODO</p>
+    <app-spinner [show]="emailSpinner"></app-spinner>
+    <c-row *ngFor="let field of emailConfigKeys; let i = index">
+        <c-col xs="12">
+            <mat-form-field style="width: 100%;">
+                <mat-label>{{field | translate}}</mat-label>
+                <input matInput [name]="field" [placeholder]="field" [(ngModel)]="emailConfigFields[i]" required>
+            </mat-form-field>
+        </c-col>
+    </c-row>
+    <c-row>
+        <c-col xs="6"></c-col>
+        <c-col xs="6">
+            <button style="width: 100%;" cButton class="me-1" variant="outline" size="sm" color="warning" (click)="onEmailConfigSave()"> {{"SAVE" |
+                translate}}</button>
+        </c-col>
+    </c-row>
 </ng-template>
 
 <ng-template #storageConfig>
+    <app-spinner [show]="storageSpinner"></app-spinner>
+    <c-row *ngFor="let field of storageGcpConfigKeys; let i = index">
+        <c-col xs="12">
+            <mat-form-field style="width: 100%;">
+                <mat-label>{{field | translate}}</mat-label>
+                <input matInput [name]="field" [placeholder]="field" [(ngModel)]="gcpConfigFields[i]" required>
+            </mat-form-field>
+        </c-col>
+    </c-row>
+    <c-row>
+        <c-col xs="6"></c-col>
+        <c-col xs="6">
+            <button style="width: 100%;" cButton class="me-1" variant="outline" size="sm" color="warning" (click)="onEmailConfigSave()"> {{"SAVE" |
+                translate}}</button>
+        </c-col>
+    </c-row>
+</ng-template>
+
+<ng-template #smsConfig>
     <p>TODO</p>
 </ng-template>
