@@ -49,5 +49,10 @@ public enum Permissions {
 		str.append(" ]");
 		return str.toString();
 	}
+	
+	public static Permissions getPermissionIfValid(String permissionName) {
+		return stream().filter(permission -> permission.getPermissionUniqueName().equalsIgnoreCase(permissionName))
+				.findFirst().get();
+	}
 
 }

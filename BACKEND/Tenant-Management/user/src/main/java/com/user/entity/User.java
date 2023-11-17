@@ -2,13 +2,17 @@ package com.user.entity;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.base.entity.MultiTenantEntity;
 import com.base.util.Log;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.platform.annotations.PIIData;
+import com.platform.entity.UserBaseObject;
 import com.platform.security.AttributeEncryptor;
+import com.platform.user.Permissions;
 import com.platform.util.EncryptionUtil;
 
 import jakarta.persistence.Column;
@@ -24,19 +28,22 @@ import jakarta.persistence.PrePersist;
  */
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class User extends MultiTenantEntity {
+public class User extends MultiTenantEntity implements UserBaseObject {
 
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "UNIQUENAME", updatable = false)
 	private String uniquename;
 
+	@PIIData(allowedRolePermissions = { Permissions.ADMIN })
 	@Column(name = "FNAME")
 	private String fname;
 
+	@PIIData(allowedRolePermissions = { Permissions.ADMIN })
 	@Column(name = "LNAME")
 	private String lname;
 
+	@PIIData(allowedRolePermissions = { Permissions.ADMIN, Permissions.CUSTOMER_SUPPORT }, visibleCharacters = 4)
 	@Column(name = "MOBILE")
 	@Convert(converter = AttributeEncryptor.class)
 	private String mobile;
@@ -44,6 +51,7 @@ public class User extends MultiTenantEntity {
 	@Column(name = "MOBILEHASH")
 	private String mobilehash;
 
+	@PIIData(allowedRolePermissions = { Permissions.ADMIN, Permissions.CUSTOMER_SUPPORT })
 	@Column(name = "EMAILID")
 	private String emailid;
 
@@ -141,7 +149,7 @@ public class User extends MultiTenantEntity {
 			updateMobileHash();
 		}
 	}
-	
+
 	public void updateMobileHash() {
 		try {
 			this.mobilehash = EncryptionUtil.hash_SHA256(mobile);
@@ -154,10 +162,16 @@ public class User extends MultiTenantEntity {
 	protected void generateUniqueName() throws SQLException {
 		// NO-OP
 	}
-	
+
 	@Override
 	public String getUniqueId() {
 		return this.uniquename;
+	}
+
+	@Override
+	public Set<Permissions> getUserPermissions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
