@@ -37,7 +37,7 @@ public class LocaleInterceptor implements WebRequestInterceptor {
 
 	@Override
 	public void afterCompletion(WebRequest request, Exception ex) throws Exception {
-		Log.i18n.debug("Session cleaned up for tenant : {} : {}", BaseSession.getTenantUniqueName(), request.toString());
+		Log.i18n.debug("Base Session cleaned : {}", request.toString());
 		BaseSession.clear();
 	}
 

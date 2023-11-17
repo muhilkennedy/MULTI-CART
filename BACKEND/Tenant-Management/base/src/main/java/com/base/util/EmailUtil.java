@@ -25,7 +25,7 @@ public class EmailUtil {
 
 	public static final int MAX_EMAIL_THREADS = 10;
 
-	public static List<Map> getBasicInlineImages(String tenantId, String tenantName, String tagLine,
+	/*public static List<Map> getBasicInlineImages(String tenantId, String tenantName, String tagLine,
 			String tenantContact, String tenantEmail, String tenantUniqueName) {
 		List<Map> inlineListMap = new ArrayList<Map>();
 		Map<String, File> inlineImages = new HashMap<String, File>();
@@ -70,7 +70,7 @@ public class EmailUtil {
 			Log.base.error("getBasicInlineImages : {}", e);
 		}
 		return inlineListMap;
-	}
+	}*/
 	
 	public static File getLocalEmailTemplatesDirectory() {
 		return new File(

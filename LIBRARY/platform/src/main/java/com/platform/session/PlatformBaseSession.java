@@ -3,6 +3,7 @@ package com.platform.session;
 import com.platform.configuration.PlatformConfiguration;
 import com.platform.entity.BaseObject;
 import com.platform.entity.PlatformTenant;
+import com.platform.entity.UserBaseObject;
 
 /**
  * @author Muhil
@@ -12,7 +13,7 @@ import com.platform.entity.PlatformTenant;
 public class PlatformBaseSession {
 
 	private static final ThreadLocal<BaseObject> tenant = new ThreadLocal<BaseObject>();
-	private static final ThreadLocal<BaseObject> user = new ThreadLocal<BaseObject>();
+	private static final ThreadLocal<UserBaseObject> user = new ThreadLocal<UserBaseObject>();
 	
 	private static PlatformTenant dummyTenant = null;
 
@@ -42,11 +43,11 @@ public class PlatformBaseSession {
 		user.remove();
 	}
 	
-	public static void setUser(BaseObject usr) {
+	public static void setUser(UserBaseObject usr) {
 		user.set(usr);
 	}
 
-	public static BaseObject getUser() {
+	public static UserBaseObject getUser() {
 		return user.get();
 	}
 

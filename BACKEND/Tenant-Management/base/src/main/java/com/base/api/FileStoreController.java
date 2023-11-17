@@ -11,12 +11,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.base.entity.FileStore;
+import com.base.server.BaseSession;
+import com.base.service.ConfigurationService;
 import com.base.service.FileStoreService;
 import com.base.util.BaseUtil;
 import com.platform.annotations.UserPermission;
@@ -25,6 +29,7 @@ import com.platform.messages.ConfigurationType;
 import com.platform.messages.GenericResponse;
 import com.platform.messages.Response;
 import com.platform.messages.StoreType;
+import com.platform.service.StorageService;
 import com.platform.user.Permissions;
 import com.platform.util.FileUtil;
 
@@ -35,10 +40,13 @@ import com.platform.util.FileUtil;
 @RestController
 @RequestMapping("admin/file")
 @ValidateUserToken
-public class FileController {
+public class FileStoreController {
 
 	@Autowired
 	private FileStoreService fileService;
+	
+	@Autowired
+	private ConfigurationService configService;
 
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_PROMOTIONS })
 	@GetMapping(value = "/download", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,6 +87,21 @@ public class FileController {
 		GenericResponse<ConfigurationType> response = new GenericResponse<>();
 		return response.setStatus(Response.Status.OK).setData(ConfigurationType.STORAGE)
 				.setDataList(StoreType.GCP_CONSTANTS.stream().toList()).build();
+	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PatchMapping(value = "/gcp/loadconfig", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<?> loadTenantEmailConfig() throws IOException {
+		GenericResponse<?> response = new GenericResponse<>();
+		String storageConfig = configService.getConfigValueIfPresent(StoreType.GCP_CONSTANTS.GCPCONFIG.name(),
+				ConfigurationType.STORAGE);
+		Assert.isNull(storageConfig, "Sorage Config not found");
+		String storageBucketConfig = configService.getConfigValueIfPresent(StoreType.GCP_CONSTANTS.GCPCONFIG.name(),
+				ConfigurationType.STORAGE);
+		Assert.isNull(storageBucketConfig, "Sorage Bucket not found");
+		StorageService.getStorage(StoreType.GCP).updateTenantConfig(BaseSession.getTenantId(), storageConfig,
+				storageBucketConfig);
+		return response.setStatus(Response.Status.OK).build();
 	}
 
 }

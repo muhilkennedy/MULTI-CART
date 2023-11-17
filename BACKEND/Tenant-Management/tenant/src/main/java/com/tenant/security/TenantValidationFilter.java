@@ -71,7 +71,12 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 		if(!isValidTenant(tenant, response)) {
 			return;
 		}
-		BaseSession.setTenant(tenant);
+		/*
+		 * setting current tenant here indicates, he is the owner of this session. (but
+		 * based on tenant id on parameter tenant will be updated keeping current tenant
+		 * value as owner)
+		 */
+		BaseSession.setCurrentTenant(tenant);
 		Log.base.debug("Tenant Session For {} is setup for request {}", tenant.getUniquename(), requestUri);
 		TenantDetails td = tenant.getTenantDetail();
 		if(PropertiesUtil.isProdDeployment() && td.getDetails().isInitialSetUpDone()) {

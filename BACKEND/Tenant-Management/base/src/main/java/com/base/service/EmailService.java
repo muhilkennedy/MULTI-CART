@@ -109,40 +109,40 @@ public class EmailService {
 	}
 
 	public void sendMail(String recipientEmail, String subject, String body, Map<String, File> inlineImages) {
-		EmailTask task = new EmailTask(BaseSession.getTenantId(), Arrays.asList(recipientEmail), subject, body,
+		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), Arrays.asList(recipientEmail), subject, body,
 				inlineImages);
 		this.postEmailTask(task);
 	}
 
 	public void sendMail(List<String> recipientEmail, String subject, String body, Map<String, File> inlineImages) {
-		EmailTask task = new EmailTask(BaseSession.getTenantId(), recipientEmail, subject, body, inlineImages);
+		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), recipientEmail, subject, body, inlineImages);
 		this.postEmailTask(task);
 	}
 
 	public void sendMail(String recipientEmail, String subject, String body, Map<String, File> inlineImages,
 			List<File> attachments) {
-		EmailTask task = new EmailTask(BaseSession.getTenantId(), Arrays.asList(recipientEmail), subject, body,
+		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), Arrays.asList(recipientEmail), subject, body,
 				inlineImages, attachments);
 		this.postEmailTask(task);
 	}
 
 	public void sendMail(String recipientEmail, String cc, String subject, String body, Map<String, File> inlineImages,
 			List<File> attachments) {
-		EmailTask task = new EmailTask(BaseSession.getTenantId(), Arrays.asList(recipientEmail), Arrays.asList(cc),
+		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), Arrays.asList(recipientEmail), Arrays.asList(cc),
 				subject, body, inlineImages, attachments);
 		this.postEmailTask(task);
 	}
 
 	public void sendMail(List<String> recipientEmail, String subject, String body, Map<String, File> inlineImages,
 			List<File> attachments) {
-		EmailTask task = new EmailTask(BaseSession.getTenantId(), recipientEmail, subject, body, inlineImages,
+		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), recipientEmail, subject, body, inlineImages,
 				attachments);
 		this.postEmailTask(task);
 	}
 
 	public void sendMail(List<String> recipientEmail, List<String> cc, String subject, String body,
 			Map<String, File> inlineImages, List<File> attachments) {
-		EmailTask task = new EmailTask(BaseSession.getTenantId(), recipientEmail, cc, subject, body, inlineImages,
+		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), recipientEmail, cc, subject, body, inlineImages,
 				attachments);
 		this.postEmailTask(task);
 	}

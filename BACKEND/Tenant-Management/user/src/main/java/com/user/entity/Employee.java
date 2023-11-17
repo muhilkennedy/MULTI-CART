@@ -2,8 +2,14 @@ package com.user.entity;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.platform.annotations.ClassMetaProperty;
+import com.platform.entity.BasePermissions;
+import com.platform.user.Permissions;
 import com.user.util.UserUtil;
 
 import jakarta.persistence.CascadeType;
@@ -21,7 +27,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "EMPLOYEE")
 @ClassMetaProperty(code = "EMP")
-public class Employee extends User {
+public class Employee extends User implements BasePermissions {
 
 	private static final long serialVersionUID = 2L;
 
@@ -31,6 +37,7 @@ public class Employee extends User {
 	@Column(name = "REPORTSTO")
 	private Long reportsto;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<EmployeeRole> employeeeRoles;
 
@@ -72,6 +79,16 @@ public class Employee extends User {
 	@Override
 	protected void generateUniqueName() throws SQLException {
 		setUniquename(UserUtil.generateEmployeeUniqueName());
+	}
+
+	@Override
+	public Set<Permissions> getUserPermissions() {
+		Optional<Set<Permissions>> obj = employeeeRoles.stream()
+				.map(role -> role.getRole().getPermissions().stream()
+						.map(rp -> Permissions.getPermissionIfValid(rp.getPermission().getPermission()))
+						.collect(Collectors.toSet()))
+				.findFirst();
+		return obj.get();
 	}
 
 }
