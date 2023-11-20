@@ -26,6 +26,7 @@ import com.user.entity.UserInfo;
 import com.user.exception.UserException;
 import com.user.service.EmployeeService;
 
+import jakarta.ws.rs.NotFoundException;
 import reactor.core.publisher.Flux;
 
 /**
@@ -55,8 +56,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public User register(User user) {
 		Employee employee = (Employee) user;
 		String generatedPassword = SecurityUtil.generateRandomPassword();
-		Log.user.debug(String.format("Generated password for user {%s} is {%s}", employee.getEmailid(), generatedPassword));
-		employee.setPassword(generatedPassword);
+		Log.user.debug(
+				String.format("Generated password for user {%s} is {%s}", employee.getEmailid(), generatedPassword));
+		employee.setPassword(BCrypt.hashpw(generatedPassword, BCrypt.gensalt(SecurityUtil.PASSWORD_SALT_ROUNDS)));
 		employee = (Employee) empDaoService.saveAndFlush(employee);
 		emailService.sendWelcomeActivationEmail(user, generatedPassword);
 		return employee;
@@ -99,8 +101,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public User toggleStatus(Long rootId) {
-		// TODO Auto-generated method stub
-		return null;
+		User emp = (User) empDaoService.findById(rootId);
+		if (emp == null) {
+			throw new NotFoundException();
+		}
+		emp.setActive(!emp.isActive());
+		return (User) empDaoService.saveAndFlush(emp);
 	}
 
 	@Override
@@ -134,6 +140,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		FileStore store = fileService.uploadToFileStore(document, true, "/Proof");
 		employee.getEmployeeInfo().setProofFileId(store.getRootId());
 		empDaoService.save(employee);
+	}
+
+	@Override
+	public List<Employee> findMatchingTypeAheadEmployees(String name) {
+		return empDaoService.getTypeAheadEmployees(name);
 	}
 
 }

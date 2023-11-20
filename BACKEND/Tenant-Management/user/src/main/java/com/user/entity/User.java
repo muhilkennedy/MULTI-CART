@@ -2,6 +2,7 @@ package com.user.entity;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,15 +36,15 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 	@Column(name = "UNIQUENAME", updatable = false)
 	private String uniquename;
 
-	@PIIData(allowedRolePermissions = { Permissions.ADMIN })
+	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
 	@Column(name = "FNAME")
 	private String fname;
 
-	@PIIData(allowedRolePermissions = { Permissions.ADMIN })
+	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
 	@Column(name = "LNAME")
 	private String lname;
 
-	@PIIData(allowedRolePermissions = { Permissions.ADMIN, Permissions.CUSTOMER_SUPPORT }, visibleCharacters = 4)
+	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS}, visibleCharacters = 4)
 	@Column(name = "MOBILE")
 	@Convert(converter = AttributeEncryptor.class)
 	private String mobile;
@@ -51,7 +52,7 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 	@Column(name = "MOBILEHASH")
 	private String mobilehash;
 
-	@PIIData(allowedRolePermissions = { Permissions.ADMIN, Permissions.CUSTOMER_SUPPORT })
+	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
 	@Column(name = "EMAILID")
 	private String emailid;
 
@@ -170,8 +171,7 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 
 	@Override
 	public Set<Permissions> getUserPermissions() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.<Permissions>emptySet();
 	}
 
 }

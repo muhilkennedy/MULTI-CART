@@ -43,4 +43,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	@Query(findEmployeeWithPermissionQuery)
 	Employee findEmployeeWithPermission(@Param("permission") String permission, @Param("rootId") Long rootId);
 
+	String findLikeEmployeeNameQuery = "select emp from Employee emp where (fname like %:name% or lname like %:name%)";
+
+	@Query(value = findLikeEmployeeNameQuery)
+	List<Employee> findLikeEmployeeName(@Param("name") String name);
+
 }

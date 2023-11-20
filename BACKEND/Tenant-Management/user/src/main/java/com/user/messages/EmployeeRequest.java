@@ -19,7 +19,7 @@ public class EmployeeRequest {
 	@NotBlank
 	private String mobile;
 	private String designation;
-	private Long reportsTo;
+	private String reportsTo;
 
 	private String dob;
 	private String gender; 
@@ -58,14 +58,6 @@ public class EmployeeRequest {
 		this.designation = designation;
 	}
 
-	public Long getReportsTo() {
-		return reportsTo;
-	}
-
-	public void setReportsTo(Long reportsTo) {
-		this.reportsTo = reportsTo;
-	}
-
 	public String getDob() {
 		return dob;
 	}
@@ -96,6 +88,14 @@ public class EmployeeRequest {
 
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
+	}
+
+	public String getReportsTo() {
+		return reportsTo;
+	}
+
+	public void setReportsTo(String reportsTo) {
+		this.reportsTo = reportsTo;
 	}
 
 }

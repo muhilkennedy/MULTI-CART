@@ -30,4 +30,12 @@ export class SiteSettingsService {
     return this.http.patch(`${environment.backendProxy}/admin/email/loadconfig`, null);
   }
 
+  loadNewStorageConfig(){
+    return this.http.patch(`${environment.backendProxy}/admin/file/gcp/loadconfig`, null);
+  }
+
+  getAllSMSConfigurationKeys(): Observable<any> {
+    return this.http.get(`${environment.backendProxy}/admin/sms/configurationkeys`);
+  }
+
 }

@@ -1,5 +1,7 @@
 package com.i18n.configuration;
 
+import java.util.Locale;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
@@ -22,8 +24,13 @@ public class LocaleInterceptor implements WebRequestInterceptor {
 	@Override
 	public void preHandle(WebRequest request) throws Exception {
 		String lang = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
-		if (BaseSession.getUser() != null &&  StringUtils.isNotBlank(lang)) {
-			BaseSession.setLocale(lang);
+		if (StringUtils.isNotBlank(lang) && BaseSession.getLocale() == null) {
+			try {
+				BaseSession.setLocale(lang);
+			}
+			catch(RuntimeException ex) { // Not a good idea, deal later to resolve this
+				BaseSession.setLocale(Locale.ENGLISH);
+			}
 		}
 		else {
 			Log.i18n.debug("No Locale information found in request");

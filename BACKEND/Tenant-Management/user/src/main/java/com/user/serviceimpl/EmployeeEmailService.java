@@ -18,7 +18,6 @@ import freemarker.template.TemplateException;
 
 /**
  * @author Muhil
- *
  */
 @Service
 public class EmployeeEmailService {
@@ -33,7 +32,8 @@ public class EmployeeEmailService {
 		contentMap.put("password", String.valueOf(user.getUniqueId()));
 		contentMap.put("mobile", user.getMobile());
 		contentMap.put("email", user.getEmailid());
-		contentMap.put("tenantLogo", ((Tenant)BaseSession.getCurrentTenant()).getTenantDetail().getDetails().getLogoUrl());
+		contentMap.put("tenantLogo",
+				((Tenant) BaseSession.getCurrentTenant()).getTenantDetail().getDetails().getLogoUrl());
 		try {
 			emailService.sendMail(user.getEmailid(), String.format("Welcome %s", user.getFname()),
 					emailService.constructEmailBody(EmailTemplateNames.EMPLOYEE_REGISTRATION.name(), contentMap), null);

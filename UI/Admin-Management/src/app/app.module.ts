@@ -1,5 +1,5 @@
 import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, Injectable, LOCALE_ID, NgModule } from '@angular/core';
-import { CommonModule, HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { CommonModule, DatePipe, HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -167,7 +167,8 @@ export function init_tenant(initializer: TenantInitializer) {
     },
     IconSetService,
     Title,
-    TranslatePipe
+    TranslatePipe,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })
