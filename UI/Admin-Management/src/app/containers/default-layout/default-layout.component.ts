@@ -8,6 +8,7 @@ import { CommonUtil } from 'src/app/service/util/common-util.service';
 import { UserService } from 'src/app/service/user/user.service';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { TenantService } from 'src/app/service/Tenant/tenant.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,21 @@ export class DefaultLayoutComponent implements OnInit {
 
   public navItems: INavData[] = navItems;
 
-  constructor(private translate: TranslatePipe, private subscriberService: SubscriberService, 
+  brandFull={
+    src: 'assets/img/tenant/logo.png',
+    width: 200,
+    height: 46,
+    alt: 'Logo'
+  };
+
+  brandNarrow={
+    src: 'assets/img/tenant/logo.png',
+    width: 46,
+    height: 46,
+    alt: 'Logo'
+  }
+
+  constructor(private translate: TranslatePipe, private tenantService: TenantService, 
               private userService: UserService, private router: Router, private cookie: CookieService) {
     this.updateLocale();
   }
@@ -34,7 +49,9 @@ export class DefaultLayoutComponent implements OnInit {
           this.userService.getCurrentUser().userEmail = resp.data.emailid;
           this.userService.getCurrentUser().userId = resp.data.rootId;
           this.userService.getCurrentUser().userName = resp.data.fname + resp.data.lname;
-          this.router.navigate(['/sitesettings']);//change
+          this.router.navigate(['/dashboard']);
+          this.brandFull = this.getTenantLogo();
+          this.brandNarrow = this.brandFull;
         },
         error: (error: any) => {
           this.router.navigate(['/login']);
@@ -44,6 +61,10 @@ export class DefaultLayoutComponent implements OnInit {
         }
       }
     )
+  }
+
+  getTenantLogo() {
+    return CommonUtil.isNullOrEmptyOrUndefined(this.tenantService.getCurrentTenant().details.details.logoUrl) ? "../../../../assets/img/tenant/logo.png" : this.tenantService.getCurrentTenant().details.details.logoUrl;
   }
 
   updateLocale() {

@@ -20,7 +20,9 @@ public interface EmployeeService extends UserService {
 	boolean doesEmployeeHavePermission(Permissions permission, Long employeeId);
 
 	User createEmployeeInfo(Employee employee, EmployeeInfo info);
-	
+
 	void uploadEmployeeDocumentProof(Employee employee, File document) throws IOException;
+
+	List<Employee> findMatchingTypeAheadEmployees(String name);
 
 }

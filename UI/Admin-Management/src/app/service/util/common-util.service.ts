@@ -6,6 +6,7 @@ import { Injectable } from "@angular/core";
 export class CommonUtil {
 
     static TOKEN_KEY = 'X-Token';
+    static DATE_FORMAT_PLAIN = "dd/MM/yyyy";
 
     static isNullOrEmptyOrUndefined(value: any): boolean {
         return (value == undefined || value == null || value == '');

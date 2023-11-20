@@ -14,8 +14,8 @@ import java.util.stream.Stream;
  */
 public enum EmailTemplateNames {
 
-	EMPLOYEE_REGISTRATION(new String[] { "tenantLogo", "tenanThumbnail", "tenantName", "tenantAdminUrl", "userPassword",
-			"tenantAddress", "tenantContact" }),
+	EMPLOYEE_REGISTRATION(new String[] { "tenantLogo", "userName", "password", "mobile", "email", "tenantAdminUrl" }),
+	FORGOT_PASSWORD(new String[] { "tenantLogo", "userName", "uniqueName", "mobile", "email", "forgotPasswordUrl" }),
 	CUSTOMER_REGISTRATION(new String[] { "tenantLogo", "tenanThumbnail", "tenantName", "tenantClientUrl", "tenantAddress",
 			"tenantContact" });
 

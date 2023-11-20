@@ -25,7 +25,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.platform</groupId>
-			<artifactId>platform</artifactId>
+			<artifactId>platform-commons</artifactId>
 			<version>${platform.version}</version>
 		</dependency>
 		<!-- server dependencies -->

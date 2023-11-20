@@ -45,7 +45,7 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 	private TenantService tenantService;
 	
 	//move to config file
-	private static List<String> Whitelisted_URI = Arrays.asList("/actuator/health","/actuator/metrics","/favicon.ico");
+	private static List<String> Whitelisted_URI = Arrays.asList("/actuator/health","/actuator/metrics");
 	
     @Override
     protected boolean shouldNotFilter (HttpServletRequest request)
@@ -73,8 +73,9 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 		}
 		/*
 		 * setting current tenant here indicates, he is the owner of this session. (but
-		 * based on tenant id on parameter tenant will be updated keeping current tenant
-		 * value as owner)
+		 * based on tenant id on parameter, tenant object will be updated so object
+		 * persistance happens for tenant passed as parameter. In short tenantId passed
+		 * as parameter will take precedence.
 		 */
 		BaseSession.setCurrentTenant(tenant);
 		Log.base.debug("Tenant Session For {} is setup for request {}", tenant.getUniquename(), requestUri);

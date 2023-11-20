@@ -125,7 +125,7 @@
 <tr>
 <td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
 <div align="center" class="alignment" style="line-height:10px">
-<img alt="LOGO" src="https://firebasestorage.googleapis.com/v0/b/mken-test-webapp.appspot.com/o/devTenant_logo_mken.png?alt=media&token=7e1e101f-e430-4438-bcfd-ee330a2d7b00&_gl=1*1rmr9mq*_ga*MTQxNDQ0NTU5MS4xNjk1NzMwMTMx*_ga_CW55HF8NVT*MTY5OTQxODMyNC4xMi4xLjE2OTk0MTg3MjMuMjguMC4w" style="display: block; height: auto; border: 0; width: 250px; max-width: 100%;" title="Image" width="250"/>
+<img alt="LOGO" src="${tenantLogo}" style="display: block; height: auto; border: 0; width: 250px; max-width: 100%;" title="Image" width="250"/>
 </div>
 </td>
 </tr>
@@ -229,8 +229,7 @@
 <div align="center" class="alignment">
 <table border="0" cellpadding="0" cellspacing="0" class="social-table" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block;" width="111px">
 <tr>
-<td style="padding:0 5px 0 0px;"><a href="https://www.facebook.com/" target="_blank">
-<img alt="Facebook" height="32" src="https://firebasestorage.googleapis.com/v0/b/mken-test-webapp.appspot.com/o/social-facebook-white.png?alt=media&token=091ba5c7-91b2-4d26-bfad-df5fe37ca98f&_gl=1*17gjkiq*_ga*MTQxNDQ0NTU5MS4xNjk1NzMwMTMx*_ga_CW55HF8NVT*MTY5OTQxODMyNC4xMi4xLjE2OTk0MTg3ODYuNDQuMC4w" style="display: block; height: auto; border: 0;" title="Facebook" width="32"/></a>
+<td style="padding:0 5px 0 0px;">
 </td>
 </tr>
 </table>

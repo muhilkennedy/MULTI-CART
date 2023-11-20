@@ -54,7 +54,7 @@
                 </c-col>
                 <c-col xs="6">
                     <mat-radio-group aria-labelledby="gender" [value]="gender">
-                        <mat-radio-button *ngFor="let gen of genders" [value]="gen">
+                        <mat-radio-button *ngFor="let gen of genders" [value]="gen" (change)="onGenderSelection(gen)">
                             {{gen}}
                         </mat-radio-button>
                     </mat-radio-group>
@@ -74,6 +74,34 @@
         <app-spinner></app-spinner>
         <form [formGroup]="advFormGroup">
             <ng-template matStepLabel>{{"Additional Employee Details" | translate}}</ng-template>
+            <c-row>
+                <c-col xs="6">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>{{"Reports To" | translate}}</mat-label>
+                        <input type="text"
+                               placeholder="Type Employee Name to Search"
+                               matInput
+                               [formControl]="autoCompleteControl"
+                               [matAutocomplete]="auto"
+                               (keyup)="getTypeAheadEmployeeAction($event)">
+                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                            <app-spinner [show]="empLoader"></app-spinner>
+                          <mat-option [value]="opt.uniquename" *ngFor="let opt of filteredOptions | async" > <!-- (onSelectionChange)="convertToProductItem(opt)" -->
+                            {{opt.fname}} <span></span> {{opt.lname}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                </c-col>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Designation" | translate}}</mat-label>
+                        <input matInput name="designation" placeholder="Designation" formControlName="designation"
+                            required>
+                        <mat-error *ngIf="hasError(advFormGroup, 'designation')">{{getError(advFormGroup,
+                            'designation')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+            </c-row>
             <c-row>
                 <c-col xs="6">
                     <mat-label>{{"Employee Address Proof" | translate}}</mat-label>
@@ -127,7 +155,7 @@
                     translate}}</button>
             </c-col>
             <c-col xs="3">
-                <button cButton class="me-1" variant="outline" size="sm" color="success" matStepperNext> {{"CREATE" |
+                <button cButton class="me-1" variant="outline" size="sm" color="success" matStepperNext (click)="onboardEmployee()"> {{"CREATE" |
                     translate}}</button>
             </c-col>
         </c-row>

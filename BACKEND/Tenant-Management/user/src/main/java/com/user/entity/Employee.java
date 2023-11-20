@@ -83,12 +83,17 @@ public class Employee extends User implements BasePermissions {
 
 	@Override
 	public Set<Permissions> getUserPermissions() {
-		Optional<Set<Permissions>> obj = employeeeRoles.stream()
-				.map(role -> role.getRole().getPermissions().stream()
-						.map(rp -> Permissions.getPermissionIfValid(rp.getPermission().getPermission()))
-						.collect(Collectors.toSet()))
-				.findFirst();
-		return obj.get();
+		try {
+			Optional<Set<Permissions>> obj = employeeeRoles.stream()
+					.map(role -> role.getRole().getPermissions().stream()
+							.map(rp -> Permissions.getPermissionIfValid(rp.getPermission().getPermission()))
+							.collect(Collectors.toSet()))
+					.findFirst();
+			return obj.get();
+		} catch (RuntimeException e) {
+			// Not a good idea, lets take a look to have a defensive fix here
+			return super.getUserPermissions();
+		}
 	}
 
 }

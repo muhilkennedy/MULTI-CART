@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { TenantService } from 'src/app/service/Tenant/tenant.service';
 import { SiteSettingsService } from 'src/app/service/site-settings/site-settings.service';
 import { CommonUtil } from 'src/app/service/util/common-util.service';
-import { NotificationService } from 'src/app/service/util/notification.service';
+import { NotificationService, NotificationType } from 'src/app/service/util/notification.service';
 import { SpinnerService } from 'src/app/service/util/sipnner.service';
 
 @Component({
@@ -11,17 +12,26 @@ import { SpinnerService } from 'src/app/service/util/sipnner.service';
 })
 export class SiteSettingsComponent implements OnInit {
 
+  logoFile!: File;
+
   emailConfigKeys: any[] = new Array();
   emailConfigFields: any[] = new Array();
   emailConfigType: any;
+
   storageGcpConfigKeys: any[] = new Array();
   gcpConfigFields: any[] = new Array();
   gcpConfigType: any;
 
+  smsConfigKeys: any[] = new Array();
+  smsConfigFields: any[] = new Array();
+  smsConfigType: any;
+
   emailSpinner = false;
   storageSpinner = false;
+  smsSpinner = false;
 
-  constructor(private siteService: SiteSettingsService, private spinner: SpinnerService, private notification: NotificationService) {
+  constructor(private siteService: SiteSettingsService, private spinner: SpinnerService,
+    private notification: NotificationService, private tenantService: TenantService) {
 
   }
 
@@ -50,7 +60,7 @@ export class SiteSettingsComponent implements OnInit {
           next: (resp: any) => {
             this.gcpConfigType = resp.data;
             this.storageGcpConfigKeys = resp.dataList;
-            this.gcpConfigFields = new Array(this.emailConfigKeys.length);
+            this.gcpConfigFields = new Array(this.storageGcpConfigKeys.length);
           },
           error: (err: any) => {
 
@@ -60,6 +70,50 @@ export class SiteSettingsComponent implements OnInit {
           }
         }
       );
+    this.smsSpinner = true;
+    this.siteService.getAllSMSConfigurationKeys()
+      .subscribe(
+        {
+          next: (resp: any) => {
+            this.smsConfigType = resp.data;
+            this.smsConfigKeys = resp.dataList;
+            this.smsConfigFields = new Array(this.smsConfigKeys.length);
+          },
+          error: (err: any) => {
+
+          },
+          complete: () => {
+            this.smsSpinner = false;
+          }
+        }
+      );
+  }
+
+  getTenantLogo() {
+    return CommonUtil.isNullOrEmptyOrUndefined(this.tenantService.getCurrentTenant().details.details.logoUrl) ? "../../../../assets/img/tenant/logo.png" : this.tenantService.getCurrentTenant().details.details.logoUrl;
+  }
+
+  onFileSelected(event : any){
+    this.spinner.show();
+    this.logoFile = event.target.files[0];
+    if(CommonUtil.isNullOrEmptyOrUndefined(this.logoFile)){
+      return;
+    }
+    this.tenantService.uploadLogo(this.logoFile)
+    .subscribe(
+      {
+        next: (resp: any) => {
+          this.notification.fireAndWait( { message : "Tenant Logo updated!" }, NotificationType.INFO );
+          this.tenantService.getCurrentTenant().details.details.logoUrl = resp.data.tenantDetail.details.logoUrl;
+        },
+        error: (err: any) => {
+          this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+        },
+        complete: () => {
+          this.spinner.hide();
+        }
+      }
+    )
   }
 
   onEmailConfigSave() {
@@ -93,7 +147,7 @@ export class SiteSettingsComponent implements OnInit {
       .subscribe(
         {
           next: (resp: any) => {
-            this.notification.fireAndWaitWarn({ message : "Email configurations has been updated!"});
+            this.notification.fireAndWaitWarn({ message: "Email configurations has been updated!" });
           },
           error: (err: any) => {
             this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
@@ -103,6 +157,53 @@ export class SiteSettingsComponent implements OnInit {
           }
         }
       );
+  }
+
+  onGcsConfigSave() {
+    //TODO: validate fields
+    this.spinner.show();
+    let configList = new Array();
+    for (let index = 0; index < this.gcpConfigFields.length; index++) {
+      let config = {
+        type: this.gcpConfigType,
+        key: this.storageGcpConfigKeys[index],
+        value: this.gcpConfigFields[index]
+      }
+      configList.push(config);
+    }
+    this.siteService.addConfiguartions(configList)
+      .subscribe(
+        {
+          next: (resp: any) => {
+            this.loadGCPConfig();
+          },
+          error: (err: any) => {
+            this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+            this.spinner.hide();
+          }
+        }
+      );
+  }
+
+  loadGCPConfig() {
+    this.siteService.loadNewStorageConfig()
+      .subscribe(
+        {
+          next: (resp: any) => {
+            this.notification.fireAndWaitWarn({ message: "Storage configurations has been updated!" });
+          },
+          error: (err: any) => {
+            this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+          },
+          complete: () => {
+            this.spinner.hide();
+          }
+        }
+      );
+  }
+
+  onSmsConfigSave() {
+    //TODO
   }
 
 }

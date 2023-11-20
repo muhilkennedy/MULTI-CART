@@ -1,6 +1,5 @@
 package com.user.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.base.entity.BaseEntity;
 import com.base.server.BaseSession;
 import com.base.util.CacheUtil;
-import com.base.util.DatabaseUtil;
 import com.platform.user.Permissions;
 import com.user.entity.Employee;
 import com.user.entity.User;
@@ -51,7 +49,7 @@ public class EmployeeDaoService implements UserDaoService {
 
 	@Override
 	public void deleteAll(List<?> entities) {
-		employeeRepository.deleteAll((Iterable<Employee>) entities);
+		employeeRepository.deleteAll((List<Employee>)entities);
 	}
 
 	@Override
@@ -115,6 +113,10 @@ public class EmployeeDaoService implements UserDaoService {
 	
 	public Employee findEmployeeWithPermission(Permissions perm, Long employeeId){
 		return employeeRepository.findEmployeeWithPermission(perm.getPermissionUniqueName(), employeeId);
+	}
+	
+	public List<Employee> getTypeAheadEmployees(String name) {
+		return employeeRepository.findLikeEmployeeName(name);
 	}
 
 }

@@ -3,6 +3,7 @@ package com.i18n.util;
 import java.util.Locale;
 
 import org.apache.commons.lang3.LocaleUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
@@ -31,11 +32,13 @@ public class LocaleUtil {
 	}
 
 	public static String getLocalisedString(String key, String[] paramValues, Locale locale) {
-		return messageSource.getMessage(key, paramValues, locale);
+		return messageSource.getMessage(key, paramValues,
+				(locale == null) ? Locale.ENGLISH : LocaleUtils.toLocale(locale));
 	}
 
 	public static String getLocalisedString(String key, String[] paramValues, String locale) {
-		return messageSource.getMessage(key, paramValues, LocaleUtils.toLocale(locale));
+		return messageSource.getMessage(key, paramValues,
+				StringUtils.isAllBlank(locale) ? Locale.ENGLISH : LocaleUtils.toLocale(locale));
 	}
 
 }

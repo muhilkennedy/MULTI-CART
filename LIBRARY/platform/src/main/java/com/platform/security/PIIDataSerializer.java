@@ -53,11 +53,12 @@ public class PIIDataSerializer extends StdSerializer<Object> implements Contextu
 	@Override
 	public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
 		String piiData = value.toString();
-		if (!getUserPermissions().stream()
+		if (PlatformBaseSession.getUser() != null && !getUserPermissions().stream()
 				.anyMatch(permission -> Arrays.asList(allowedRolePermissions).contains(permission))) {
-			piiData = piiData.replaceAll("\\w(?=\\w{" + visibleCharacters + "})", "x"); // w{0} - indicates last charaters to be visible.
+			piiData = piiData.replaceAll("\\w(?=\\w{" + visibleCharacters + "})", "x"); // w{0} - indicates last
+																						// charaters to be visible.
 		}
-		gen.writeString(piiData);
+		gen.writeObject(piiData);
 	}
 
 	public Set<Permissions> getUserPermissions() {
