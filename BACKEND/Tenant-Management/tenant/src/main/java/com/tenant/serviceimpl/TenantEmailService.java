@@ -33,6 +33,7 @@ public class TenantEmailService {
 		map.put("tenantName", tenant.getName());
 		map.put("tenantUniqueName", tenant.getUniquename());
 		map.put("validity", subscription.getStartdate().toString() + " to " + subscription.getEnddate().toString());
+		map.put("adminUrl", "");
 		try {
 			emailService.sendMail(tenant.getTenantDetail().getEmailid(),
 					tenant.getTenantName() + " : NEW ACCOUNT CREATED",

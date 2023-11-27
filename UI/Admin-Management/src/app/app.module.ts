@@ -49,6 +49,7 @@ import { TenantService } from './service/Tenant/tenant.service';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { MaterialModule } from './material.module';
 import { LoginComponent } from './views/login/login.component';
+import { ResetPasswordComponent } from './views/reset-password/reset-password.component';
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
@@ -100,7 +101,7 @@ export function init_tenant(initializer: TenantInitializer) {
 }
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS, LoginComponent],
+  declarations: [AppComponent, ...APP_CONTAINERS, LoginComponent, ResetPasswordComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -138,7 +139,8 @@ export function init_tenant(initializer: TenantInitializer) {
     TranslateModule,
     SpinnerModule,
     UtilitiesModule,
-    FormsModule
+    FormsModule,
+    CommonModule    
   ],
   exports: [
     

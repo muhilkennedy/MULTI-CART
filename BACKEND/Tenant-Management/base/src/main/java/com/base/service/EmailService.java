@@ -27,6 +27,7 @@ import com.base.util.Log;
 import com.platform.cache.EmailCache;
 import com.platform.email.EmailTask;
 import com.platform.messages.ConfigurationType;
+import com.platform.messages.EmailConfigurations;
 import com.platform.messages.StoreType;
 import com.platform.session.PlatformBaseSession;
 import com.platform.util.FileUtil;
@@ -221,6 +222,11 @@ public class EmailService {
 		else {
 			Log.base.warn("No Email configs to load for tenant {}", BaseSession.getTenantId());
 		}
+	}
+
+	public String getMailInboxUrl() {
+		return configService.getConfigValueIfPresent(EmailConfigurations.MAIL_INBOX_URL.name(),
+				ConfigurationType.EMAIL);
 	}
 
 }

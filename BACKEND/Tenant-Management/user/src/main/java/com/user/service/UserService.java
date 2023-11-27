@@ -1,5 +1,7 @@
 package com.user.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import com.base.service.BaseService;
@@ -27,5 +29,11 @@ public interface UserService extends BaseService {
 	List<User> findAllUsers();
 	
 	Flux<User> findAllUsersReactive();
+
+	void initiatePasswordReset(User user);
+
+	void resetPassword(User user, String password, String otp) throws UserException;
+	
+	User updateProfilePicture(File file) throws IOException;
 
 }

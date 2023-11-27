@@ -66,10 +66,10 @@ public class FileStoreService {
 		FileStore fs = new FileStore();
 		switch (type) {
 		case GCP:
-			fs.setBlobInfo(StorageService.getStorage(type).saveFile(file, aclRestricted));
+			fs.setBlobInfo(StorageService.getStorage(type).saveFile(file, directory, aclRestricted));
 			break;
 		case NFS:
-			fs.setMediaurl(StorageService.getStorage(type).saveFile(file));
+			fs.setMediaurl(StorageService.getStorage(type).saveFile(file, directory));
 			break;
 		default:
 			throw new UnsupportedOperationException();

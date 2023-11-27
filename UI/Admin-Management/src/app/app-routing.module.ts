@@ -5,6 +5,9 @@ import { DefaultLayoutComponent } from './containers';
 import { ErrorComponent } from 'src/common-components/error/error.component';
 import { NotFoundComponent } from 'src/common-components/notfound/notfound.component';
 import { LoginComponent } from './views/login/login.component';
+import { ResetPasswordComponent } from './views/reset-password/reset-password.component';
+import { ProfileComponent } from './views/profile/profile.component';
+import { TasksComponent } from './views/tasks/tasks.component';
 
 const routes: Routes = [
   {
@@ -15,6 +18,11 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+    pathMatch: 'full'
+  },
+  {
+    path: 'password/reset',
+    component: ResetPasswordComponent,
     pathMatch: 'full'
   },
   {
@@ -38,6 +46,11 @@ const routes: Routes = [
         path: 'sitesettings',
         loadChildren: () =>
           import('./views/siteSetting/site-settings.module').then((m) => m.SiteSettingsModule)
+      },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./views/profile/profile.module').then((m) => m.ProfileModule)
       }
     ]
   },

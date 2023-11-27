@@ -181,7 +181,7 @@ public class TenantServiceImpl implements TenantService {
 	public Tenant updateAllowedOrigins(String adminUrl, String clientUrl) {
 		Tenant tenant = (Tenant) BaseSession.getTenant();
 		tenant.getTenantDetail().getDetails().setAdminUrl(adminUrl);
-		tenant.getTenantDetail().getDetails().setAdminUrl(clientUrl);
+		tenant.getTenantDetail().getDetails().setClientUrl(clientUrl);
 		return (Tenant) tenantDao.saveAndFlush(tenant);
 	}
 	

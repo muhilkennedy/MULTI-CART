@@ -23,6 +23,9 @@ public class ReCaptchaService {
 	private static final String KEY_RESPONSE = "response";
 
 	private final RestTemplate restTemplate;
+	
+	@Value("${google.recaptcha.enabled}")
+	public boolean recaptchaEnabled;
 
 	@Value("${google.recaptcha.secret.key}")
 	public String recaptchaSecret;
@@ -35,6 +38,9 @@ public class ReCaptchaService {
 	}
 
 	public boolean verify(String response) throws ReCaptchaException {
+		if(!recaptchaEnabled) {
+			return true;
+		}
 		MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
 		param.add(KEY_SECRET, recaptchaSecret);
 		param.add(KEY_RESPONSE, response);

@@ -2,6 +2,9 @@ package com.tenant.model;
 
 import java.io.Serializable;
 
+import com.platform.annotations.PIIData;
+import com.platform.user.Permissions;
+
 /**
  * @author Muhil
  *
@@ -9,7 +12,9 @@ import java.io.Serializable;
 public class TenantInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	@PIIData(allowedRolePermissions = { Permissions.ADMIN, Permissions.SUPER_USER })
 	private String adminUrl;
+	@PIIData(allowedRolePermissions = { Permissions.ADMIN, Permissions.SUPER_USER })
 	private String clientUrl;
 	private boolean initialSetUpDone;
 	private String fssai;

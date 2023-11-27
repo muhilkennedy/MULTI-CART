@@ -32,18 +32,12 @@
         <a routerLink="./" cNavLink>
           <svg cIcon name="cilList" size="lg"></svg>
         </a>
-      </c-nav-item>
+      </c-nav-item>-->
       <c-nav-item>
-        <a routerLink="./" cNavLink>
+        <a [href]="mailInbox" cNavLink matTooltip="MAIL INBOX">
           <svg cIcon name="cilEnvelopeOpen" size="lg"></svg>
         </a>
-      </c-nav-item> -->
-      <select #langSelect (change)="changeLanguage(langSelect.value)">
-        <option
-          *ngFor="let lang of languages"
-          [value]="lang.code"
-          [attr.selected]="lang.code === translate.currentLang ? '' : null">{{lang.name}}</option>
-      </select>
+      </c-nav-item>
     </c-header-nav>
     <c-header-nav class="ms-3">
       <ng-container *ngTemplateOutlet="userDropdown"></ng-container>
@@ -65,17 +59,23 @@
       class="py-0"
     >
       <c-avatar
+        style="overflow: hidden;"
         cTextColor="primary"
-        shape="rounded-1"
+        shape="rounded-circle"
         size="md"
-        src="./assets/img/avatars/profile.png"
-        status="success"
-      >
+        [src]="getProfilePicture()">
+        <!-- status="success" -->
       </c-avatar>
     </button>
     <ul cDropdownMenu class="pt-0 pr-5 w-auto">
       <li>
         <h6 cDropdownHeader class="bg-light fw-semibold py-2">{{"Account" | translate}}</h6>
+      </li>
+      <li>
+        <a [href]="mailInbox" cDropdownItem>
+          <svg cIcon class="me-2" name="cilEnvelopeOpen"></svg>
+          {{"Mail Inbox" | translate}}
+        </a>
       </li>
       <li>
         <a routerLink="./" cDropdownItem>
@@ -100,7 +100,7 @@
       </li>
       <li></li>
       <li>
-        <a routerLink="./" cDropdownItem>
+        <a routerLink="/profile" cDropdownItem>
           <svg cIcon class="me-2" name="cilUser"></svg>
           {{"Profile" | translate}}
         </a>

@@ -5,6 +5,7 @@ import { TenantService } from 'src/app/service/Tenant/tenant.service';
 import { SpinnerService } from 'src/app/service/util/sipnner.service';
 import { CookieService } from 'ngx-cookie-service';
 import { CommonUtil } from 'src/app/service/util/common-util.service';
+import { NotificationService, NotificationType } from 'src/app/service/util/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
   username?: string;
   password?: string;
 
-  constructor(tenantService: TenantService, private userService: UserService,
+  constructor(tenantService: TenantService, private userService: UserService, private notification: NotificationService,
               private spinner: SpinnerService, private router: Router, private cookieService: CookieService) {
     this.tenantName = tenantService.getCurrentTenant().tenantName;
     this.tenantTag = tenantService.getCurrentTenant().details.tagline;
@@ -70,7 +71,8 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/dashboard']);
           },
           error: (error: any) => {
-            this.router.navigate(['/login', { message : 'Invalid Credentials! Please Login Again!'}]);
+            this.notification.fireAndForget({ message : 'Invalid Credentials! Please Login Again!'}, NotificationType.DANGER);
+            this.spinner.hide();
           },
           complete: () => {
             this.spinner.hide();

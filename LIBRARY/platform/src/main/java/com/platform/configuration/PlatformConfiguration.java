@@ -8,8 +8,7 @@ import org.apache.http.util.Asserts;
 import com.platform.util.PlatformPropertiesUtil;
 
 /**
- * @author Muhil
- * Builder class to initialize default properties.
+ * @author Muhil Builder class to initialize default properties.
  *
  */
 public class PlatformConfiguration {
@@ -110,27 +109,27 @@ public class PlatformConfiguration {
 			this.appProperties = appProperties;
 			return this;
 		}
-		
+
 		public PlatformConfiguration.Builder withEmailProperties(Properties emailProperties) {
 			this.emailProperties = emailProperties;
 			return this;
 		}
-		
+
 		public PlatformConfiguration.Builder withEncryptionProperties(Properties encProperties) {
 			this.encryptionProperties = encProperties;
 			return this;
 		}
-		
+
 		public PlatformConfiguration.Builder withAppName(String appName) {
 			this.appName = appName;
 			return this;
 		}
-		
+
 		public PlatformConfiguration.Builder withAVProperties(Properties avProps) {
 			this.avProperties = avProps;
 			return this;
 		}
-		
+
 		public PlatformConfiguration.Builder isMultitenantApp(boolean isMultitenantApp) {
 			this.isMultitenantApp = isMultitenantApp;
 			return this;
@@ -138,7 +137,8 @@ public class PlatformConfiguration {
 
 		public PlatformConfiguration build() {
 			Asserts.notBlank(this.appName, "Register with Application Name");
-			Objects.requireNonNull(this.isMultitenantApp, "Multitenant Application yes/no (base tenant info will be set based on this)");
+			Objects.requireNonNull(this.isMultitenantApp,
+					"Multitenant Application yes/no (base tenant info will be set based on this)");
 			Objects.requireNonNull(this.frontDoorProperties, "Front door url properties cannot be null");
 			Objects.requireNonNull(this.emailProperties, "Email configuration properties cannot be null");
 			Objects.requireNonNull(this.encryptionProperties, "Encryption configuration properties cannot be null");
@@ -149,14 +149,14 @@ public class PlatformConfiguration {
 						String.format("Property %s ", property));
 			});
 			PlatformPropertiesUtil.getMandatoryEmailProperties().parallelStream().forEach(property -> {
-				Asserts.notBlank(this.emailProperties.getProperty(property),
-						String.format("Property %s ", property));
+				Asserts.notBlank(this.emailProperties.getProperty(property), String.format("Property %s ", property));
 			});
 			PlatformPropertiesUtil.getMandatorySecretsProperties().parallelStream().forEach(property -> {
 				Asserts.notBlank(this.encryptionProperties.getProperty(property),
 						String.format("Property %s ", property));
 			});
-			return new PlatformConfiguration(frontDoorProperties, appProperties, emailProperties, encryptionProperties, avProperties, appName, isMultitenantApp);
+			return new PlatformConfiguration(frontDoorProperties, appProperties, emailProperties, encryptionProperties,
+					avProperties, appName, isMultitenantApp);
 		}
 
 	}

@@ -2,6 +2,7 @@ package com.platform.security;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -53,7 +54,7 @@ public class PIIDataSerializer extends StdSerializer<Object> implements Contextu
 	@Override
 	public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
 		String piiData = value.toString();
-		if (PlatformBaseSession.getUser() != null && !getUserPermissions().stream()
+		if (PlatformBaseSession.getUser() == null || !getUserPermissions().stream()
 				.anyMatch(permission -> Arrays.asList(allowedRolePermissions).contains(permission))) {
 			piiData = piiData.replaceAll("\\w(?=\\w{" + visibleCharacters + "})", "x"); // w{0} - indicates last
 																						// charaters to be visible.
@@ -62,6 +63,7 @@ public class PIIDataSerializer extends StdSerializer<Object> implements Contextu
 	}
 
 	public Set<Permissions> getUserPermissions() {
-		return PlatformBaseSession.getUser().getUserPermissions();
+		return PlatformBaseSession.getUser() != null ? PlatformBaseSession.getUser().getUserPermissions()
+				: Collections.<Permissions>emptySet();
 	}
 }
