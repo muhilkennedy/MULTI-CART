@@ -2,7 +2,6 @@ package com.base.api;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,9 +19,9 @@ import com.base.service.EmailService;
 import com.base.util.BaseUtil;
 import com.platform.annotations.UserPermission;
 import com.platform.annotations.ValidateUserToken;
+import com.platform.email.EmailTemplatePlaceholderConfiguration;
 import com.platform.messages.ConfigurationType;
 import com.platform.messages.EmailConfigurations;
-import com.platform.messages.EmailTemplateNames;
 import com.platform.messages.GenericResponse;
 import com.platform.messages.Response;
 import com.platform.user.Permissions;
@@ -45,19 +44,16 @@ public class EmailController {
 	public GenericResponse<EmailTemplate> addEmailTemplate(@RequestParam("name") String templateName,
 			@RequestParam("file") MultipartFile file) throws IOException {
 		GenericResponse<EmailTemplate> response = new GenericResponse<>();
-		Optional<EmailTemplateNames> template = EmailTemplateNames.getTemplateName(templateName);
-		if (template.isEmpty()) {
+		if (!EmailTemplatePlaceholderConfiguration.isValidTemplateName(templateName)) {
 			return response.setStatus(Response.Status.NO_CONTENT).build();
 		}
 		return response.setStatus(Response.Status.OK)
-				.setData(
-						emailService.createTemplate(template.get().name(),
-								BaseUtil.generateFileFromMutipartFile(file,
-										template.get().name() + PlatformUtil.MINUS_SEPERATOR
-												+ BaseSession.getTenantUniqueName(),
-										PlatformUtil.TEMPLATE_EXTENTION)))
+				.setData(emailService.createTemplate(templateName,
+						BaseUtil.generateFileFromMutipartFile(file,
+								templateName + PlatformUtil.MINUS_SEPERATOR + BaseSession.getTenantUniqueName(),
+								PlatformUtil.TEMPLATE_EXTENTION)))
 				.build();
-	}
+	}                                                                                                   
 
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_PROMOTIONS })
 	@GetMapping(value = "/template", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -70,7 +66,7 @@ public class EmailController {
 	@GetMapping(value = "/templatenames", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GenericResponse<Map> getAllAvailableEmailTemplatesInfo() {
 		GenericResponse<Map> response = new GenericResponse<>();
-		return response.setStatus(Response.Status.OK).setData(EmailTemplateNames.getAvailableTemplateNames()).build();
+		return response.setStatus(Response.Status.OK).setData(EmailTemplatePlaceholderConfiguration.getAllTemplateNamesmap()).build();
 	}
 	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
@@ -87,6 +83,13 @@ public class EmailController {
 		GenericResponse<?> response = new GenericResponse<>();
 		emailService.loadEmailCacheForTenant();
 		return response.setStatus(Response.Status.OK).build();
+	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_PROMOTIONS })
+	@GetMapping(value = "/inbox", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<String> getInboxUrl() {
+		GenericResponse<String> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(emailService.getMailInboxUrl()).build();
 	}
 
 }

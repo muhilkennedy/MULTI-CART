@@ -36,11 +36,9 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 	@Column(name = "UNIQUENAME", updatable = false)
 	private String uniquename;
 
-	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
 	@Column(name = "FNAME")
 	private String fname;
 
-	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
 	@Column(name = "LNAME")
 	private String lname;
 
@@ -49,10 +47,10 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 	@Convert(converter = AttributeEncryptor.class)
 	private String mobile;
 
+	@JsonIgnore
 	@Column(name = "MOBILEHASH")
 	private String mobilehash;
 
-	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
 	@Column(name = "EMAILID")
 	private String emailid;
 

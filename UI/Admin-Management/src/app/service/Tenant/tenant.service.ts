@@ -25,4 +25,8 @@ export class TenantService {
     return this.http.post<any>(`${environment.backendProxy}/admin/tenant/logo`, formData)
   }
 
+  getMailInboxUrl(): Observable<any> {
+    return this.http.get(`${environment.backendProxy}/admin/email/inbox`);
+  }
+
 }

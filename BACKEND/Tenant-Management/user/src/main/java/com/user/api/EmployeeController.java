@@ -134,10 +134,9 @@ public class EmployeeController {
 		employee.setMobile(empRequest.getMobile());
 		employee.setDesignation(empRequest.getDesignation());
 		User reportsToEmp = empService.findByUniqueName(empRequest.getReportsTo());
-		if (reportsToEmp == null) {
-			throw new UserNotFoundException();
+		if (reportsToEmp != null) {
+			employee.setReportsto(reportsToEmp.getRootId());
 		}
-		employee.setReportsto(reportsToEmp.getRootId());
 		employee = (Employee) empService.register(employee);
 		EmployeeInfo empInfo = new EmployeeInfo();
 		empInfo.setDob(empRequest.getDob());
@@ -183,6 +182,15 @@ public class EmployeeController {
 		GenericResponse<Employee> response = new GenericResponse<>();
 		return response.setStatus(Response.Status.OK).setDataList(empService.findMatchingTypeAheadEmployees(name))
 				.build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_USERS })
+	@PostMapping(value = "/profilepic", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<User> updateProfilePic(@RequestParam("picture") MultipartFile picture)
+			throws IllegalStateException, IOException {
+		GenericResponse<User> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK)
+				.setData(empService.updateProfilePicture(BaseUtil.generateFileFromMutipartFile(picture))).build();
 	}
 
 }

@@ -78,7 +78,6 @@ public class TenantAdminController {
 		tenantService.toggleTenantState(uniqueName);
 		return response.setStatus(Response.Status.OK).build();
 	}
-	
 
 	@UserPermission(values = Permissions.SUPER_USER)
 	@GetMapping(value = "/subscriptions", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -104,7 +103,7 @@ public class TenantAdminController {
 	
 	@UserPermission(values = Permissions.SUPER_USER)
 	@PostMapping(value = "/origins", produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<Tenant> addStorageConfig(@RequestParam("tenantId") Long tenantId,
+	public GenericResponse<Tenant> updateTenantUrls(@RequestParam("tenantId") Long tenantId,
 			@RequestBody @Valid TenantOriginRequest tenantRequest) throws IOException{
 		GenericResponse<Tenant> response = new GenericResponse<>();
 		tenantService.updateAllowedOrigins(tenantRequest.getAdminUrl(), tenantRequest.getClientUrl());

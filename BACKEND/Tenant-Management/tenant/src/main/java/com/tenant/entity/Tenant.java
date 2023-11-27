@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 import com.base.entity.BaseEntity;
 import com.platform.annotations.ClassMetaProperty;
+import com.platform.annotations.PIIData;
 import com.platform.entity.TenantBaseObject;
+import com.platform.user.Permissions;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -30,6 +32,7 @@ public class Tenant extends BaseEntity implements Serializable, TenantBaseObject
 	@Column(name = "UNIQUENAME", unique = true)
 	private String uniquename;
 
+	@PIIData(allowedRolePermissions = { Permissions.ADMIN, Permissions.SUPER_USER })
 	@Column(name = "PARENT")
 	private Long parent;
 	

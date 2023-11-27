@@ -41,6 +41,9 @@ export class EdittenantComponent implements OnInit {
     end: new FormControl(this.addOneYear()),
   });
 
+  adminUrl: string;
+  clientUrl: string;
+
   addOneYear() {
     // Making a copy with the Date() constructor
     let dateCopy = new Date();
@@ -200,6 +203,36 @@ export class EdittenantComponent implements OnInit {
               });
             }
           }
+    )
+  }
+
+  onTenantOriginSave(){
+    let body = {
+      adminUrl : this.adminUrl,
+      clientUrl : this.clientUrl
+    }
+    this.tenantService.updateTenantUrl(body, this.selectedRealm)
+    .subscribe(
+      {
+        next: (resp: any) => {
+          this.toastr.success('<span class="tim-icons icon-bell-55" [data-notify]="icon"></span> <b>Tenant Url updated</b>.', '', {
+            disableTimeOut: false,
+            closeButton: true,
+            enableHtml: true,
+            toastClass: "alert alert-success alert-with-icon",
+            positionClass: 'toast-' + 'bottom' + '-' + 'center'
+          });
+        },
+        error: (err: any) => {
+          this.toastr.error('<span class="tim-icons icon-bell-55" [data-notify]="icon"></span> <b>Error updating tenant : ' + err.error.message + '</b>.', '', {
+            disableTimeOut: false,
+            closeButton: true,
+            enableHtml: true,
+            toastClass: "alert alert-error alert-with-icon",
+            positionClass: 'toast-' + 'bottom' + '-' + 'center'
+          });
+        }
+      }
     )
   }
 

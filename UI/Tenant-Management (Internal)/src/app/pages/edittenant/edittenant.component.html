@@ -130,5 +130,49 @@
           </form>
         </div>
       </div>
+
+      <div class=" card" *ngIf="isRealmSelected">
+        <div class=" card-header"><h5 class=" title">Tenant Origin URl</h5></div>
+        <div class=" card-body">
+          <form>
+            <div class="row">
+              <div class=" col-md-6">
+                <div class=" form-group">
+                  <label> Admin Url </label>
+                  <input
+                    class=" form-control"
+                    placeholder="Admin url"
+                    type="text"
+                    [(ngModel)]="adminUrl"
+                    required="true"
+                  />
+                </div>
+              </div>
+              <div class=" col-md-6">
+                <div class=" form-group">
+                  <label> Client Url </label>
+                  <input
+                    class=" form-control"
+                    placeholder="Client Url"
+                    type="text"
+                    [(ngModel)]="clientUrl"
+                    required="true"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class=" col-md-6">
+              
+              </div>
+              <div class=" col-md-6">
+                <div class=" form-group">
+                  <button class=" btn btn-fill btn-danger" type="submit" (click)="onTenantOriginSave()">Update</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
   </div>
 </div>

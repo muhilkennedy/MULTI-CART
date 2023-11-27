@@ -1,0 +1,18 @@
+{
+	"EMPLOYEE_REGISTRATION": [
+		"tenantLogo",
+		"userName",
+		"password",
+		"mobile",
+		"email",
+		"tenantAdminUrl"
+	],
+	"EMPLOYEE_FORGOT_PASSWORD": [
+		"tenantLogo",
+		"userName",
+		"uniqueName",
+		"mobile",
+		"email",
+		"forgotPasswordUrl"
+	]
+}

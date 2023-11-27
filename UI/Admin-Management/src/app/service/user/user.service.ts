@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 export class UserService {
 
   private user: User;
+  private userResponse: any;
 
   constructor(private http: HttpClient) {
     this.user = new User();
@@ -17,6 +18,14 @@ export class UserService {
 
   getCurrentUser(): User {
     return this.user;
+  }
+
+  getCurrentUserResponse(): any {
+    return this.userResponse;
+  }
+
+  setCurrentUserResponse(userResponse: any){
+    this.userResponse = userResponse;
   }
 
   login(body: any): Observable<any> {
@@ -81,6 +90,24 @@ export class UserService {
         userId: userId
       }
     })
+  }
+
+  initiatePasswordReset(emailId: any){
+    return this.http.post<any>(`${environment.backendProxy}/user/employee/password/reset/initiate`, null, {
+      params: {
+        emailId: emailId
+      }
+    });
+  }
+
+  resetPassword(body: any){
+    return this.http.post<any>(`${environment.backendProxy}/user/employee/password/reset`, body);
+  }
+
+  uploadProfilePic(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append("picture", file, file.name);
+    return this.http.post<any>(`${environment.backendProxy}/employee/profilepic`, formData)
   }
 
 }
