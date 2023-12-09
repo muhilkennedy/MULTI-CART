@@ -43,6 +43,6 @@ public class BaseEntityListener {
 		}
 		return BaseSession.getUser().getRootId();
 	}
-	
+
 }
 

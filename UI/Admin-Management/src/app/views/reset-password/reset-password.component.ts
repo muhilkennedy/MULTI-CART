@@ -1,12 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { get } from 'scriptjs';
 import { TenantService } from 'src/app/service/Tenant/tenant.service';
 import { UserService } from 'src/app/service/user/user.service';
 import { CommonUtil } from 'src/app/service/util/common-util.service';
 import { NotificationService } from 'src/app/service/util/notification.service';
 import { SpinnerService } from 'src/app/service/util/sipnner.service';
-import { environment } from 'src/environments/environment';
 
 declare var grecaptcha: any;
 
@@ -47,10 +45,6 @@ export class ResetPasswordComponent implements OnInit {
         this.otp = params.otp;
       }
       );
-    //we need to load this dynamically to make sure captcha container is rendered along with js load.
-    get(environment.recaptcha_url, () => {
-      console.log("Recaptcha loaded");
-    });
   }
 
   isPassworsCriteriaGood() {

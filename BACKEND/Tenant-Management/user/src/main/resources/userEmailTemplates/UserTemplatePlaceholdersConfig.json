@@ -14,5 +14,16 @@
 		"mobile",
 		"email",
 		"forgotPasswordUrl"
+	],
+	"CUSTOMER_REGISTRATION": [
+		"TODO: need to update",
+		"clientUrl"
+	],
+	"CUSTOMER_FORGOT_PASSWORD": [
+		"TODO: need to update",
+		"forgotPasswordUrl"
+	],
+	"BIRTHDAY_WISHES":[
+		"TODO: update"
 	]
 }

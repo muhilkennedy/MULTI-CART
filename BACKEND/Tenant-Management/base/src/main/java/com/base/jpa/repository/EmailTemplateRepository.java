@@ -1,5 +1,7 @@
 package com.base.jpa.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,5 +19,10 @@ public interface EmailTemplateRepository extends JpaRepository<EmailTemplate, Lo
 
 	@Query(findEmailTemplateQuery)
 	EmailTemplate findEmailTemplate(@Param("name") String name);
+
+	String findEmailTemplateNamesQuery = "select name from EmailTemplate";
+
+	@Query(findEmailTemplateNamesQuery)
+	List<String> findEmailTemplateNames();
 
 }

@@ -26,6 +26,7 @@ import jakarta.persistence.MappedSuperclass;
 public class MultiTenantEntity extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	public static final String KEY_TENANTID = "tenantid";
 
 	@Column(name = "TENANTID", updatable = false, nullable = false)
 	private Long tenantid;

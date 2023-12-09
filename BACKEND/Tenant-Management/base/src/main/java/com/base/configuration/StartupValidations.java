@@ -2,11 +2,11 @@ package com.base.configuration;
 
 
 import java.net.PortUnreachableException;
+import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.annotation.PostConstruct;
-
+import org.quartz.Scheduler;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,6 +23,8 @@ import com.base.util.Log;
 import com.base.util.PropertiesUtil;
 import com.platform.annotations.ClassMetaProperty;
 import com.platform.antivirus.ClamAVService;
+
+import jakarta.annotation.PostConstruct;
 
 
 /**
@@ -78,14 +80,15 @@ public class StartupValidations {
 	 * @param event
 	 * Execute after application startup
 	 * @throws PortUnreachableException 
+	 * @throws ParseException 
 	 */
 	@EventListener
-	private void onApplicationEvent(ApplicationReadyEvent event) throws PortUnreachableException {
+	private void onApplicationEvent(ApplicationReadyEvent event) throws PortUnreachableException, ParseException {
 		clearInitialCaches();
 		if (PropertiesUtil.getBooleanProperty("app.security.clamav.enabled")) {
 			pingClamAVService();
 		}
-		if (PropertiesUtil.getBooleanProperty("app.email.enabled")) {
+		if (PropertiesUtil.getBooleanProperty("app.email.startup.loadtemplate")) {
 			emailService.loadAllTemplatesToLocalStorage();
 		}
 		Log.base.info("StartupValidations done!");
@@ -111,5 +114,5 @@ public class StartupValidations {
 			throw new PortUnreachableException();
 		}
 	}
-
+	
 }

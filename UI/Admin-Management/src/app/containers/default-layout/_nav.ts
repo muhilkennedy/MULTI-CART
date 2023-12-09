@@ -56,7 +56,7 @@ export const navItems: INavData[] = [
   {
     name: 'Product',
     url: '/product',
-    iconComponent: { name: 'cilFactory' },
+    iconComponent: { name: 'cilCart' },
     children: [
       {
         name: 'Add New',
@@ -74,6 +74,11 @@ export const navItems: INavData[] = [
         iconComponent: { name: 'cilList' },
       }
     ]
+  },
+  {
+    name: 'Supplier',
+    url: '/supplier',
+    iconComponent: { name: 'cilFactory' },
   },
   {
     name: 'Shipping',
@@ -155,14 +160,21 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cilDollar' },
   },
   {
-    name: 'Email Templates',
-    url: '/emailtemplate',
-    iconComponent: { name: 'cilEnvelopeClosed' },
-  },
-  {
-    name: 'Invoice Templates',
-    url: '/emailtemplate',
-    iconComponent: { name: 'cilPrint' },
+    name: 'Templates',
+    url: '/templates',
+    iconComponent: { name: 'cilNotes' },
+    children: [
+      {
+        name: 'Email',
+        url: '/templates/emailtemplate',
+        iconComponent: { name: 'cilEnvelopeClosed' },
+      },
+      {
+        name: 'Invoice',
+        url: '/templates/invoicetemplate',
+        iconComponent: { name: 'cilPrint' },
+      }
+    ]
   },
   {
     title: true,
