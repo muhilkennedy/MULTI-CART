@@ -11,11 +11,15 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.quartz.JobDataMap;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
+import com.base.bgwork.BGWorkUtil;
+import com.base.bgwork.EmailJob;
 import com.base.entity.BaseEntity;
 import com.base.entity.ConfigType;
 import com.base.entity.EmailTemplate;
@@ -26,6 +30,7 @@ import com.base.util.EmailUtil;
 import com.base.util.Log;
 import com.platform.cache.EmailCache;
 import com.platform.email.EmailTask;
+import com.platform.messages.AuditOperation;
 import com.platform.messages.ConfigurationType;
 import com.platform.messages.EmailConfigurations;
 import com.platform.messages.StoreType;
@@ -36,9 +41,11 @@ import com.platform.util.PlatformUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import io.jsonwebtoken.lang.Assert;
 
 /**
- * @author Muhil Execute email sending as fixed number of threads.
+ * @author Muhil
+ * Execute email sending as fixed number of threads.
  */
 @Component
 public class EmailService {
@@ -56,6 +63,9 @@ public class EmailService {
 	
 	@Autowired
 	private ConfigurationService configService;
+	
+	@Autowired
+	private AuditService audit;
 
 	@Value("${app.email.enabled}")
 	private boolean isEmailFeatureEnabled;
@@ -109,48 +119,102 @@ public class EmailService {
 		}
 	}
 
-	public void sendMail(String recipientEmail, String subject, String body, Map<String, File> inlineImages) {
-		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), Arrays.asList(recipientEmail), subject, body,
-				inlineImages);
+	public void sendMail(EmailTask task) {
 		this.postEmailTask(task);
+	}
+	
+	private JobDataMap createJobDataMap(List<String> recipientEmail, String subject, String body,
+			List<File> attachmemnts) {
+		return createJobDataMap(recipientEmail, null, subject, body, null, attachmemnts);
+	}
+
+	private JobDataMap createJobDataMap(List<String> recipientEmail, String subject, String body,
+			Map<String, File> inlineImages) {
+		return createJobDataMap(recipientEmail, null, subject, body, inlineImages, null);
+	}
+
+	private JobDataMap createJobDataMap(List<String> recipientEmail, List<String> cc, String subject, String body,
+			Map<String, File> inlineImages, List<File> attachmemnts) {
+		JobDataMap dataMap = new JobDataMap();
+		dataMap.put(EmailTask.KEY_TENANATID, BaseSession.getCurrentTenant().getRootId());
+		dataMap.put(EmailTask.KEY_RECIPIENTS, recipientEmail);
+		dataMap.put(EmailTask.KEY_CARBONCOPY, cc);
+		dataMap.put(EmailTask.KEY_SUBJECT, subject);
+		dataMap.put(EmailTask.KEY_BODY, body);
+		dataMap.put(EmailTask.KEY_INLINEIMAGES, inlineImages);
+		dataMap.put(EmailTask.KEY_ATTACHMENTS, attachmemnts);
+		return dataMap;
+	}
+
+	public void sendMail(String recipientEmail, String subject, String body, Map<String, File> inlineImages) {
+		/*
+		 * EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(),
+		 * Arrays.asList(recipientEmail), subject, body, inlineImages);
+		 * this.postEmailTask(task);
+		 */
+		try {
+			BGWorkUtil.fireAndForget(EmailJob.class,
+					createJobDataMap(Arrays.asList(recipientEmail), subject, body, inlineImages), EmailJob.JOB_GROUP);
+		} catch (SchedulerException e) {
+			Log.base.error("Exception sending email : {}", e);
+			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+		}
 	}
 
 	public void sendMail(List<String> recipientEmail, String subject, String body, Map<String, File> inlineImages) {
-		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), recipientEmail, subject, body, inlineImages);
-		this.postEmailTask(task);
+		try {
+			BGWorkUtil.fireAndForget(EmailJob.class, createJobDataMap(recipientEmail, subject, body, inlineImages),
+					EmailJob.JOB_GROUP);
+		} catch (SchedulerException e) {
+			Log.base.error("Exception sending email : {}", e);
+			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+		}
 	}
 
 	public void sendMail(String recipientEmail, String subject, String body, Map<String, File> inlineImages,
 			List<File> attachments) {
-		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), Arrays.asList(recipientEmail), subject, body,
-				inlineImages, attachments);
-		this.postEmailTask(task);
+		try {
+			BGWorkUtil.fireAndForget(EmailJob.class,
+					createJobDataMap(Arrays.asList(recipientEmail), null, subject, body, inlineImages, attachments),
+					EmailJob.JOB_GROUP);
+		} catch (SchedulerException e) {
+			Log.base.error("Exception sending email : {}", e);
+			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+		}
 	}
 
 	public void sendMail(String recipientEmail, String cc, String subject, String body, Map<String, File> inlineImages,
 			List<File> attachments) {
-		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), Arrays.asList(recipientEmail), Arrays.asList(cc),
-				subject, body, inlineImages, attachments);
-		this.postEmailTask(task);
+		try {
+			BGWorkUtil.fireAndForget(EmailJob.class, createJobDataMap(Arrays.asList(recipientEmail), Arrays.asList(cc),
+					subject, body, inlineImages, attachments), EmailJob.JOB_GROUP);
+		} catch (SchedulerException e) {
+			Log.base.error("Exception sending email : {}", e);
+			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+		}
 	}
 
 	public void sendMail(List<String> recipientEmail, String subject, String body, Map<String, File> inlineImages,
 			List<File> attachments) {
-		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), recipientEmail, subject, body, inlineImages,
-				attachments);
-		this.postEmailTask(task);
+		try {
+			BGWorkUtil.fireAndForget(EmailJob.class,
+					createJobDataMap(recipientEmail, null, subject, body, inlineImages, attachments),
+					EmailJob.JOB_GROUP);
+		} catch (SchedulerException e) {
+			Log.base.error("Exception sending email : {}", e);
+			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+		}
 	}
 
 	public void sendMail(List<String> recipientEmail, List<String> cc, String subject, String body,
 			Map<String, File> inlineImages, List<File> attachments) {
-		EmailTask task = new EmailTask(BaseSession.getCurrentTenant().getRootId(), recipientEmail, cc, subject, body, inlineImages,
-				attachments);
-		this.postEmailTask(task);
-	}
-
-	// setup task with tenant business auth
-	public void sendMail(EmailTask task) {
-		this.postEmailTask(task);
+		try {
+			BGWorkUtil.fireAndForget(EmailJob.class,
+					createJobDataMap(recipientEmail, cc, subject, body, inlineImages, attachments), EmailJob.JOB_GROUP);
+		} catch (SchedulerException e) {
+			Log.base.error("Exception sending email : {}", e);
+			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+		}
 	}
 
 	/**
@@ -204,6 +268,16 @@ public class EmailService {
 	
 	public List<EmailTemplate> getAllTemplates() {
 		return templateRepository.findAll();
+	}
+	
+	public List<String> getAllTemplateNamesForTenant(){
+		return templateRepository.findEmailTemplateNames();
+	}
+	
+	public File downloadTemplateFile(String templateName) throws IOException {
+		EmailTemplate template = templateRepository.findEmailTemplate(templateName);
+		Assert.notNull(template, "Email Template is not configured");
+		return fileStore.getFileById(template.getStoreid());
 	}
 	
 	public void loadEmailCacheForTenant() {

@@ -1,6 +1,10 @@
 package com.base.bgwork;
 
-import org.springframework.scheduling.annotation.Scheduled;
+import java.util.concurrent.TimeUnit;
+
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
 
 import com.base.util.Log;
@@ -13,16 +17,22 @@ import com.platform.util.FileUtil;
 @Component
 public class TempFileCleanUpScheduledTask extends BGTask {
 
-	@Scheduled(fixedDelay = 21600000)
+	//@Scheduled(fixedDelay = 21600000)
 	@Override
-	public void schedule() {
-		this.run();
+	public void schedule() throws SchedulerException {
+		BGWorkUtil.scheduleBasicJob(this.getClass().getSimpleName(), this.getClass(), TimeUnit.HOURS, 6);
 	}
 
 	@Override
 	public void run() {
 		Log.base.info("Starting TempFileCleanUpScheduledTask");
 		FileUtil.cleanUpTempDirectory();
+		Log.base.info("Completed TempFileCleanUpScheduledTask");
+	}
+ 
+	@Override
+	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+		this.run();
 	}
 
 }

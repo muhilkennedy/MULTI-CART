@@ -19,7 +19,7 @@ const routes: Routes = [
         path: 'profile',
         component: ProfileComponent,
         data: {
-          title: 'Onboard',
+          title: 'Profile',
         },
       }
     ],

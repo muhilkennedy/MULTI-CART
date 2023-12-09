@@ -1,0 +1,59 @@
+<app-spinner></app-spinner>
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{"Email Templates" | translate}}</strong> <small>(Default templates will be loaded if not configured)</small>
+        </c-card-header>
+        <c-card-body style="overflow: auto;">
+            <c-row>
+                <c-col xs="6">
+                    <div cListGroup style="overflow: auto;">
+                        <button (click)="selectTemplateName(name)" cListGroupItem class="d-flex justify-content-between align-items-center" *ngFor="let name of templateNames">
+                          {{name}}
+                          <c-badge color="success" shape="rounded-pill" *ngIf="isTemplatePresent(name)">{{"valid" | translate}}</c-badge>
+                          <c-badge color="danger" shape="rounded-pill" *ngIf="!isTemplatePresent(name)">{{"N/A" | translate}}</c-badge>
+                        </button>
+                      </div>
+                </c-col>
+                <c-col xs="6">
+                    <label cLabel for="formFile">{{"Upload .ftl template" | translate}}</label>
+                    <input #file cFormControl id="formFile" accept=".ftl" type="file" (change)="onTemplateSelected($event)"/>
+                    <hr/>
+                    <c-row>
+                        <c-col xs="6">
+                            <button style="width: 100%;" cButton class="me-1" color="info" variant="outline" size="sm" (click)="downloadTemplete()"> {{"DOWNLOAD" | translate}}</button>
+                        </c-col>
+                        <c-col xs="6">
+                            <button style="width: 100%;" cButton class="me-1" color="success" variant="outline" size="sm" (click)="uploadTemplate()"> {{"UPLOAD" | translate}}</button>
+                        </c-col>
+                    </c-row>
+                    <hr/>
+                    <label><strong>{{"Available Place Holders" | translate}}</strong></label>
+                    <ul>
+                        <li *ngFor="let holder of getPlacehHolderList()">{{holder}}</li>
+                    </ul>
+                </c-col>
+            </c-row>
+        </c-card-body>
+    </c-card>
+    </c-col>
+</c-row>
+
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{"Preview" | translate}}</strong>
+          <button disabled="true" style="float: right;" cButton class="me-1" color="primary" variant="outline" size="sm" (click)="validateTemplate()"> {{"VALIDATE" | translate}}</button>
+        </c-card-header>
+        <c-card-body style="overflow: auto;">
+            <c-row style="width: fit-content;">
+                <c-col xs=12>
+                    <div [innerHTML]="fileContent"></div>
+                </c-col>
+            </c-row>
+        </c-card-body>
+    </c-card>
+    </c-col>
+</c-row>

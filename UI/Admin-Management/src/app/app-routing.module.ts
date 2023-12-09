@@ -51,6 +51,11 @@ const routes: Routes = [
         path: 'profile',
         loadChildren: () =>
           import('./views/profile/profile.module').then((m) => m.ProfileModule)
+      },
+      {
+        path: 'templates',
+        loadChildren: () =>
+          import('./views/templates/templates.module').then((m) => m.TemplatesModule)
       }
     ]
   },

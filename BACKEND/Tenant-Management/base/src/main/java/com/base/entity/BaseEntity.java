@@ -25,6 +25,13 @@ import jakarta.persistence.MappedSuperclass;
 public class BaseEntity implements Serializable, BaseObject {
 
 	private static final long serialVersionUID = 1L;
+	public static final String KEY_TIMEUPDATED = "timeupdated";
+	public static final String KEY_TIMECREATED = "timecreated";
+	public static final String KEY_CREATEDBY = "createdby";
+	public static final String KEY_MODIFIEDBY = "modifiedby";
+	public static final String KEY_ROOTID = "rootid";
+	public static final String KEY_ACTIVE = "active";
+	public static final String KEY_VERSION = "version";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,6 +55,10 @@ public class BaseEntity implements Serializable, BaseObject {
 
 	@Column(name = "ACTIVE", columnDefinition = "boolean default true")
 	private boolean active;
+
+	public BaseEntity() {
+		super();
+	}
 
 	public long getRootId() {
 		return rootid;

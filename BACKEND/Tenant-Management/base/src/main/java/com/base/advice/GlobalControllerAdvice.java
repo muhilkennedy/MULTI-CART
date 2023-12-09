@@ -1,6 +1,8 @@
 package com.base.advice;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,7 +12,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.base.service.AuditService;
 import com.base.util.Log;
+import com.platform.messages.AuditOperation;
 import com.platform.messages.ErrorResponse;
 
 /**
@@ -19,15 +23,16 @@ import com.platform.messages.ErrorResponse;
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
+	
+	@Autowired
+	private AuditService auditService;
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<ErrorResponse> handleSQLIntegrityException(DataIntegrityViolationException ex) {
 		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), "Oops! There is a data conflict! Please try again!"); //TODO: Localize
 		Log.base.error(errorResponse.toString());
-		if (logger.isDebugEnabled()) {
-			ex.printStackTrace();
-		}
 		logger.error("SQLIntegrityConstraintViolationException :: Exception :: ", ex);
+		auditService.logAuditInfo(AuditOperation.ERROR, ExceptionUtils.getStackTrace(ex), errorResponse.getErrorCode());
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.CONFLICT);
 	}
 
@@ -36,6 +41,7 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
 		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), extractMessage(ex));
 		Log.base.error(errorResponse.toString());
 		logger.error("handleGenericException :: Exception :: {}", ex);
+		auditService.logAuditInfo(AuditOperation.ERROR, ExceptionUtils.getStackTrace(ex), errorResponse.getErrorCode());
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 

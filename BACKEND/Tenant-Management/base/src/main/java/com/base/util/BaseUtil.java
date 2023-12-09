@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.base.entity.BaseEntity;
 import com.platform.util.FileUtil;
 
 /**
@@ -59,7 +60,7 @@ public class BaseUtil {
 	}
 
 	public static Pageable getPageable(String sortBy, String sortOrder, int pageNumber, int pageSize) {
-		String sortByField = StringUtils.isAllBlank(sortBy) ? "timUpdated" : sortBy;
+		String sortByField = StringUtils.isAllBlank(sortBy) ? BaseEntity.KEY_TIMEUPDATED : sortBy;
 		String sortDir = StringUtils.isAllBlank(sortOrder) ? "ASC" : sortOrder;
 		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortByField).ascending()
 				: Sort.by(sortByField).descending();

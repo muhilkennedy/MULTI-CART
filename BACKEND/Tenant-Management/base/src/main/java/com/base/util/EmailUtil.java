@@ -80,6 +80,7 @@ public class EmailUtil {
 	public static String getPropertyKey(String name) {
 		Optional<EmailConfigurations> config = EmailConfigurations.getConfigByName(name);
 		if (config.isEmpty()) {
+			Log.base.error("Config not found!");
 			throw new NotFoundException();
 		}
 		return config.get().getProperty();

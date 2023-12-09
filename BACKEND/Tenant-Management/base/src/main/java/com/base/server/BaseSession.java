@@ -7,6 +7,7 @@ import org.apache.commons.lang3.LocaleUtils;
 import com.base.entity.BaseEntity;
 import com.platform.entity.UserBaseObject;
 import com.platform.session.PlatformBaseSession;
+import com.platform.util.PlatformUtil;
 
 /**
  * @author Muhil
@@ -42,7 +43,7 @@ public class BaseSession {
 	}
 	
 	public static String getTenantUniqueName() {
-		return tenant.get().getUniqueId();
+		return tenant.get() != null ? tenant.get().getUniqueId() : PlatformUtil.EMPTY_STRING;
 	}
 
 	public static void setUser(BaseEntity usr) {
