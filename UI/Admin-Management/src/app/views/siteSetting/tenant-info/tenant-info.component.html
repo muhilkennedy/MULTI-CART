@@ -1,0 +1,118 @@
+<c-row>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant Id" | translate}}</mat-label>
+            <input disabled="true" matInput type="text" [value]="tenantId">
+        </mat-form-field>
+    </c-col>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant Name" | translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="tenantName">
+            <button *ngIf="this.tenantName != this.tenantService.getCurrentTenant().tenantName" matSuffix
+                mat-icon-button (click)="onTenantNameUpdate()">
+                <mat-icon color="warn">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </c-col>
+</c-row>
+<c-row>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant Contact" | translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="contact">
+            <button *ngIf="this.contact != this.tenantService.getCurrentTenant().details.contact" matSuffix
+                mat-icon-button (click)="onTenantNameUpdate()">
+                <mat-icon color="warn">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </c-col>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant Email" | translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="email">
+            <button *ngIf="this.email != this.tenantService.getCurrentTenant().details.emailid" matSuffix
+                mat-icon-button (click)="onTenantNameUpdate()">
+                <mat-icon color="warn">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </c-col>
+</c-row>
+<c-row>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant Tag Line" | translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="tagline">
+            <button *ngIf="this.tagline != this.tenantService.getCurrentTenant().details.tagline" matSuffix
+                mat-icon-button (click)="onTenantNameUpdate()">
+                <mat-icon color="warn">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </c-col>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant Street" | translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="street">
+            <button *ngIf="this.street != this.tenantService.getCurrentTenant().details.street" matSuffix
+                mat-icon-button (click)="onTenantNameUpdate()">
+                <mat-icon color="warn">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </c-col>
+</c-row>
+<c-row>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant City" | translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="city">
+            <button *ngIf="this.city != this.tenantService.getCurrentTenant().details.city" matSuffix
+                mat-icon-button (click)="onTenantNameUpdate()">
+                <mat-icon color="warn">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </c-col>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant PinCode" | translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="pincode">
+            <button *ngIf="this.pincode != this.tenantService.getCurrentTenant().details.pincode" matSuffix
+                mat-icon-button (click)="onTenantNameUpdate()">
+                <mat-icon color="warn">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </c-col>
+</c-row>
+<c-row>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant FSSAI" | translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="fssai">
+            <button *ngIf="this.fssai != this.tenantService.getCurrentTenant().details.details.fssai" matSuffix
+                mat-icon-button (click)="onTenantNameUpdate()">
+                <mat-icon color="warn">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </c-col>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant GSTIN" | translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="gstin">
+            <button *ngIf="this.gstin != this.tenantService.getCurrentTenant().details.details.gstin" matSuffix
+                mat-icon-button (click)="onTenantNameUpdate()">
+                <mat-icon color="warn">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </c-col>
+</c-row>
+<c-row>
+    <c-col xs="6">
+        <mat-form-field>
+            <mat-label>{{"Tenant Google Map URL" | translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="gmap">
+            <button *ngIf="this.gmap != this.tenantService.getCurrentTenant().details.details.gmapUrl" matSuffix
+                mat-icon-button (click)="onTenantNameUpdate()">
+                <mat-icon color="warn">save</mat-icon>
+            </button>
+        </mat-form-field>
+    </c-col>
+</c-row>

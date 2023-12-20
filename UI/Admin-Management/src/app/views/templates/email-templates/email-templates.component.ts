@@ -50,6 +50,10 @@ export class EmailTemplatesComponent implements OnInit {
     this.selectedTemplate = name;
   }
 
+  canEnableButton(){
+    return CommonUtil.isNullOrEmptyOrUndefined(this.selectedTemplate);
+  }
+
   getPlacehHolderList(){
     if(CommonUtil.isNullOrEmptyOrUndefined(this.selectedTemplate)){
       return new Array();

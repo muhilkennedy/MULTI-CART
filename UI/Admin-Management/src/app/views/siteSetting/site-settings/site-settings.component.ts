@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Tenant } from 'src/app/model/tenant.model';
 import { TenantService } from 'src/app/service/Tenant/tenant.service';
 import { SiteSettingsService } from 'src/app/service/site-settings/site-settings.service';
 import { CommonUtil } from 'src/app/service/util/common-util.service';
@@ -31,7 +32,7 @@ export class SiteSettingsComponent implements OnInit {
   smsSpinner = false;
 
   constructor(private siteService: SiteSettingsService, private spinner: SpinnerService,
-    private notification: NotificationService, private tenantService: TenantService) {
+    private notification: NotificationService, public tenantService: TenantService) {
 
   }
 
@@ -93,27 +94,27 @@ export class SiteSettingsComponent implements OnInit {
     return CommonUtil.isNullOrEmptyOrUndefined(this.tenantService.getCurrentTenant().details.details.logoUrl) ? "../../../../assets/img/tenant/logo.png" : this.tenantService.getCurrentTenant().details.details.logoUrl;
   }
 
-  onFileSelected(event : any){
+  onFileSelected(event: any) {
     this.spinner.show();
     this.logoFile = event.target.files[0];
-    if(CommonUtil.isNullOrEmptyOrUndefined(this.logoFile)){
+    if (CommonUtil.isNullOrEmptyOrUndefined(this.logoFile)) {
       return;
     }
     this.tenantService.uploadLogo(this.logoFile)
-    .subscribe(
-      {
-        next: (resp: any) => {
-          this.notification.fireAndWait( { message : "Tenant Logo updated!" }, NotificationType.INFO );
-          this.tenantService.getCurrentTenant().details.details.logoUrl = resp.data.tenantDetail.details.logoUrl;
-        },
-        error: (err: any) => {
-          this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
-        },
-        complete: () => {
-          this.spinner.hide();
+      .subscribe(
+        {
+          next: (resp: any) => {
+            this.notification.fireAndWait({ message: "Tenant Logo updated!" }, NotificationType.INFO);
+            this.tenantService.getCurrentTenant().details.details.logoUrl = resp.data.tenantDetail.details.logoUrl;
+          },
+          error: (err: any) => {
+            this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+          },
+          complete: () => {
+            this.spinner.hide();
+          }
         }
-      }
-    )
+      )
   }
 
   onEmailConfigSave() {

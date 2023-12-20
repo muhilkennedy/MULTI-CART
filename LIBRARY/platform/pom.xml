@@ -34,6 +34,7 @@
 		<imagescalr.version>4.2</imagescalr.version>
 		<poi.version>5.2.3</poi.version>
 		<commons.text.version>1.10.0</commons.text.version>
+		<firebase.admin.version>9.2.0</firebase.admin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -161,6 +162,11 @@
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-storage</artifactId>
 			<version>${google.cloud.storage.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.google.firebase</groupId>
+		    <artifactId>firebase-admin</artifactId>
+		    <version>${firebase.admin.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.commons</groupId>

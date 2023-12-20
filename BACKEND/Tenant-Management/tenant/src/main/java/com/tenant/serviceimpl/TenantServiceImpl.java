@@ -146,12 +146,14 @@ public class TenantServiceImpl implements TenantService {
 		for (TenantSubscription sub : subs) {
 			Instant currentInstant = Instant.now();
 			Instant subscriptionStartDate = Instant.ofEpochMilli(sub.getStartdate().getTime());
+			Instant subscriptionEndDate = Instant.ofEpochMilli(sub.getEnddate().getTime());
 			Log.tenant.debug("checkAndRenewTenant : {} : subscriptionStartDate {}", BaseSession.getTenantUniqueName(),
 					subscriptionStartDate);
 			if (!sub.isActive() && currentInstant.isAfter(subscriptionStartDate)) {
 				sub.setActive(true);
 				tenantDao.saveTenantSubscription(sub);
-			} else if (sub.isActive() && currentInstant.isBefore(subscriptionStartDate)) {
+			} else if (sub.isActive() && (currentInstant.isBefore(subscriptionStartDate)
+					|| currentInstant.isAfter(subscriptionEndDate))) {
 				sub.setActive(false);
 				tenantDao.saveTenantSubscription(sub);
 			}
@@ -161,6 +163,7 @@ public class TenantServiceImpl implements TenantService {
 				|| (activeSubscription == null && BaseSession.getTenant().isActive())) {
 			toggleTenantState(BaseSession.getTenantUniqueName());
 		}
+		//TODO: send out email to notify
 	}
 	
 	@Override

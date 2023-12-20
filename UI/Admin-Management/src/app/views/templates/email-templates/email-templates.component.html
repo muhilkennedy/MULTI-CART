@@ -22,10 +22,10 @@
                     <hr/>
                     <c-row>
                         <c-col xs="6">
-                            <button style="width: 100%;" cButton class="me-1" color="info" variant="outline" size="sm" (click)="downloadTemplete()"> {{"DOWNLOAD" | translate}}</button>
+                            <button [disabled]="canEnableButton()" style="width: 100%;" cButton class="me-1" color="info" variant="outline" size="sm" (click)="downloadTemplete()"> {{"DOWNLOAD" | translate}}</button>
                         </c-col>
                         <c-col xs="6">
-                            <button style="width: 100%;" cButton class="me-1" color="success" variant="outline" size="sm" (click)="uploadTemplate()"> {{"UPLOAD" | translate}}</button>
+                            <button [disabled]="canEnableButton()" style="width: 100%;" cButton class="me-1" color="success" variant="outline" size="sm" (click)="uploadTemplate()"> {{"UPLOAD" | translate}}</button>
                         </c-col>
                     </c-row>
                     <hr/>
@@ -44,7 +44,7 @@
     <c-col xs="12">
       <c-card class="mb-4">
         <c-card-header>
-          <strong>{{"Preview" | translate}}</strong>
+          <strong>{{"PREVIEW" | translate}}</strong>
           <button disabled="true" style="float: right;" cButton class="me-1" color="primary" variant="outline" size="sm" (click)="validateTemplate()"> {{"VALIDATE" | translate}}</button>
         </c-card-header>
         <c-card-body style="overflow: auto;">

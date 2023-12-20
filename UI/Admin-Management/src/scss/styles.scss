@@ -29,3 +29,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     width: 100%;
 }
 
+.position-absolute {
+    position: fixed !important;
+}
+
+.zoom:hover {
+    transform: scale(1.5);
+}
+

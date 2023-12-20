@@ -3,6 +3,8 @@ package com.user.entity;
 import com.base.entity.MultiTenantEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.platform.annotations.ClassMetaProperty;
+import com.platform.annotations.PIIData;
+import com.platform.user.Permissions;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -22,6 +24,7 @@ public class EmployeeInfo extends MultiTenantEntity {
 
 	private static final long serialVersionUID = 1L;
 
+	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
 	@Column(name = "DOB")
 	private String dob;
 

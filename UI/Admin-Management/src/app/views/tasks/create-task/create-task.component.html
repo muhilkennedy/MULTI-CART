@@ -1,0 +1,203 @@
+<c-row>
+    <c-col md="12">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>{{"CREATE TASK" | translate }}</strong>
+            </c-card-header>
+            <c-card-body style="overflow: auto;">
+                <mat-stepper orientation="vertical" [linear]="true" #stepper>
+                    <mat-step [stepControl]="typeFormGroup">
+                        <form [formGroup]="typeFormGroup">
+                            <ng-template matStepLabel>{{"Select Task Type" | translate}}</ng-template>
+                            <c-row>
+                                <c-col xs="12">
+                                    <mat-form-field>
+                                        <mat-label>{{"Task Type" | translate}}</mat-label>
+                                        <mat-select name="type" formControlName="type">
+                                            <mat-option *ngFor="let type of taskTypes"
+                                                [value]="type">{{type | translate}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="hasError(typeFormGroup, 'type')">{{getError(typeFormGroup,
+                                            'type')}}</mat-error>
+                                    </mat-form-field>
+                                </c-col>
+                            </c-row>
+                            <c-row>
+                                <c-col xs="6"></c-col>
+                                <c-col xs="6">
+                                    <button cButton class="me-1 fullWidth" variant="outline" size="sm" matStepperNext>
+                                        {{"NEXT" |
+                                        translate}}</button>
+                                </c-col>
+                            </c-row>
+                        </form>
+                    </mat-step>
+                    <mat-step [stepControl]="basicFormGroup">
+                        <form [formGroup]="basicFormGroup">
+                            <ng-template matStepLabel>{{"Basic Task Details" | translate}}</ng-template>
+                            <c-row>
+                                <c-col md="6">
+                                    <mat-form-field>
+                                        <mat-label>{{"Title" | translate}}</mat-label>
+                                        <textarea matInput name="title" placeholder="Task title" formControlName="title"
+                                            required></textarea>
+                                        <mat-error *ngIf="hasError(basicFormGroup, 'title')">{{getError(basicFormGroup,
+                                            'title')}}</mat-error>
+                                    </mat-form-field>
+                                </c-col>
+                                <c-col md="6">
+                                    <mat-form-field>
+                                        <mat-label>{{"Description" | translate}}</mat-label>
+                                        <textarea matInput name="desc" placeholder="Description"
+                                            formControlName="description" required></textarea>
+                                        <mat-error
+                                            *ngIf="hasError(basicFormGroup, 'description')">{{getError(basicFormGroup,
+                                            'description')}}</mat-error>
+                                    </mat-form-field>
+                                </c-col>
+                            </c-row>
+                            <c-row>
+                                <c-col xs="6">
+                                    <mat-form-field>
+                                        <mat-label>{{"Start Date" | translate}}</mat-label>
+                                        <input matInput [matDatepicker]="picker" name="startdate"
+                                            formControlName="startdate">
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                        <mat-error
+                                            *ngIf="hasError(basicFormGroup, 'startdate')">{{getError(basicFormGroup,
+                                            'startdate')}}</mat-error>
+                                    </mat-form-field>
+                                </c-col>
+                                <c-col xs="6">
+                                    <mat-form-field>
+                                        <mat-label>{{"Due Date" | translate}}</mat-label>
+                                        <input matInput [matDatepicker]="picker1" name="enddate"
+                                            formControlName="enddate">
+                                        <mat-hint>MM/DD/YYYY</mat-hint>
+                                        <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                        <mat-error
+                                            *ngIf="hasError(basicFormGroup, 'enddate')">{{getError(basicFormGroup,
+                                            'enddate')}}</mat-error>
+                                    </mat-form-field>
+                                </c-col>
+                            </c-row>
+                            <c-row>
+                                <c-col xs="6"></c-col>
+                                <c-col xs="3">
+                                    <button cButton class="me-1 fullWidth" variant="outline" size="sm"
+                                        matStepperPrevious>
+                                        {{"PREVIOUS" |
+                                        translate}}</button>
+                                </c-col>
+                                <c-col xs="3">
+                                    <button cButton class="me-1 fullWidth" variant="outline" size="sm" matStepperNext>
+                                        {{"NEXT" |
+                                        translate}}</button>
+                                </c-col>
+                            </c-row>
+                        </form>
+                    </mat-step>
+                    <mat-step>
+                        <app-spinner></app-spinner>
+                        <ng-template matStepLabel>{{"Select Assignee" | translate}}</ng-template>
+                        <c-row>
+                            <c-col xs="6">
+                                <mat-form-field>
+                                    <app-spinner [show]="loadEmpSpinner"></app-spinner>
+                                    <mat-label>{{"Assignees" | translate}}</mat-label>
+                                    <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                                        (keyup)="action()" [formControl]="assigneeControl" [matAutocomplete]="auto">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let option of employees" [value]="option.fname"
+                                            (onSelectionChange)="addAssignee(option)">
+                                            {{option.fname}} {{option.lname}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <mat-chip-listbox>
+                                    <mat-chip *ngFor="let emp of selectedAssignees">{{emp.fname}}
+                                        <button matChipRemove>
+                                            <mat-icon (click)="remove(emp)">cancel</mat-icon>
+                                        </button>
+                                    </mat-chip>
+                                </mat-chip-listbox>
+                                <br />
+                            </c-col>
+                            <c-col xs="6">
+                                <mat-checkbox  *ngIf="!isApprovalTask()" [indeterminate]="!canBroadCast()" [disabled]="!canBroadCast()"
+                                    [(ngModel)]="isBroadcastTask">{{"Broadcast Task for All Employees" | translate}}</mat-checkbox>
+                                <mat-checkbox  *ngIf="isApprovalTask()"
+                                    [(ngModel)]="isManagerApproval">{{"Manager Approval Required" | translate}}</mat-checkbox>
+                            </c-col>
+                        </c-row>
+                        <div>
+                            <c-row>
+                                <c-col xs="6"></c-col>
+                                <c-col xs="3">
+                                    <button cButton class="me-1 fullWidth" variant="outline" size="sm"
+                                        matStepperPrevious>
+                                        {{"PREVIOUS" |
+                                        translate}}</button>
+                                </c-col>
+                                <c-col xs="3">
+                                    <button *ngIf="!isApprovalTask()" cButton class="me-1 fullWidth" variant="outline" size="sm" color="success"
+                                        matStepperNext (click)="createTask()"> {{"CREATE" |
+                                        translate}}</button>
+                                    <button  *ngIf="isApprovalTask()" cButton class="me-1 fullWidth" variant="outline" size="sm" matStepperNext>
+                                        {{"NEXT" |
+                                        translate}}</button>
+                                </c-col>
+                            </c-row>
+                        </div>
+                    </mat-step>
+                    <mat-step *ngIf="isApprovalTask()">
+                        <app-spinner></app-spinner>
+                        <ng-template matStepLabel>{{"Upload Approval Documents" | translate}}</ng-template>
+                        <div>
+                            <c-row>
+                                <c-col xs="6"></c-col>
+                                <c-col xs="3">
+                                    <button cButton class="me-1 fullWidth" variant="outline" size="sm"
+                                        matStepperPrevious>
+                                        {{"PREVIOUS" |
+                                        translate}}</button>
+                                </c-col>
+                                <c-col xs="3">
+                                    <button cButton class="me-1 fullWidth" variant="outline" size="sm" color="success"
+                                        matStepperNext (click)="createTask()"> {{"CREATE" |
+                                        translate}}</button>
+                                </c-col>
+                            </c-row>
+                        </div>
+                    </mat-step>
+                </mat-stepper>
+                
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>
+
+
+
+<ng-template #modaltest>
+    <!-- <c-modal id="roleModal" [visible]="showTaskDialog" (visibleChange)="handleCreateTaskModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>{{ "CREATE TASK" | translate }}</h5>
+            <button (click)="toggleTaskAction()" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            
+        </c-modal-body>
+        <c-modal-footer>
+            <button (click)="toggleTaskAction()" cButton color="secondary">
+                {{"CLOSE" | translate}}
+            </button>
+            <button (click)="createTaskAction()" cButton color="success">
+                {{"CREATE" | translate}}
+            </button>
+        </c-modal-footer>
+    </c-modal> -->
+</ng-template>

@@ -1,0 +1,7 @@
+
+<c-alert [visible]="notification.active"
+         [dismissible]="true"
+         color="warning"
+         fade *ngFor="let notification of notifications" (visibleChange)="msgRead(notification)">
+  <strong>{{notification.content}}</strong>
+</c-alert>

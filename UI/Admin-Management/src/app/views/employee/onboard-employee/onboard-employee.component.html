@@ -115,7 +115,7 @@
                 </c-col>
                 <c-col xs="6">
                     <mat-form-field>
-                        <mat-label>{{"Employee Roles"}}</mat-label>
+                        <mat-label>{{"Employee Roles" | translate}}</mat-label>
                         <mat-select name="roles" multiple formControlName="roles">
                             <mat-select-trigger style="color: blueviolet;">
                                 {{advFormGroup.controls['roles'].value?.[0] || ''}}

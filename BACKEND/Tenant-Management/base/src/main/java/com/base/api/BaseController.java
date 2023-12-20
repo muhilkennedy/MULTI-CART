@@ -13,10 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.base.entity.ConfigType;
 import com.base.messages.ConfigRequest;
 import com.base.service.ConfigurationService;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.platform.annotations.UserPermission;
 import com.platform.annotations.ValidateUserToken;
+import com.platform.cloud.messaging.DirectNotification;
+import com.platform.cloud.messaging.SubscriptionRequest;
+import com.platform.cloud.messaging.TopicNotification;
 import com.platform.messages.GenericResponse;
 import com.platform.messages.Response;
+import com.platform.service.GoogleMessagingService;
 import com.platform.user.Permissions;
 
 import jakarta.validation.Valid;
@@ -51,6 +56,21 @@ public class BaseController {
 			configService.createConfig(config.getKey(), config.getValue(), config.getType());
 		});
 		return response.setStatus(Response.Status.OK).build();
+	}
+	
+	@PostMapping("/notification")
+	public void direct(@RequestBody DirectNotification request) {
+		GoogleMessagingService.getInstance().sendNotificationToTarget(request);
+	}
+
+	@PostMapping("/topic/notification")
+	public void topic(@RequestBody TopicNotification request) {
+		GoogleMessagingService.getInstance().sendNotificationToTarget(request);
+	}
+
+	@PostMapping("/topic/subscription")
+	public void subscribeToTopic(@RequestBody SubscriptionRequest request) throws FirebaseMessagingException {
+		GoogleMessagingService.getInstance().subscribeToTopic(request);
 	}
 
 }

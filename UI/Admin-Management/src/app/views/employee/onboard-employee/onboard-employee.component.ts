@@ -33,12 +33,16 @@ export class OnboardEmployeeComponent implements OnInit {
     dob: ['', Validators.required]
   });
 
+  constructor(private _formBuilder: FormBuilder, private translate: TranslatePipe,
+    private userService: UserService, private spinner: SpinnerService,
+    private notificationService: NotificationService, private datePipe: DatePipe) { }
+
   public hasError = (fieldGroup: any, fieldName: string) => {
     return CommonUtil.hasFormFieldError(fieldGroup, fieldName);
   }
 
   public getError = (fieldGroup: any, fieldName: string) => {
-    return CommonUtil.getFieldError(fieldGroup, fieldName);
+    return CommonUtil.getFieldError(fieldGroup, fieldName, this.translate);
   }
 
   advFormGroup = this._formBuilder.group({
@@ -49,10 +53,6 @@ export class OnboardEmployeeComponent implements OnInit {
 
   allRoles: Array<any> = new Array();
   selectedFile!: File;
-
-  constructor(private _formBuilder: FormBuilder, private translate: TranslatePipe,
-    private userService: UserService, private spinner: SpinnerService,
-    private notificationService: NotificationService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.genders = this.genders.map(gen => {

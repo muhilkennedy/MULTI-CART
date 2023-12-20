@@ -56,7 +56,17 @@ const routes: Routes = [
         path: 'templates',
         loadChildren: () =>
           import('./views/templates/templates.module').then((m) => m.TemplatesModule)
-      }
+      },
+      {
+        path: 'task',
+        loadChildren: () =>
+          import('./views/tasks/tasks.module').then((m) => m.TasksModule)
+      },
+      {
+        path: 'notifications',
+        loadChildren: () =>
+          import('./views/user-notification/user-notification.module').then((m) => m.UserNotificationModule)
+      },
     ]
   },
   {

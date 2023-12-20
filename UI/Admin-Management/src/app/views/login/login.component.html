@@ -7,13 +7,13 @@
               <c-card-body>
                 <app-spinner></app-spinner>
                 <form cForm>
-                  <h1>{{"Login" | translate}}</h1>
+                  <h1>{{"LOGIN" | translate}}</h1>
                   <p class="text-medium-emphasis">{{"Sign In to your account" | translate}}</p>
                   <c-input-group class="mb-3">
                     <span cInputGroupText>
                       <svg cIcon name="cilUser"></svg>
                     </span>
-                    <input autoComplete="username" cFormControl name="emailid" placeholder="Username/EmailId" [(ngModel)]="username"/>
+                    <input autoComplete="username" cFormControl name="emailid" placeholder="{{'Email Id' | translate}}" [(ngModel)]="username"/>
                   </c-input-group>
                   <c-input-group class="mb-4">
                     <span cInputGroupText>
@@ -23,7 +23,7 @@
                       name="password"
                       autoComplete="current-password"
                       cFormControl
-                      placeholder="Password"
+                      placeholder="{{'Password' | translate}}"
                       type="password"
                       [(ngModel)]="password"
                     />
@@ -31,13 +31,14 @@
                   <c-row>
                     <c-col xs="6">
                       <button cButton class="px-4" color="primary" (click)="loginAction()">
-                        {{"Login" | translate}}
+                        {{"LOGIN" | translate}}
                       </button>
                     </c-col>
                     <c-col class="text-right" xs="6">
-                      <button cButton class="px-0" color="link">
+                      <button cButton class="px-0" color="link" (click)="toggleFPModal()">
                        {{"Forgot password" | translate}}?
                       </button>
+                    <ng-container *ngTemplateOutlet="forgotPassword"></ng-container>
                     </c-col>
                   </c-row>
                 </form>
@@ -62,4 +63,24 @@
       </c-row>
     </c-container>
   </div>
+
+  <ng-template #forgotPassword>
+    <c-modal id="fpModal" [visible]="showFPModal" (visibleChange)="handleFPModal($event)">
+      <c-modal-header>
+        <h2 cModalTitle>{{ "PASSWORD RESET" | translate | uppercase}}</h2>
+        <button (click)="toggleFPModal()" cButtonClose></button>
+      </c-modal-header>
+      <c-modal-body>
+        <input autoComplete="username" cFormControl name="emailid" placeholder="Username/EmailId" [(ngModel)]="username"/>
+      </c-modal-body>
+      <c-modal-footer>
+        <button (click)="toggleFPModal()" cButton color="secondary">
+          {{"CLOSE" | translate}}
+        </button>
+        <button (click)="initiateReset()" cButton color="warning">
+          {{"SEND RESET LINK" | translate}}
+        </button>
+      </c-modal-footer>
+    </c-modal>
+</ng-template>
   

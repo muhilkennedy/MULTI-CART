@@ -74,6 +74,7 @@ public class FileStoreService {
 		default:
 			throw new UnsupportedOperationException();
 		}
+		fs.setAcl(aclRestricted);
 		fs.setStoretype(type.name());
 		fs.setFileName(file.getName());
 		fs.setFileExtention(FileUtil.getFileExtensionFromName(file.getName()));

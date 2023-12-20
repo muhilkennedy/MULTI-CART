@@ -21,15 +21,17 @@ export class LoginComponent implements OnInit {
   username?: string;
   password?: string;
 
+  showFPModal = false;
+
   constructor(tenantService: TenantService, private userService: UserService, private notification: NotificationService,
-              private spinner: SpinnerService, private router: Router, private cookieService: CookieService) {
+    private spinner: SpinnerService, private router: Router, private cookieService: CookieService) {
     this.tenantName = tenantService.getCurrentTenant().tenantName;
     this.tenantTag = tenantService.getCurrentTenant().details.tagline;
     this.tenantLogo = tenantService.getCurrentTenant().details.details.logoUrl;
   }
 
   ngOnInit(): void {
-    if(!CommonUtil.isNullOrEmptyOrUndefined(this.cookieService.get(CommonUtil.TOKEN_KEY))){
+    if (!CommonUtil.isNullOrEmptyOrUndefined(this.cookieService.get(CommonUtil.TOKEN_KEY))) {
       this.spinner.show();
       this.userService.pingUser()
         .subscribe(
@@ -71,7 +73,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/dashboard']);
           },
           error: (error: any) => {
-            this.notification.fireAndForget({ message : 'Invalid Credentials! Please Login Again!'}, NotificationType.DANGER);
+            this.notification.fireAndForget({ message: 'Invalid Credentials! Please Login Again!' }, NotificationType.DANGER);
             this.spinner.hide();
           },
           complete: () => {
@@ -81,4 +83,33 @@ export class LoginComponent implements OnInit {
       )
   }
 
+  toggleFPModal() {
+    this.showFPModal = !this.showFPModal;
+  }
+
+  //done to avoid reopening issue on click outside modal area.
+  handleFPModal(event: boolean) {
+    this.showFPModal = event;
+  }
+
+  loadFPModal() {
+    this.toggleFPModal();
+  }
+
+  initiateReset() {
+    this.toggleFPModal();
+    this.spinner.show();
+    this.userService.initiatePasswordReset(this.username)
+      .subscribe({
+        next: (resp: any) => {
+          this.notification.fireAndForget({ message: "Password Reset Link Sent Successfully To Registered Email!" }, NotificationType.PRIMARY);
+        },
+        error: (err: any) => {
+          this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+        },
+        complete: () => {
+          this.spinner.hide();
+        }
+      })
+  }
 }

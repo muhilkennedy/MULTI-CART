@@ -78,20 +78,20 @@
         </a>
       </li>
       <li>
-        <a routerLink="./" cDropdownItem>
+        <a routerLink="/notifications" cDropdownItem>
           <svg cIcon class="me-2" name="cilBell"></svg>
           {{"Updates" | translate}}
           <c-badge class="ms-2 float-end" color="info">
-            42
+            {{notificationCount}}
           </c-badge>
         </a>
       </li>
       <li>
-        <a routerLink="./" cDropdownItem>
+        <a routerLink="/task" cDropdownItem>
           <svg cIcon class="me-2" name="cilTask"></svg>
           {{"Tasks" | translate}}
           <c-badge class="ms-2 float-end" color="danger">
-            42
+            {{taskCount}}
           </c-badge>
         </a>
       </li>

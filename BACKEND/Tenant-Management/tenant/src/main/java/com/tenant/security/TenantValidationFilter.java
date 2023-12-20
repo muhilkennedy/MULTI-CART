@@ -45,7 +45,7 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 	private TenantService tenantService;
 	
 	//move to config file
-	private static List<String> Whitelisted_URI = Arrays.asList("/actuator/health","/actuator/metrics");
+	private static List<String> Whitelisted_URI = Arrays.asList("/actuator/");
 	
     @Override
     protected boolean shouldNotFilter (HttpServletRequest request)
