@@ -35,5 +35,7 @@ public interface UserService extends BaseService {
 	void resetPassword(User user, String password, String otp) throws UserException;
 	
 	User updateProfilePicture(File file) throws IOException;
+	
+	void sendBirthdayWishesMail();
 
 }

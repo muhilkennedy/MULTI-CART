@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 import { UserService } from 'src/app/service/user/user.service';
 import { CommonUtil } from 'src/app/service/util/common-util.service';
 import { NotificationService, NotificationType } from 'src/app/service/util/notification.service';
@@ -28,22 +29,23 @@ export class PermissionsComponent implements OnInit {
     rolePermission: ['', Validators.required]
   });
 
+  constructor(private userService: UserService, private _formBuilder: FormBuilder, private spinner: SpinnerService,
+    private notification: NotificationService, private translate: TranslatePipe) {
+    this.spinner.show();
+    this.getAllPermissions();
+    this.getAllRoles();
+  }
+
   public hasError = (fieldGroup: any, fieldName: string) => {
     return CommonUtil.hasFormFieldError(fieldGroup, fieldName);
   }
 
   public getError = (fieldGroup: any, fieldName: string) => {
-    return CommonUtil.getFieldError(fieldGroup, fieldName);
+    return CommonUtil.getFieldError(fieldGroup, fieldName, this.translate);
   }
 
   ngOnInit(): void {
 
-  }
-
-  constructor(private userService: UserService, private _formBuilder: FormBuilder, private spinner: SpinnerService, private notification: NotificationService) {
-    this.spinner.show();
-    this.getAllPermissions();
-    this.getAllRoles();
   }
 
   getAllPermissions() {
@@ -140,6 +142,5 @@ export class PermissionsComponent implements OnInit {
   handleCreateRoleModal(event: boolean) {
     this.showCreateRoleModal = event;
   }
-
 
 }

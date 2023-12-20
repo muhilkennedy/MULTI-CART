@@ -51,6 +51,8 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 	@Column(name = "MOBILEHASH")
 	private String mobilehash;
 
+	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
+	//TODO: impl has field and compare @Convert(converter = AttributeEncryptor.class)
 	@Column(name = "EMAILID")
 	private String emailid;
 

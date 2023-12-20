@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.base.service.ReCaptchaService;
-import com.platform.cache.UserCache;
 import com.platform.exception.ReCaptchaException;
 import com.platform.exception.UserNotFoundException;
 import com.platform.messages.GenericResponse;
@@ -88,6 +87,5 @@ public class UserController {
 			throw new ReCaptchaException("Captcha Validation Failed!");
 		}
 	}
-	
 
 }

@@ -20,7 +20,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label>{{"Mobile" | translate}}</label>
+                            <label>{{"Mobile Number" | translate}}</label>
                         </td>
                         <td> : </td>
                         <td>
@@ -29,7 +29,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label>{{"EmailID" | translate}}</label>
+                            <label>{{"Email Id" | translate}}</label>
                         </td>
                         <td> : </td>
                         <td>
@@ -84,8 +84,8 @@
               </select>
             </c-card-header>
             <c-card-body style="overflow: auto;">
-                <label cLabel for="formFile">{{"Upload New Profile Picture"}}</label>
-                <input #file cFormControl id="formFile" accept="image/*" type="file" (change)="onPictureSeclected($event)"/>
+                <label cLabel for="formFile">{{"Upload New Profile Picture" | translate}}</label>
+                <input #file cFormControl id="formFile" name="chooser" accept="image/*" type="file" (change)="onPictureSeclected($event)"/>
             </c-card-body>
         </c-card>
     </c-col>

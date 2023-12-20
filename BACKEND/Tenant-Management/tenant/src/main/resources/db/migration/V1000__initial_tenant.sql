@@ -12,3 +12,4 @@ insert into tenant (rootid, name, uniquename ) values (-2, "Client Dev Tenant (d
 /*dev email - noreplyeventemail@gmail.com*/
 insert into tenantdetails (rootid, tenantid, contact, emailid, street, city, pincode, tagline, businessemail ) values (-1, -1, "1234567890", "noreplyeventemail@gmail.com", "street", "mpm", "603104", "Vazhka oru vattam da!", "");
 insert into tenantdetails (rootid, tenantid, contact, emailid, street, city, pincode, tagline, businessemail ) values (-2, -2, "1234567890", "noreplyeventemail@gmail.com", "street", "mpm", "603104", "Vazhka oru vattam da!", "");
+insert into tenantsubscription (rootid, tenantid, active, timecreated, timeupdated, startdate, enddate) values (-1, -1, 1, 1, 1, '2023-01-23',  '2050-01-23');

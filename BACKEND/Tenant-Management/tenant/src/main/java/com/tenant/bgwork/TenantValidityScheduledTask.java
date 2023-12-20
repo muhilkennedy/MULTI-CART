@@ -8,7 +8,7 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.base.bgwork.BGTask;
+import com.base.bgwork.BGJob;
 import com.base.bgwork.BGWorkUtil;
 import com.base.server.BaseSession;
 import com.base.util.Log;
@@ -22,14 +22,14 @@ import com.tenant.service.TenantService;
 @Component
 @PersistJobDataAfterExecution //we can persist some data if required in jobdata map for subsequent executions
 @DisallowConcurrentExecution
-public class TenantValidityScheduledTask extends BGTask {
+public class TenantValidityScheduledTask extends BGJob {
 	
 	@Autowired
 	private TenantService tenantService;
 	
 	@Override
 	public void schedule() throws SchedulerException {
-		BGWorkUtil.scheduleCronJob(this.getClass().getSimpleName(), this.getClass(), "0 * 0 ? * * *");
+		BGWorkUtil.scheduleCronJob(this.getClass().getSimpleName(), this.getClass(), "0 0 0 ? * * *");
 	}
 	
 	@Override

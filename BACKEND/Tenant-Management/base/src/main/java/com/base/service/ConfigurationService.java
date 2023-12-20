@@ -69,7 +69,7 @@ public class ConfigurationService implements BaseService {
 	 */
 	public String getConfigValueIfPresent(String name, ConfigurationType type) {
 		List<ConfigType> config = configRepository.findByConfig(name, type.name());
-		if (config != null) {
+		if (config != null && !config.isEmpty()) {
 			return config.get(0).getVal();
 		}
 		return null;

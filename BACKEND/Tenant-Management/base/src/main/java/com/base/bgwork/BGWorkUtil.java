@@ -51,6 +51,7 @@ public class BGWorkUtil {
 	/**
 	 * @param job Lambda Fire the bg job immedietly
 	 */
+	@Deprecated
 	public static void fireAndForget(JobLambda job) {
 		fireAndForget(0, null, job);
 	}
@@ -59,6 +60,7 @@ public class BGWorkUtil {
 	 * @param plusSeconds trigger job from current instant + secs
 	 * @param job         Lamda
 	 */
+	@Deprecated
 	public static void fireAndForget(long plusSeconds, JobLambda job) {
 		fireAndForget(plusSeconds, TimeUnit.SECONDS, job);
 	}
@@ -68,6 +70,7 @@ public class BGWorkUtil {
 	 * @param timeUnit millis/secs
 	 * @param job      Lambda
 	 */
+	@Deprecated
 	public static void fireAndForget(long plusTime, TimeUnit timeUnit, JobLambda job) {
 		Instant currentInstant = Instant.now();
 		switch (timeUnit) {
@@ -92,8 +95,8 @@ public class BGWorkUtil {
 	 * @param timeUnit millis/secs
 	 * @param job      Lambda
 	 */
+	@Deprecated
 	public static void fireAndForget(Date date, JobLambda job) {
-		;
 		JobId jobId = BackgroundJob.schedule(date.toInstant(), job);
 		Log.base.info("fireAndForget : created BG job :{}", jobId.toString());
 	}
@@ -102,6 +105,7 @@ public class BGWorkUtil {
 	 * @param cronExpression
 	 * @param job
 	 */
+	@Deprecated
 	public static void scheduleJob(String cronExpression, JobLambda job) {
 		BackgroundJob.scheduleRecurrently(cronExpression, job);
 	}
@@ -112,6 +116,7 @@ public class BGWorkUtil {
 	 * @param cronExpression
 	 * @param job
 	 */
+	@Deprecated
 	public static void scheduleJob(String jobId, String cronExpression, JobLambda job) {
 		BackgroundJob.scheduleRecurrently(jobId, cronExpression, job);
 	}
@@ -215,6 +220,7 @@ public class BGWorkUtil {
 		Trigger trigger = createCronTrigger(job, cron);
 		scheduler.scheduleJob(job, trigger);
 		Log.base.info("scheduleBasicJob : New job scheduled : {} with trigger : {}", job, trigger);
+		Log.base.info("{} - {} - scheduled at {}", jobName, jobGroup, trigger.getNextFireTime());
 	}
 
 	/**
@@ -266,7 +272,7 @@ public class BGWorkUtil {
 			boolean isDurable) throws SchedulerException {
 		deleteJobIfExists(key);
 		JobDetail job = JobBuilder.newJob().ofType(jobClass).withIdentity(key).storeDurably(isDurable)
-				.withDescription(jobClass.getName()).build();
+				.requestRecovery(true).withDescription(jobClass.getName()).build();
 		quartzService.createQuartzJobInfo(job.getKey().getName(), job.getKey().getGroup(), isRecurring);
 		Log.base.info("New Job Created : {}", job);
 		return job;
@@ -301,7 +307,7 @@ public class BGWorkUtil {
 			boolean isRecurring, boolean isDurable) throws SchedulerException {
 		deleteJobIfExists(key);
 		JobDetail job = JobBuilder.newJob().ofType(jobClass).withIdentity(key).storeDurably(isDurable)
-				.withDescription(jobClass.getName()).setJobData(jobData).build();
+				.requestRecovery(true).withDescription(jobClass.getName()).setJobData(jobData).build();
 		quartzService.createQuartzJobInfo(job.getKey().getName(), job.getKey().getGroup(), isRecurring);
 		Log.base.info("New Job Created : {}", job);
 		return job;

@@ -23,6 +23,7 @@ import {
   BreadcrumbModule,
   ButtonGroupModule,
   ButtonModule,
+  CalloutModule,
   CardModule,
   DropdownModule,
   FooterModule,
@@ -30,6 +31,7 @@ import {
   GridModule,
   HeaderModule,
   ListGroupModule,
+  ModalModule,
   NavModule,
   ProgressModule,
   SharedModule,
@@ -50,6 +52,7 @@ import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { MaterialModule } from './material.module';
 import { LoginComponent } from './views/login/login.component';
 import { ResetPasswordComponent } from './views/reset-password/reset-password.component';
+// import { AngularFireModule, FirebaseApp } from '@angular/fire/compat';
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
@@ -63,12 +66,14 @@ export class TenantInitializer {
   constructor(private router: Router, private http: HttpClient, private tenantService: TenantService) { }
 
   initializeApp(): Promise<any> {
+    // const app = initializeApp(environment.firebaseConfig);
+    // const msg = getMessaging(app);
     return new Promise((resolve, reject) => {
           console.log(`initializeApp:: Setting up Tenant`);
           this.http.get(`${environment.backendProxy}/tenant/ping`)
           .subscribe({
             next: (resp: any) => {
-                  this.tenantService.getCurrentTenant().tenantId = resp.data.tenantId;
+                  this.tenantService.getCurrentTenant().tenantId = resp.data.uniquename;
                   this.tenantService.getCurrentTenant().rootId = resp.data.rootId;
                   this.tenantService.getCurrentTenant().tenantActive = resp.data.active;
                   this.tenantService.getCurrentTenant().tenantName = resp.data.tenantName;
@@ -140,7 +145,9 @@ export function init_tenant(initializer: TenantInitializer) {
     SpinnerModule,
     UtilitiesModule,
     FormsModule,
-    CommonModule    
+    CommonModule ,
+    CalloutModule,
+    ModalModule
   ],
   exports: [
     

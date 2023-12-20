@@ -76,7 +76,7 @@ export class UserService {
     return this.http.post<any>(`${environment.backendProxy}/role/create`, body)
   }
 
-  toggleRoleStatus(roleId: number) {
+  toggleRoleStatus(roleId: number): Observable<any> {
     return this.http.put<any>(`${environment.backendProxy}/role/toggle`, null, {
       params: {
         id: roleId
@@ -84,7 +84,7 @@ export class UserService {
     })
   }
 
-  toggleEmployeeStatus(userId: number) {
+  toggleEmployeeStatus(userId: number): Observable<any> {
     return this.http.put<any>(`${environment.backendProxy}/employee/togglestate`, null, {
       params: {
         userId: userId
@@ -92,7 +92,7 @@ export class UserService {
     })
   }
 
-  initiatePasswordReset(emailId: any){
+  initiatePasswordReset(emailId: any): Observable<any>{
     return this.http.post<any>(`${environment.backendProxy}/user/employee/password/reset/initiate`, null, {
       params: {
         emailId: emailId
@@ -100,7 +100,7 @@ export class UserService {
     });
   }
 
-  resetPassword(body: any){
+  resetPassword(body: any): Observable<any>{
     return this.http.post<any>(`${environment.backendProxy}/user/employee/password/reset`, body);
   }
 

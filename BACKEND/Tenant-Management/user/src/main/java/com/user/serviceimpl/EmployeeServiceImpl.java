@@ -181,4 +181,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return (User) empDaoService.save(user);
 	}
 
+	@Override
+	public void sendBirthdayWishesMail() {
+		// TODO: query employees for dob and send out email
+	}
+
 }

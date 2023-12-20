@@ -10,7 +10,7 @@
             
                     <!-- Emp Id Column -->
                     <ng-container matColumnDef="EmployeeId">
-                        <th mat-header-cell *matHeaderCellDef> {{"Employee-ID" | translate}} </th>
+                        <th mat-header-cell *matHeaderCellDef> {{"Employee ID" | translate}} </th>
                         <td mat-cell *matCellDef="let element">
                             <img *ngIf="showEmployeeBdayCard(element)" src="../../../../assets/img/bday.gif" style="height: 2rem;" class="zoom"/>
                             <svg *ngIf="isEmployeeFemale(element); else male" cIcon name="cilUserFemale" size="xs" title="GenderIcon"></svg> 
@@ -37,13 +37,13 @@
             
                     <!-- Mobile Column -->
                     <ng-container matColumnDef="Mobile">
-                        <th mat-header-cell *matHeaderCellDef> {{"Mobile" | translate}} </th>
+                        <th mat-header-cell *matHeaderCellDef> {{"Mobile Number" | translate}} </th>
                         <td mat-cell *matCellDef="let element"> {{element.mobile}} </td>
                     </ng-container>
             
                     <!-- Email Column -->
                     <ng-container matColumnDef="Email">
-                        <th mat-header-cell *matHeaderCellDef> {{"Email" | translate}} </th>
+                        <th mat-header-cell *matHeaderCellDef> {{"Email Id" | translate}} </th>
                         <td mat-cell *matCellDef="let element"> {{element.emailid}}</td>
                     </ng-container>
             
@@ -89,12 +89,12 @@
 <ng-template #permissionModal>
     <c-modal id="permissionModal" [visible]="showPermissionsModal" (visibleChange)="handlePermissionModal($event)">
         <c-modal-header>
-            <h5 cModalTitle>{{ "PERMISSIONS" | translate}}</h5>
+            <h5 cModalTitle>{{ "Permissions" | translate}}</h5>
             <button (click)="togglePermissionsModal()" cButtonClose></button>
         </c-modal-header>
         <c-modal-body>
             <mat-list role="list" *ngFor="let permission of employeePermissions">
-                <mat-list-item role="listitem">{{ permission }}</mat-list-item>
+                <mat-list-item role="listitem">{{ permission | translate}}</mat-list-item>
                 <mat-divider></mat-divider>
             </mat-list>
         </c-modal-body>
@@ -114,7 +114,7 @@
         </c-modal-header>
         <c-modal-body>
             Employee <strong>{{getDeletableEmployeeUniqueName()}}</strong> will be deleted permanently! <br/>
-            {{"Are you sure to proceed for deletion?" | translate}}
+            {{"Are you sure to proceed for deletion" | translate}}?
         </c-modal-body>
         <c-modal-footer>
             <button (click)="toggleDeleteModal()" cButton color="secondary">

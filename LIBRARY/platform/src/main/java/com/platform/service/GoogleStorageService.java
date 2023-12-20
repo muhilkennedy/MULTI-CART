@@ -56,8 +56,8 @@ public class GoogleStorageService implements AbstractStorage {
 	}
 
 	public static void init(File gcpConfigFile, String bucketName) throws IOException {
-		if (instance == null) {
-			synchronized (GoogleStorageService.class) {
+		synchronized (GoogleStorageService.class) {
+			if (instance == null) {
 				instance = new GoogleStorageService(gcpConfigFile, bucketName);
 			}
 		}
@@ -158,7 +158,7 @@ public class GoogleStorageService implements AbstractStorage {
 		}
 		BlobId blobId = BlobId.of(bucket(),
 				PlatformBaseSession.getTenantUniqueName().concat(FileUtil.sanitizeDirPath(dir)).concat(file.getName()));
-		uploadFile(blobId, file, false);
+		uploadFile(blobId, file, isInternalOnly);
 		return blobId;
 	}
 

@@ -5,6 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import com.base.entity.QuartzJobInfo;
 
+/**
+ * @author muhil
+ */
 @Repository
 public interface QuartzReactiveRepository extends R2dbcRepository<QuartzJobInfo, Long> {
 

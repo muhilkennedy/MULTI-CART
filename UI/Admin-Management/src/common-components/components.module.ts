@@ -58,7 +58,9 @@ import { RecaptchaComponent } from './recaptcha/recaptcha.component';
     ModalModule,
     SharedModule,
     TooltipModule,
-    PopoverModule
+    PopoverModule,
+    CalloutModule,
+    ModalModule
   ]
 })
 export class ComponentsModule {

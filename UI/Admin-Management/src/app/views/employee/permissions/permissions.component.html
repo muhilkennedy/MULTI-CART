@@ -3,7 +3,7 @@
     <c-col xs="12">
       <c-card class="mb-4">
         <c-card-header>
-          <strong>{{"Available Roles"}}</strong>
+          <strong>{{"Available Roles" | translate}}</strong>
           <button style="float: right;" cButton class="me-1" color="primary" variant="outline" size="sm" (click)="toggleCreateRoleModal()"> {{"CREATE ROLE" | translate}}</button>
           <ng-container *ngTemplateOutlet="roleModal"></ng-container>
         </c-card-header>
@@ -49,12 +49,12 @@
 <ng-template #permissionModal>
     <c-modal id="permissionModal" [visible]="showPermissionsModal" (visibleChange)="handlePermissionModal($event)">
       <c-modal-header>
-        <h5 cModalTitle>{{ "PERMISSIONS" | translate}}</h5>
+        <h5 cModalTitle>{{ "Permissions" | translate | uppercase}}</h5>
         <button (click)="togglePermissionsModal()" cButtonClose></button>
       </c-modal-header>
       <c-modal-body>
         <mat-list role="list" *ngFor="let rp of rolePermissions">
-            <mat-list-item role="listitem" >{{ rp.permission.permission }}</mat-list-item>
+            <mat-list-item role="listitem" >{{ rp.permission.permission | translate }}</mat-list-item>
             <mat-divider></mat-divider>
         </mat-list>
       </c-modal-body>
@@ -74,7 +74,7 @@
       </c-modal-header>
       <c-modal-body>
         <mat-form-field [formGroup]="roleFormGroup" style="width: 100%;">
-            <mat-label>{{"ROLE NAME" | translate}}</mat-label>
+            <mat-label>{{"Role Name" | translate | uppercase}}</mat-label>
             <input matInput name="LastName" placeholder="Role Name" formControlName="roleName" required>
             <mat-error *ngIf="hasError(roleFormGroup, 'roleName')">{{getError(roleFormGroup,
                 'roleName')}}</mat-error>
@@ -88,7 +88,7 @@
               </mat-expansion-panel-header>
               <mat-selection-list #permission formControlName="rolePermission">
                 <mat-list-option color="primary" *ngFor="let perm of permissions" [value]="perm">
-                  {{perm.permission}}
+                  {{perm.permission | translate}}
                 </mat-list-option>
               </mat-selection-list>
           </mat-expansion-panel>

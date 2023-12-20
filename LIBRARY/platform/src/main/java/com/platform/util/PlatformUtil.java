@@ -39,5 +39,6 @@ public class PlatformUtil {
 	public static final String TEMPLATES_FOLDER = "EmailTemplates";
 	
 	public static final SimpleDateFormat SIMPLE_DATE_ONLY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	public static final SimpleDateFormat SIMPLE_UI_DATE_ONLY_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
 }

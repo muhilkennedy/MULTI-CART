@@ -21,6 +21,7 @@ import com.base.util.PropertiesUtil;
 import com.platform.exception.CryptoException;
 import com.platform.messages.ConfigurationType;
 import com.platform.messages.StoreType;
+import com.platform.service.GoogleMessagingService;
 import com.platform.service.GoogleStorageService;
 import com.platform.service.NFSStorageService;
 import com.platform.service.StorageService;
@@ -68,6 +69,7 @@ public class StorageConfiguration {
 						new String(Base64.getDecoder().decode(PropertiesUtil.getFileSecret()), StandardCharsets.UTF_8),
 						tempFile);
 				GoogleStorageService.init(decryptedFile, defaultGcsbucket);
+				GoogleMessagingService.init(decryptedFile);
 				FileUtil.deleteDirectoryOrFile(decryptedFile);
 			} else {
 				initGCPForTenants();
