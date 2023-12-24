@@ -169,8 +169,8 @@ public class TaskServiceImpl implements TaskService {
 		daoService.saveTaskAssignee(assignee);
 		try {
 			NotificationRequest request = new NotificationRequest(emp.getObjectId(),
-					String.format("New %s Task has been assigned to you!", task.getTasktype()), NotificationType.INFO,
-					"tasks");
+					String.format("New %s Task has been assigned to you!", task.getTasktype()), task.getTitle(),
+					NotificationType.INFO, "/task");
 			this.notify.createNotification(request);
 		} catch (SchedulerException e) {
 			Log.user.error("Error creating notification : {}", e);

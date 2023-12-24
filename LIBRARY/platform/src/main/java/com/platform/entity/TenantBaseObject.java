@@ -11,5 +11,7 @@ public interface TenantBaseObject extends BaseObject {
 	String getTenantUniqueName();
 	
 	Long getTenantRootId();
+	
+	boolean isSystemTenant();
 
 }

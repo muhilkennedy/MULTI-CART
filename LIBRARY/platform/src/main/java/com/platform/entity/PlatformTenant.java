@@ -1,59 +1,94 @@
 package com.platform.entity;
 
-import java.util.List;
+import com.platform.util.PlatformUtil;
 
 /**
  * @author Muhil
  *
  */
-public class PlatformTenant implements TenantBaseObject {
-
-	private Long rootId;
-	private String tenantUniqueName;
-	private String tenantName;
+public class PlatformTenant extends PlatformBaseEntity implements TenantBaseObject {
+	
+	private String name;
+	private String uniquename;
+	private Long parent;
 	private String locale;
-	private String timeZone;
+	private String timezone;
 	private boolean purgeTenant;
 
-	// common base fields
-	private boolean active;
-	private long timeUpdated;
-	private long timeCreated;
-	private String modifiedBy;
-	private String createdBy;
-	private long version;
-
 	private PlatformTenantDetails tenantDetail;
-
-	private List<TenantOrigin> tenantOrigin;
+	
+	public static PlatformTenant getSystemTenant() {
+		PlatformTenant tenant = new PlatformTenant();
+		tenant.setUniquename(PlatformUtil.INTERNAL_SYSTEM);
+		tenant.setActive(true);
+		tenant.setName("MKEN SYSTEM");
+		tenant.setRootid(PlatformUtil.SYSTEM_REALM_ROOTID);
+		return tenant;
+	}
 	
 	@Override
 	public Long getObjectId() {
-		return this.rootId;
+		return this.getRootid();
+	}
+	
+	@Override
+	public Long getTenantRootId() {
+		return getRootid();
+	}
+	
+	@Override
+	public String getUniqueId() {
+		return uniquename;
 	}
 
-	public Long getRootId() {
-		return rootId;
-	}
-
-	public void setRootId(Long rootId) {
-		this.rootId = rootId;
-	}
-
-	public String getTenantUniqueName() {
-		return tenantUniqueName;
-	}
-
-	public void setTenantUniqueName(String tenantUniqueName) {
-		this.tenantUniqueName = tenantUniqueName;
-	}
-
+	@Override
 	public String getTenantName() {
-		return tenantName;
+		return name;
 	}
 
-	public void setTenantName(String tenantName) {
-		this.tenantName = tenantName;
+	@Override
+	public String getTenantUniqueName() {
+		return uniquename;
+	}
+
+	public boolean isPurgeTenant() {
+		return purgeTenant;
+	}
+
+	public void setPurgeTenant(boolean purgeTenant) {
+		this.purgeTenant = purgeTenant;
+	}
+	
+	public PlatformTenantDetails getTenantDetail() {
+		return tenantDetail;
+	}
+
+	public void setTenantDetail(PlatformTenantDetails tenantDetail) {
+		this.tenantDetail = tenantDetail;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getUniquename() {
+		return uniquename;
+	}
+
+	public void setUniquename(String uniquename) {
+		this.uniquename = uniquename;
+	}
+
+	public Long getParent() {
+		return parent;
+	}
+
+	public void setParent(Long parent) {
+		this.parent = parent;
 	}
 
 	public String getLocale() {
@@ -64,94 +99,17 @@ public class PlatformTenant implements TenantBaseObject {
 		this.locale = locale;
 	}
 
-	public String getTimeZone() {
-		return timeZone;
+	public String getTimezone() {
+		return timezone;
 	}
 
-	public void setTimeZone(String timeZone) {
-		this.timeZone = timeZone;
-	}
-
-	public boolean isPurgeTenant() {
-		return purgeTenant;
-	}
-
-	public void setPurgeTenant(boolean purgeTenant) {
-		this.purgeTenant = purgeTenant;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	public long getTimeUpdated() {
-		return timeUpdated;
-	}
-
-	public void setTimeUpdated(long timeUpdated) {
-		this.timeUpdated = timeUpdated;
-	}
-
-	public long getTimeCreated() {
-		return timeCreated;
-	}
-
-	public void setTimeCreated(long timeCreated) {
-		this.timeCreated = timeCreated;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public long getVersion() {
-		return version;
-	}
-
-	public void setVersion(long version) {
-		this.version = version;
-	}
-
-	public PlatformTenantDetails getTenantDetail() {
-		return tenantDetail;
-	}
-
-	public void setTenantDetail(PlatformTenantDetails tenantDetail) {
-		this.tenantDetail = tenantDetail;
-	}
-
-	public List<TenantOrigin> getTenantOrigin() {
-		return tenantOrigin;
-	}
-
-	public void setTenantOrigin(List<TenantOrigin> tenantOrigin) {
-		this.tenantOrigin = tenantOrigin;
-	}
-
-	@Override
-	public Long getTenantRootId() {
-		return getRootId();
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
 	}
 	
 	@Override
-	public String getUniqueId() {
-		return tenantUniqueName;
+	public boolean isSystemTenant() {
+		return getRootid() == PlatformUtil.SYSTEM_REALM_ROOTID;
 	}
-
+	
 }

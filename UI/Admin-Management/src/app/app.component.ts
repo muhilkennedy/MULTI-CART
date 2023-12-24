@@ -6,8 +6,6 @@ import { iconSubset } from './icons/icon-subset';
 import { Title } from '@angular/platform-browser';
 import { environment } from '../environments/environment';
 import { IdleService } from '../app/service/util/idle.service';
-// import { AngularFireMessaging } from '@angular/fire/compat/messaging';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -22,9 +20,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private titleService: Title,
     private iconSetService: IconSetService,
-    private idleService: IdleService,
-    // private fireMessaging: AngularFireMessaging,
-    private http: HttpClient
+    private idleService: IdleService
   ) {
     this.titleService.setTitle(this.title);
     this.iconSetService.icons = { ...iconSubset };
@@ -34,36 +30,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    // this.fireMessaging.requestToken.subscribe(token => {
-    
-    //   console.log(token);
-    //   this.http.post(`${environment.backendProxy}/admin/base/notification`, {
-    //     target: token,
-    //     title: 'hello world',
-    //     message: 'First notification, kinda nervous',
-    //   }).subscribe((resp) => { console.log(resp) });
-   
-    //   this.http.post(`${environment.backendProxy}/admin/base/topic/subscription`, {
-    //     topic: 'weather',
-    //     subscriber: token
-    //   }).subscribe((resp) => { console.log(resp) });
-   
-    // }, error => {
-   
-    //   alert(error);
-   
-    // });
-
-    // this.fireMessaging.onMessage((payload) => {
-    //   // Get the data about the notification
-    //   let notification = payload.notification;
-    //   // Create a Message object and add it to the array
-    //   alert({title: notification.title, body: notification.body, iconUrl: notification.icon});
-    //  });
-
-    
-
     this.router.events.subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
         return;

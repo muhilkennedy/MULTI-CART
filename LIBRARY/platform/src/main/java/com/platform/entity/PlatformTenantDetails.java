@@ -4,116 +4,148 @@ package com.platform.entity;
  * @author Muhil
  *
  */
-public class PlatformTenantDetails {
+public class PlatformTenantDetails extends PlatformBaseEntity {
 
-	private String tenantContact;
-	private String tenantEmail;
-	private String tenantStreet;
-	private String tenantCity;
-	private String tenantPin;
-	private String tagLine;
+	private String contact;
+	private String emailid;
+	private String street;
+	private String city;
+	private String pincode;
+	private String tagline;
+	private PlatformTenantInfo details;
 
-	private boolean active;
-	private long timeUpdated;
-	private long timeCreated;
-	private String modifiedBy;
-	private String createdBy;
-	private long version;
-
-	public String getTenantContact() {
-		return tenantContact;
+	public String getContact() {
+		return contact;
 	}
 
-	public void setTenantContact(String tenantContact) {
-		this.tenantContact = tenantContact;
+	public void setContact(String contact) {
+		this.contact = contact;
 	}
 
-	public String getTenantEmail() {
-		return tenantEmail;
+	public String getEmailid() {
+		return emailid;
 	}
 
-	public void setTenantEmail(String tenantEmail) {
-		this.tenantEmail = tenantEmail;
+	public void setEmailid(String emailid) {
+		this.emailid = emailid;
 	}
 
-	public String getTenantStreet() {
-		return tenantStreet;
+	public String getStreet() {
+		return street;
 	}
 
-	public void setTenantStreet(String tenantStreet) {
-		this.tenantStreet = tenantStreet;
+	public void setStreet(String street) {
+		this.street = street;
 	}
 
-	public String getTenantCity() {
-		return tenantCity;
+	public String getCity() {
+		return city;
 	}
 
-	public void setTenantCity(String tenantCity) {
-		this.tenantCity = tenantCity;
+	public void setCity(String city) {
+		this.city = city;
 	}
 
-	public String getTenantPin() {
-		return tenantPin;
+	public String getPincode() {
+		return pincode;
 	}
 
-	public void setTenantPin(String tenantPin) {
-		this.tenantPin = tenantPin;
+	public void setPincode(String pincode) {
+		this.pincode = pincode;
 	}
 
-	public String getTagLine() {
-		return tagLine;
+	public String getTagline() {
+		return tagline;
 	}
 
-	public void setTagLine(String tagLine) {
-		this.tagLine = tagLine;
+	public void setTagline(String tagline) {
+		this.tagline = tagline;
 	}
 
-	public boolean isActive() {
-		return active;
+	public PlatformTenantInfo getDetails() {
+		return details;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setDetails(PlatformTenantInfo details) {
+		this.details = details;
 	}
 
-	public long getTimeUpdated() {
-		return timeUpdated;
+}
+
+//The json field in tenant entity.
+class PlatformTenantInfo {
+
+	private String adminUrl;
+	private String clientUrl;
+	private boolean initialSetUpDone;
+	private String fssai;
+	private String gstin;
+	private String gmapUrl;
+	private String logoUrl;
+	private String logoThumbnail;
+
+	public String getAdminUrl() {
+		return adminUrl;
 	}
 
-	public void setTimeUpdated(long timeUpdated) {
-		this.timeUpdated = timeUpdated;
+	public void setAdminUrl(String adminUrl) {
+		this.adminUrl = adminUrl;
 	}
 
-	public long getTimeCreated() {
-		return timeCreated;
+	public String getClientUrl() {
+		return clientUrl;
 	}
 
-	public void setTimeCreated(long timeCreated) {
-		this.timeCreated = timeCreated;
+	public void setClientUrl(String clientUrl) {
+		this.clientUrl = clientUrl;
 	}
 
-	public String getModifiedBy() {
-		return modifiedBy;
+	public boolean isInitialSetUpDone() {
+		return initialSetUpDone;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
+	public void setInitialSetUpDone(boolean initialSetUpDone) {
+		this.initialSetUpDone = initialSetUpDone;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
+	public String getFssai() {
+		return fssai;
 	}
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
+	public void setFssai(String fssai) {
+		this.fssai = fssai;
 	}
 
-	public long getVersion() {
-		return version;
+	public String getGstin() {
+		return gstin;
 	}
 
-	public void setVersion(long version) {
-		this.version = version;
+	public void setGstin(String gstin) {
+		this.gstin = gstin;
+	}
+
+	public String getGmapUrl() {
+		return gmapUrl;
+	}
+
+	public void setGmapUrl(String gmapUrl) {
+		this.gmapUrl = gmapUrl;
+	}
+
+	public String getLogoUrl() {
+		return logoUrl;
+	}
+
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
+	}
+
+	public String getLogoThumbnail() {
+		return logoThumbnail;
+	}
+
+	public void setLogoThumbnail(String logoThumbnail) {
+		this.logoThumbnail = logoThumbnail;
 	}
 
 }
