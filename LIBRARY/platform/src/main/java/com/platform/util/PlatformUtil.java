@@ -38,6 +38,9 @@ public class PlatformUtil {
 	public static final String TEMPLATE_EXTENTION = ".ftl";
 	public static final String TEMPLATES_FOLDER = "EmailTemplates";
 	
+	public static final String TOPIC_ADMIN_USER = "ADMINUSER";
+	public static final String TOPIC_CLIENT_USER = "CLIENTUSER";
+	
 	public static final SimpleDateFormat SIMPLE_DATE_ONLY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	public static final SimpleDateFormat SIMPLE_UI_DATE_ONLY_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 

@@ -75,7 +75,7 @@ export class CreateTaskComponent implements OnInit {
       .subscribe({
         next: (resp: any) => {
           this.employees = resp.dataList;
-          this.router.navigate(['/tasks']);
+          this.router.navigate(['/task']);
         },
         error: (err: any) => {
           this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));

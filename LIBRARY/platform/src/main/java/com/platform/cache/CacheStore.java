@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.platform.entity.BaseObject;
-import com.platform.session.PlatformBaseSession;
 import com.platform.util.Log;
 
 /**
@@ -18,8 +17,8 @@ public class CacheStore implements CacheService {
 	
 	public CacheStore() {
 		this.cache = CacheBuilder.newBuilder().maximumSize(MAX_CACHED_OBJECTS)
-				.expireAfterWrite(MAX_CACHE_TTL_MIN, TimeUnit.MINUTES)
-				.expireAfterAccess(MAX_CACHE_TTL_MIN, TimeUnit.MINUTES).build();
+				.expireAfterWrite(MAX_CACHE_TTL_MIN, TimeUnit.MINUTES).build();
+				//.expireAfterAccess(MAX_CACHE_TTL_MIN, TimeUnit.MINUTES).build();
 	}
 
 	public CacheStore(int ttl, TimeUnit unit) {
@@ -59,7 +58,7 @@ public class CacheStore implements CacheService {
 	@Override
 	public void add(BaseObject value) {
 		Log.tenant.debug(String.format("Cached key %s ", value.getObjectId()));
-		this.add(value.getObjectId() + PlatformBaseSession.getTenantUniqueName(), value);
+		this.add(String.valueOf(value.getObjectId()), value);
 	}
 
 }

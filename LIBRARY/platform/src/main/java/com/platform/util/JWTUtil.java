@@ -9,6 +9,8 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.platform.entity.PlatformUser;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -89,6 +91,19 @@ public class JWTUtil {
 		claims.put(UNIQUE_NAME, uniqueName);
 		// we can add more details about user in future in Claims map if needed.
 		return doGenerateToken(claims, rootId, rememberMe);
+	}
+	
+	/**
+	 * @return token 
+	 * NOTE: since we are not using oauth between apps, we need to
+	 * make sure same jwt secret is used across services to communicate.
+	 */
+	public static String generateSystemUserToken() {
+		Map<String, Object> claims = new HashMap<>();
+		PlatformUser user = PlatformUser.getSystemUser();
+		claims.put(CLAIM_USER_TYPE, USER_TYPE_EMPLOYEE);
+		claims.put(UNIQUE_NAME, user.getUniqueId());
+		return doGenerateToken(claims, String.valueOf(user.getRootid()), false);
 	}
 
 	/**

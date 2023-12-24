@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<property resource="logger.properties" />
+
+    <!-- <property name="HOME_LOG" value="logs/AppLogs.log"/> -->
+    <!-- <property name="HOME_LOG_ARCHIVE" value="logs/archived/"/>  -->
+	
+	<!-- Console level logging -->
+ 	<appender name = "STDOUT" class = "ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+         <pattern>[%d{ISO8601}] [%t] [%L] [%-5p] [%logger{35}] %m%n</pattern>
+      </encoder>
+   </appender>
+    <logger name="org.flywaydb" level="debug">
+    	<appender-ref ref="STDOUT"/>
+    </logger>
+
+
+   <!--  <logger name="org.hibernate.SQL" level="debug">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.hibernate.orm.jdbc.bind" level="trace" >
+        <appender-ref ref="STDOUT"/>
+    </logger> -->
+   <!--  <logger name="org.hibernate.stat" level="debug">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.hibernate.SQL_SLOW" level="info">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.hibernate.cache" level="debug" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger> -->
+    
+    <root level="error">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    
+    <!-- Hibernate after 6 -->
+<!-- Hibernate after 6 -->
+
+   <!-- File logging  -->
+    <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${HOME_LOG}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${HOME_LOG_ARCHIVE}app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <totalSizeCap>1000MB</totalSizeCap>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <!-- <pattern>%d{date}{ISO8601} [%thread] %-5level %logger{35} - %msg%n</pattern> -->
+            <pattern>%d{ISO8601} [%C] [%t] [%L] %logger{35} - %m%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.flywaydb" level="debug">
+    	<appender-ref ref="FILE-ROLLING"/>
+    </logger>
+    
+    <!-- <logger name="org.hibernate.SQL" level="debug" additivity="false">
+    	<appender-ref ref="FILE-ROLLING"/>
+    </logger>
+    <logger name="org.hibernate.orm.jdbc.bind" level="trace" additivity="false">
+        <appender-ref ref="FILE-ROLLING"/>
+    </logger> -->
+
+    <root level="error">
+        <appender-ref ref="FILE-ROLLING"/>
+    </root>
+</configuration>

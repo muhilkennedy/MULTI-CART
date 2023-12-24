@@ -61,11 +61,13 @@ export class ListTasksComponent implements OnInit, OnChanges {
 
   loadTasks(){
     this.spinner.show();
-    this.taskService.getTasks(this.type, this.status, this.status =='Broadcasted')
+    this.taskService.getTasks(this.pageSize, this.pageIndex, this.type, this.status, this.status =='Broadcasted')
       .subscribe({
         next: (resp: any) => {
-          this.tasks = resp.data.content;
-          this.totalPages = resp.data.totalElements;
+          if(!CommonUtil.isNullOrEmptyOrUndefined(resp.data)){
+            this.tasks = resp.data.content;
+            this.totalPages = resp.data.totalElements;
+          }
         },
         error: (err: any) => {
           this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));

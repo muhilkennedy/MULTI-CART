@@ -7,7 +7,7 @@
             <td mat-cell *matCellDef="let element">
                 <!-- TODO: on click open dialoag with detailed summary -->
                 <img *ngIf="element.tasktype == 'TODO'" src="../../../assets/img/todo.png" style="height: 1rem;" class="zoom" matTooltip="{{'TODO' |translate}}"/>
-                <img *ngIf="element.tasktype == 'APPROVAL'" src="../../../assets/img/approval.png" style="height: 1rem;" matTooltip="{{'APPROVAL' |translate}}"/>
+                <img *ngIf="element.tasktype == 'APPROVAL'" src="../../../assets/img/approval.png" style="height: 1rem;" class="zoom" matTooltip="{{'APPROVAL' |translate}}"/>
             </td>
         </ng-container>
 

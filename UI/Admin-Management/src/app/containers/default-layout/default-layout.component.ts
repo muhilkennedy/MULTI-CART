@@ -50,7 +50,7 @@ export class DefaultLayoutComponent implements OnInit {
             this.userService.getCurrentUser().userId = resp.data.rootId;
             this.userService.getCurrentUser().userName = resp.data.fname + resp.data.lname;
             this.userService.setCurrentUserResponse(resp.data);
-            this.router.navigate(['/notifications']);
+            this.router.navigate(['/dashboard']);
           },
           error: (error: any) => {
             this.router.navigate(['/login']);
