@@ -175,7 +175,12 @@ public class BGWorkUtil {
 	 */
 	public static void scheduleBasicJob(String jobName, Class<? extends Job> jobClass, TimeUnit timeUnit, int time)
 			throws SchedulerException {
-		scheduleBasicJob(jobName, null, jobClass, timeUnit, time);
+		scheduleBasicJob(jobName, null, jobClass, timeUnit, time, false);
+	}
+	
+	public static void scheduleBasicJob(String jobName, Class<? extends Job> jobClass, TimeUnit timeUnit, int time, boolean overrideJob)
+			throws SchedulerException {
+		scheduleBasicJob(jobName, null, jobClass, timeUnit, time, overrideJob);
 	}
 
 	/**
@@ -184,15 +189,24 @@ public class BGWorkUtil {
 	 * @param jobClass
 	 * @param timeUnit
 	 * @param time
+	 * @param overrideJob
 	 * @throws SchedulerException
 	 */
 	public static void scheduleBasicJob(String jobName, String jobGroup, Class<? extends Job> jobClass,
-			TimeUnit timeUnit, int time) throws SchedulerException {
+			TimeUnit timeUnit, int time, boolean overrideJob) throws SchedulerException {
 		JobKey key = new JobKey(jobName, StringUtils.isAllBlank(jobGroup) ? PlatformUtil.INTERNAL_SYSTEM : jobGroup);
-		JobDetail job = createBasicJobDetail(jobClass, key, true, true);
-		Trigger trigger = createBasicRecurrentTrigger(job, timeUnit, time);
-		scheduler.scheduleJob(job, trigger);
-		Log.base.info("scheduleBasicJob : New job scheduled : {} with trigger : {}", job, trigger);
+		if (overrideJob) {
+			deleteJobIfExists(key);
+		} 
+		if (!scheduler.checkExists(key)) { //TODO: check if schedule changed and override
+			JobDetail job = createBasicJobDetail(jobClass, key, true, true);
+			Trigger trigger = createBasicRecurrentTrigger(job, timeUnit, time);
+			scheduler.scheduleJob(job, trigger);
+			Log.base.info("scheduleBasicJob : New job scheduled : {} with trigger : {}", job, trigger);
+		}
+		else {
+			Log.base.info("scheduleBasicJob : Existing scheduled job : {}", scheduler.getJobDetail(key));
+		}
 	}
 	
 	/**
@@ -203,7 +217,12 @@ public class BGWorkUtil {
 	 */
 	public static void scheduleCronJob(String jobName, Class<? extends Job> jobClass, String cron)
 			throws SchedulerException {
-		scheduleCronJob(jobName, null, jobClass, cron);
+		scheduleCronJob(jobName, null, jobClass, cron, false);
+	}
+	
+	public static void scheduleCronJob(String jobName, Class<? extends Job> jobClass, String cron, boolean overrideJob)
+			throws SchedulerException {
+		scheduleCronJob(jobName, null, jobClass, cron, overrideJob);
 	}
 
 	/**
@@ -213,16 +232,24 @@ public class BGWorkUtil {
 	 * @param cron
 	 * @throws SchedulerException
 	 */
-	public static void scheduleCronJob(String jobName, String jobGroup, Class<? extends Job> jobClass, String cron)
+	public static void scheduleCronJob(String jobName, String jobGroup, Class<? extends Job> jobClass, String cron, boolean overrideJob)
 			throws SchedulerException {
 		JobKey key = new JobKey(jobName, StringUtils.isAllBlank(jobGroup) ? PlatformUtil.INTERNAL_SYSTEM : jobGroup);
-		JobDetail job = createBasicJobDetail(jobClass, key, true, true);
-		Trigger trigger = createCronTrigger(job, cron);
-		scheduler.scheduleJob(job, trigger);
-		Log.base.info("scheduleBasicJob : New job scheduled : {} with trigger : {}", job, trigger);
-		Log.base.info("{} - {} - scheduled at {}", jobName, jobGroup, trigger.getNextFireTime());
+		if (overrideJob) {
+			deleteJobIfExists(key);
+		}
+		if(!scheduler.checkExists(key)) {
+			JobDetail job = createBasicJobDetail(jobClass, key, true, true);
+			Trigger trigger = createCronTrigger(job, cron);
+			scheduler.scheduleJob(job, trigger);
+			Log.base.info("scheduleBasicJob : New job scheduled : {} with trigger : {}", job, trigger);
+			Log.base.info("{} - {} - scheduled at {}", jobName, jobGroup, trigger.getNextFireTime());
+		}
+		else {
+			Log.base.info("scheduleBasicJob : Existing scheduled cron job : {}", scheduler.getJobDetail(key));
+		}
 	}
-
+	
 	/**
 	 * @param jobClass
 	 * @return
@@ -270,7 +297,6 @@ public class BGWorkUtil {
 	 */
 	public static JobDetail createBasicJobDetail(Class<? extends Job> jobClass, JobKey key, boolean isRecurring,
 			boolean isDurable) throws SchedulerException {
-		deleteJobIfExists(key);
 		JobDetail job = JobBuilder.newJob().ofType(jobClass).withIdentity(key).storeDurably(isDurable)
 				.requestRecovery(true).withDescription(jobClass.getName()).build();
 		quartzService.createQuartzJobInfo(job.getKey().getName(), job.getKey().getGroup(), isRecurring);
@@ -305,7 +331,6 @@ public class BGWorkUtil {
 	 */
 	public static JobDetail createAdvancedJobDetail(Class<? extends Job> jobClass, JobKey key, JobDataMap jobData,
 			boolean isRecurring, boolean isDurable) throws SchedulerException {
-		deleteJobIfExists(key);
 		JobDetail job = JobBuilder.newJob().ofType(jobClass).withIdentity(key).storeDurably(isDurable)
 				.requestRecovery(true).withDescription(jobClass.getName()).setJobData(jobData).build();
 		quartzService.createQuartzJobInfo(job.getKey().getName(), job.getKey().getGroup(), isRecurring);
