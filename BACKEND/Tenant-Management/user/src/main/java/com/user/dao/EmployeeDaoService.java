@@ -53,13 +53,13 @@ public class EmployeeDaoService implements UserDaoService {
 	}
 
 	@Override
-	@CachePut(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootId")
+	@CachePut(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootid")
 	public BaseEntity save(BaseEntity obj) {
 		return employeeRepository.save((Employee) obj);
 	}
 
 	@Override
-	@CachePut(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootId")
+	@CachePut(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootid")
 	public BaseEntity saveAndFlush(BaseEntity obj) {
 		return employeeRepository.saveAndFlush((Employee) obj);
 	}
@@ -71,7 +71,7 @@ public class EmployeeDaoService implements UserDaoService {
 	}
 
 	@Override
-	@CacheEvict(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootId")
+	@CacheEvict(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootid")
 	public void delete(BaseEntity obj) {
 		employeeRepository.delete((Employee)obj);
 	}
@@ -87,7 +87,7 @@ public class EmployeeDaoService implements UserDaoService {
 	}
 	
 	@Override
-	@CacheEvict(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootId")
+	@CacheEvict(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootid")
 	public void deleteById(Long rootId) {
 		employeeRepository.deleteById(rootId);
 	}

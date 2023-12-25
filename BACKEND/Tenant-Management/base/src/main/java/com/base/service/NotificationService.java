@@ -61,7 +61,7 @@ public class NotificationService implements BaseService {
 		}
 		BaseEntity emp = employeeService.findById(notificationRequest.getUserId());
 		Assert.notNull(emp, "Invalid UserId");
-		Notification notification = new Notification(BaseSession.getTenantId(), emp.getRootId(),
+		Notification notification = new Notification(BaseSession.getTenantId(), emp.getRootid(),
 				notificationRequest.getTitle(), notificationRequest.getContent(), notificationRequest.getRecirectPath(),
 				notificationRequest.getType());
 		notificationRepository.save(notification).block();

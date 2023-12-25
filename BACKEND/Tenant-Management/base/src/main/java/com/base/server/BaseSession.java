@@ -39,7 +39,7 @@ public class BaseSession {
 	}
 	
 	public static Long getTenantId() {
-		return tenant.get().getObjectId();
+		return tenant.get().getRootid();
 	}
 	
 	public static String getTenantUniqueName() {

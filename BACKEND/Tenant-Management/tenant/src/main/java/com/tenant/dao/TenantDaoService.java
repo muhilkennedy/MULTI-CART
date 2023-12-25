@@ -66,7 +66,7 @@ public class TenantDaoService implements BaseDaoService, BaseReactiveDaoService 
 	}
 
 	@Override
-	@CachePut(value = CacheUtil.TENANT_CACHE_NAME, key = "#obj.rootId")
+	@CachePut(value = CacheUtil.TENANT_CACHE_NAME, key = "#obj.rootid")
 	public BaseEntity save(BaseEntity obj) {
 		Tenant tenant = (Tenant) obj;
 		evictTenantByUniqueName(tenant.getUniquename());
@@ -74,7 +74,7 @@ public class TenantDaoService implements BaseDaoService, BaseReactiveDaoService 
 	}
 
 	@Override
-	@CachePut(value = CacheUtil.TENANT_CACHE_NAME, key = "#obj.rootId")
+	@CachePut(value = CacheUtil.TENANT_CACHE_NAME, key = "#obj.rootid")
 	public BaseEntity saveAndFlush(BaseEntity obj) {
 		Tenant tenant = (Tenant) obj;
 		evictTenantByUniqueName(tenant.getUniquename());
@@ -88,7 +88,7 @@ public class TenantDaoService implements BaseDaoService, BaseReactiveDaoService 
 	}
 
 	@Override
-	@CacheEvict(value = CacheUtil.TENANT_CACHE_NAME, key = "#obj.rootId")
+	@CacheEvict(value = CacheUtil.TENANT_CACHE_NAME, key = "#obj.rootid")
 	public void delete(BaseEntity obj) {
 		tenantRepository.delete((Tenant) obj);
 	}
