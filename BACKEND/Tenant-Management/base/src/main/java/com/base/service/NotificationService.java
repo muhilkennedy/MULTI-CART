@@ -13,10 +13,13 @@ import com.base.bgwork.BGWorkUtil;
 import com.base.bgwork.BroadCastNotificationJob;
 import com.base.entity.BaseEntity;
 import com.base.entity.Notification;
+import com.base.entity.Notificationtoken;
 import com.base.messages.NotificationRequest;
 import com.base.reactive.repository.NotificationRepository;
 import com.base.server.BaseSession;
 import com.base.util.BaseUtil;
+import com.platform.cloud.messaging.DirectNotification;
+import com.platform.service.PushMessageService;
 
 import reactor.core.publisher.Flux;
 
@@ -28,6 +31,9 @@ public class NotificationService implements BaseService {
 
 	@Autowired
 	private NotificationRepository notificationRepository;
+	
+	@Autowired
+	private NotificationTokenService tokenService;
 
 	@Autowired
 	@Qualifier("EmployeeService")
@@ -40,7 +46,7 @@ public class NotificationService implements BaseService {
 
 	public Flux<Notification> findAllUnReadForUser() {
 		return notificationRepository.getAllUserUnreadNotification(BaseSession.getTenantId(),
-				BaseSession.getUser().getRootId());
+				BaseSession.getUser().getRootid());
 	}
 
 	public void createNotification(NotificationRequest notificationRequest) throws SchedulerException {
@@ -48,9 +54,10 @@ public class NotificationService implements BaseService {
 			// TODO: check permissions, only superuser , admin, manage users can broadcast
 			JobDataMap map = new JobDataMap();
 			map.put("request", notificationRequest);
-			map.put("tenant", BaseSession.getTenant().getRootId());
-			map.put("user", BaseSession.getUser().getRootId());
+			map.put("tenant", BaseSession.getTenant().getRootid());
+			map.put("user", BaseSession.getUser().getRootid());
 			BGWorkUtil.fireAndForget(BroadCastNotificationJob.class, map, "INTERNAL-NOTIFICATION");
+			return;
 		}
 		BaseEntity emp = employeeService.findById(notificationRequest.getUserId());
 		Assert.notNull(emp, "Invalid UserId");
@@ -58,18 +65,33 @@ public class NotificationService implements BaseService {
 				notificationRequest.getTitle(), notificationRequest.getContent(), notificationRequest.getRecirectPath(),
 				notificationRequest.getType());
 		notificationRepository.save(notification).block();
+		sendOutPushNotification(notificationRequest);
+	}
+	
+	private void sendOutPushNotification(NotificationRequest notificationRequest) {
+		if (notificationRequest.isPushNotification()) {
+			Flux<Notificationtoken> tokens = tokenService.findAllUserTokens(notificationRequest.getUserId());
+			tokens.toStream().forEach(token -> {
+				DirectNotification directNotification = new DirectNotification();
+				directNotification.setMessage(notificationRequest.getContent());
+				directNotification.setTitle(notificationRequest.getTitle());
+				directNotification.setTarget(token.getToken());
+				PushMessageService.getInstance().sendNotificationToTarget(directNotification);
+			});
+		}
 	}
 
 	public int getUnreadNotificationCount() {
 		return notificationRepository
-				.getAllUserUnreadNotificationCount(BaseSession.getTenantId(), BaseSession.getUser().getRootId())
+				.getAllUserUnreadNotificationCount(BaseSession.getTenantId(), BaseSession.getUser().getRootid())
 				.block();
 	}
 
 	/**
-	 * @param notificationRequest 
-	 * recursive method to create notification for all users in batch.
-	 */
+	 * @param notificationRequest
+	 * recursive method to create notification for all users in batch
+  */
+
 	public void broadCastNotificationJob(NotificationRequest notificationRequest) {
 		List<BaseEntity> employees = (List<BaseEntity>) employeeService
 				.findAll(BaseUtil.getPageable("timecreated", "desc", 0, 100));
@@ -77,11 +99,15 @@ public class NotificationService implements BaseService {
 			return;
 		}
 		List<Notification> notifications = employees.stream()
-				.map(emp -> new Notification(BaseSession.getTenantId(), emp.getRootId(), notificationRequest.getTitle(),
+				.map(emp -> new Notification(BaseSession.getTenantId(), emp.getRootid(), notificationRequest.getTitle(),
 						notificationRequest.getContent(), notificationRequest.getRecirectPath(),
 						notificationRequest.getType()))
 				.toList();
 		notificationRepository.saveAll(notifications).buffer();
+		employees.stream().forEach(employee -> {
+			notificationRequest.setUserId(employee.getRootid());
+			sendOutPushNotification(notificationRequest);
+		});
 		broadCastNotificationJob(notificationRequest);
 	}
 

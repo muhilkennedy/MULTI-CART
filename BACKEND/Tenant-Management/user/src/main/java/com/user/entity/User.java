@@ -15,6 +15,7 @@ import com.platform.entity.UserBaseObject;
 import com.platform.security.AttributeEncryptor;
 import com.platform.user.Permissions;
 import com.platform.util.EncryptionUtil;
+import com.platform.util.PlatformUtil;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -172,6 +173,10 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 	@Override
 	public Set<Permissions> getUserPermissions() {
 		return Collections.<Permissions>emptySet();
+	}
+
+	public boolean isSystemUser() {
+		return getRootid() == PlatformUtil.SYSTEM_USER_ROOTID;
 	}
 
 }

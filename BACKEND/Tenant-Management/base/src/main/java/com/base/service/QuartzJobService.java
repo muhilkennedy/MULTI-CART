@@ -30,13 +30,13 @@ public class QuartzJobService implements BaseService, BaseReactiveDaoService {
 
 	@Autowired
 	private QuartzJobRepository jobRepository;
-	
+
 	@Autowired
 	private QuartzReactiveRepository reativeRepository;
-	
+
 	@Autowired
 	private Scheduler quartzScheduler;
-	
+
 	@Override
 	public BaseEntity findById(Long rootId) {
 		return jobRepository.findById(rootId).get();
@@ -64,17 +64,13 @@ public class QuartzJobService implements BaseService, BaseReactiveDaoService {
 
 	public QuartzJobInfo createQuartzJobInfo(String jobName, String jobGroup, boolean isRecurring) {
 		QuartzJobInfo info = jobRepository.findJob(jobGroup, jobName);
-		if(info == null)
-		{
+		if (info == null) {
 			info = new QuartzJobInfo();
 			info.setJobgroup(jobGroup);
 			info.setJobname(jobName);
 			info.setIsrecurring(isRecurring);
 		}
 		info.setJobstatus(ScheduledTaskStatus.CREATED.name());
-		if(BaseSession.getTenant() != null) {
-			info.setTenantId(BaseSession.getTenantId());
-		}
 		return jobRepository.saveAndFlush(info);
 	}
 
@@ -83,7 +79,7 @@ public class QuartzJobService implements BaseService, BaseReactiveDaoService {
 		job.setJobstatus(status.name());
 		jobRepository.save(job);
 	}
-	
+
 	public void markJobProcessing(String jobName, String jobGroup) {
 		QuartzJobInfo job = jobRepository.findJob(jobGroup, jobName);
 		job.setJobstatus(ScheduledTaskStatus.INPROGRESS.name());
@@ -96,20 +92,20 @@ public class QuartzJobService implements BaseService, BaseReactiveDaoService {
 		job.setErrorinfo(errorMessage);
 		jobRepository.save(job);
 	}
-	
+
 	public void markJobComplete(String jobName, String jobGroup) {
 		QuartzJobInfo job = jobRepository.findJob(jobGroup, jobName);
 		job.setJobstatus(ScheduledTaskStatus.SUCCESS.name());
 		jobRepository.save(job);
 	}
-	
+
 	public void deleteJob(String jobName, String jobGroup) throws SchedulerException {
 		QuartzJobInfo job = jobRepository.findJob(jobGroup, jobName);
 		JobKey key = new JobKey(jobName, jobGroup);
 		BGWorkUtil.deleteJobIfExists(key);
 		jobRepository.delete(job);
 	}
-	
+
 	public void forceExecuteJob(String jobName, String jobGroup) throws SchedulerException {
 		QuartzJobInfo job = jobRepository.findJob(jobGroup, jobName);
 		JobKey key = new JobKey(jobName, jobGroup);

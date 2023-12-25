@@ -23,5 +23,10 @@ public interface ConfigTypeRepository extends JpaRepository<ConfigType, Long> {
 
 	@Query(findByNameQuery)
 	List<ConfigType> findByConfig(@Param("name") String name, @Param("configtype") String configtype);
+	
+	String findAllFromTimeQuery = "select conf from ConfigType conf where timeupdated > :timeupdated order by timeupdated asc";
+
+	@Query(findAllFromTimeQuery)
+	List<ConfigType> findAllFromTime(@Param("timeupdated") long timeupdated);
 
 }

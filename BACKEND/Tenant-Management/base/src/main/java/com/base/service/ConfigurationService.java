@@ -27,6 +27,10 @@ public class ConfigurationService implements BaseService {
 	public List<ConfigType> findAllConfigs() {
 		return configRepository.findAll();
 	}
+	
+	public List<ConfigType> findAllConfigsFromTimeUpdated(Long fromTime) {
+		return configRepository.findAllFromTime(fromTime);
+	}
 
 	public List<ConfigType> findAllConfig(ConfigurationType type) {
 		return configRepository.findAllConfigByType(type.name());

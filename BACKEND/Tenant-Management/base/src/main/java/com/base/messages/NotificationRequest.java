@@ -17,12 +17,15 @@ public class NotificationRequest implements Serializable {
 	@NotNull
 	private Long userId;
 	@NotBlank
+	private String title;
+	@NotBlank
 	private String content;
 	@NotBlank
 	private String title;
 	private int type;
 	private String recirectPath;
 	private boolean broadcastNotification;
+	private boolean pushNotification;
 	
 	public NotificationRequest() {
 		
@@ -33,6 +36,7 @@ public class NotificationRequest implements Serializable {
 		super();
 		this.userId = userId;
 		this.content = content;
+		this.title = title;
 		this.type = type.ordinal();
 		this.recirectPath = recirectPath;
 		this.title = title;
@@ -84,6 +88,14 @@ public class NotificationRequest implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public boolean isPushNotification() {
+		return pushNotification;
+	}
+
+	public void setPushNotification(boolean pushNotification) {
+		this.pushNotification = pushNotification;
 	}
 
 }

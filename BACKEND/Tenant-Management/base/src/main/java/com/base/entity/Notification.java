@@ -45,6 +45,7 @@ public class Notification extends MultiTenantEntity {
 		this.userid = userid;
 		this.title = title;
 		this.content = content;
+		this.title = title;
 		this.notificationtype = type.ordinal();
 	}
 
@@ -56,6 +57,7 @@ public class Notification extends MultiTenantEntity {
 		this.content = content;
 		this.redirectpath = redirectpath;
 		this.notificationtype = type.ordinal();
+		this.title = title;
 		this.setTenantid(tenantId);
 		this.setActive(true);
 	}
@@ -67,6 +69,7 @@ public class Notification extends MultiTenantEntity {
 		this.content = content;
 		this.redirectpath = redirectpath;
 		this.notificationtype = type;
+		this.title = title;
 		this.setTenantid(tenantId);
 		this.setActive(true);
 	}

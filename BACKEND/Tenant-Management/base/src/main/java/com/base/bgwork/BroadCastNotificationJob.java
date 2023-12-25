@@ -27,7 +27,7 @@ public class BroadCastNotificationJob extends BGJob {
 	}
 
 	@Override
-	public void run() {
+	public void run(JobExecutionContext context) {
 		// No-Op
 	}
 

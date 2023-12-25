@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.quartz.Job;
 import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
@@ -17,11 +18,13 @@ import org.springframework.stereotype.Component;
 
 import com.base.entity.BaseEntity;
 import com.base.server.BaseSession;
+import com.base.service.AuditService;
 import com.base.service.BaseService;
 import com.base.service.QuartzJobService;
 import com.base.util.DatabaseUtil;
 import com.base.util.Log;
 import com.platform.exception.BGWorkException;
+import com.platform.messages.AuditOperation;
 
 import jakarta.annotation.PostConstruct;
 
@@ -43,6 +46,9 @@ public abstract class BGJob implements Job {
 
 	@Autowired
 	private Scheduler quartzScheduler;
+	
+	@Autowired
+	private AuditService auditService;
 	
 	@Autowired
 	private QuartzJobService quartzJobService;
@@ -79,19 +85,26 @@ public abstract class BGJob implements Job {
 	/**
 	 * Actual work to be executed. (business logic)
 	 */
-	public abstract void run();
+	public abstract void run(JobExecutionContext context) throws BGWorkException;
 
-	public void runForAllTenants() throws BGWorkException {
+	public void runForAllTenants(JobExecutionContext context) throws BGWorkException {
 		try {
 			List<?> tenantIds = DatabaseUtil.executeDQL(FETCH_TENANTS_QUERY);
 			tenantIds.stream().peek(tenantId -> Log.tenant.info("Executing BGWork {} for tenant : {}",
 					this.getClass().getSimpleName(), tenantId)).forEach(tenantId -> {
 						setupSession((Long) tenantId);
-						run();
+						try {
+							run(context);
+						} catch (BGWorkException e) {
+							String msg = String.format("Error running job for tenant : {%s} : {%s}", tenantId, e);
+							Log.base.error(msg);
+							auditService.logAuditInfo(AuditOperation.SCHEDULEDTASKERROR, msg);
+						}
 						teardownSession();
 					});
 		} catch (SQLException e) {
 			Log.base.error("Error querying tenants : {}", e);
+			auditService.logAuditInfo(AuditOperation.SCHEDULEDTASKERROR, e.getMessage());
 			throw new BGWorkException("Error querying tenants : " + e.getMessage());
 		}
 	}

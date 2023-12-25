@@ -31,7 +31,7 @@ public class BirthdayWishesScheduledTask extends BGJob {
 	}
 	
 	@Override
-	public void run() {
+	public void run(JobExecutionContext context) {
 		Log.tenant.info("Executing Birthday wishes task for tenant : {}", BaseSession.getTenantUniqueName());
 		empService.sendBirthdayWishesMail();
 	}
@@ -39,7 +39,7 @@ public class BirthdayWishesScheduledTask extends BGJob {
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		try {
-			runForAllTenants();
+			runForAllTenants(arg0);
 		} catch (BGWorkException e) {
 			throw new JobExecutionException(e);
 		}

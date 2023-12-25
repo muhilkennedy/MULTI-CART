@@ -249,7 +249,7 @@ public class BGWorkUtil {
 			Log.base.info("scheduleBasicJob : Existing scheduled cron job : {}", scheduler.getJobDetail(key));
 		}
 	}
-	
+
 	/**
 	 * @param jobClass
 	 * @return

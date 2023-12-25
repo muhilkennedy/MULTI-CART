@@ -29,7 +29,7 @@ public class TaskStatusUpdaterScheduledTask extends BGJob {
 	}
 	
 	@Override
-	public void run() {
+	public void run(JobExecutionContext context) {
 		Log.tenant.info("Executing Task status check for tenant : {}", BaseSession.getTenantUniqueName());
 		taskService.checkAndUpdateTaskStatus();
 	}
@@ -37,7 +37,7 @@ public class TaskStatusUpdaterScheduledTask extends BGJob {
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		try {
-			runForAllTenants();
+			runForAllTenants(arg0);
 		} catch (BGWorkException e) {
 			throw new JobExecutionException(e);
 		}

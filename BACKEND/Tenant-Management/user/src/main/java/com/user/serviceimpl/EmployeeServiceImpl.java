@@ -143,7 +143,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public void uploadEmployeeDocumentProof(Employee employee, File document) throws IOException {
 		FileStore store = fileService.uploadToFileStore(document, true, "/EmployeeProof/" + employee.getUniquename());
-		employee.getEmployeeInfo().setProofFileId(store.getRootId());
+		employee.getEmployeeInfo().setProofFileId(store.getRootid());
 		empDaoService.save(employee);
 	}
 

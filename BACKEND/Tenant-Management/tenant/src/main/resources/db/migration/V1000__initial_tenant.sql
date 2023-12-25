@@ -5,7 +5,7 @@ create table if not exists tenantsubscription (rootid bigint NOT NULL AUTO_INCRE
 create table if not exists tenantconfig (rootid bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, tenantid bigint NOT NULL, active BOOL DEFAULT TRUE, timecreated bigint DEFAULT 0, timeupdated bigint DEFAULT 0, modifiedby bigint DEFAULT 0, createdby bigint DEFAULT 0, version bigint DEFAULT 0, pname varchar(128), pvalue varchar(1024), ptype tinyint, CONSTRAINT FOREIGN KEY(tenantid) REFERENCES tenant(rootid));
 
 /*Initial data load*/
-insert into tenant (rootid, name, uniquename ) values (0, "MKEN SYSTEM", "system");
+/*insert into tenant (rootid, name, uniquename ) values (0, "MKEN SYSTEM", "SYSTEM");*/
 insert into tenant (rootid, name, uniquename ) values (-1, "Admin Tenant (dev)", "devTenant");
 insert into tenant (rootid, name, uniquename ) values (-2, "Client Dev Tenant (dev)", "clientDevTenant");
 

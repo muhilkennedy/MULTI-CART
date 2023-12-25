@@ -2,11 +2,13 @@ package com.base.entity;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.base.server.BaseSession;
 import com.platform.annotations.ClassMetaProperty;
 import com.platform.util.PlatformUtil;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 /**
@@ -92,6 +94,13 @@ public class QuartzJobInfo extends BaseEntity {
 			this.errorinfo = errorinfo.substring(0, ERROR_SIZE_LIMIT);
 		} else {
 			this.errorinfo = errorinfo;
+		}
+	}
+	
+	@PrePersist
+	private void manipulateTenant() {
+		if(BaseSession.getTenant() != null) {
+			setTenantId(BaseSession.getTenantId());
 		}
 	}
 

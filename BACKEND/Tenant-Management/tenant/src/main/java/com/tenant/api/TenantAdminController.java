@@ -63,6 +63,14 @@ public class TenantAdminController {
 		Tenant newTenant = tenantService.uploadLogo(BaseUtil.generateFileFromMutipartFile(picture));
 		return response.setStatus(Response.Status.CREATED).setData(newTenant).build();
 	}
+	
+	@UserPermission(values = Permissions.SUPER_USER)
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> getTenant(@RequestParam("tenantUniqueName") String uniqueName)
+			throws IllegalStateException, IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.findByUniqueName(uniqueName)).build();
+	}
 
 	@UserPermission(values = Permissions.SUPER_USER)
 	@GetMapping(value = "/alltenants", produces = MediaType.APPLICATION_JSON_VALUE)

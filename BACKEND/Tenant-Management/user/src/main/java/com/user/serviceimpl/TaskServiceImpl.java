@@ -71,17 +71,17 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public Page<Task> findAllTaskUserIsPartOf(Pageable pageable) {
-		return daoService.findAllTasksUserPartOf(BaseSession.getUser().getRootId(), pageable);
+		return daoService.findAllTasksUserPartOf(BaseSession.getUser().getRootid(), pageable);
 	}
 	
 	@Override
 	public Page<Task> findAllTaskUserIsPartOf(String status, Pageable pageable) {
-		return daoService.findAllTasksUserPartOf(status, BaseSession.getUser().getRootId(), pageable);
+		return daoService.findAllTasksUserPartOf(status, BaseSession.getUser().getRootid(), pageable);
 	}
 	
 	@Override
 	public Page<Task> findAllBroadCastTask( Pageable pageable) {
-		return daoService.findAllBroadCastTask(BaseSession.getUser().getRootId(), pageable);
+		return daoService.findAllBroadCastTask(BaseSession.getUser().getRootid(), pageable);
 	}
 
 	@Override
@@ -96,8 +96,8 @@ public class TaskServiceImpl implements TaskService {
 		if (request.isBroadCast()) {
 			JobDataMap map = new JobDataMap();
 			map.put("request", request);
-			map.put("tenant", BaseSession.getTenant().getRootId());
-			map.put("user", BaseSession.getUser().getRootId());
+			map.put("tenant", BaseSession.getTenant().getRootid());
+			map.put("user", BaseSession.getUser().getRootid());
 			try {
 				BGWorkUtil.fireAndForget(BroadCastTaskJob.class, map, "INTENAL-TASK");
 			} catch (SchedulerException e) {
@@ -203,7 +203,7 @@ public class TaskServiceImpl implements TaskService {
 	
 	@Override
 	public int getTasksCount(TaskStatus status) {
-		return daoService.getTasksCount(BaseSession.getUser().getRootId(), status.name());
+		return daoService.getTasksCount(BaseSession.getUser().getRootid(), status.name());
 	}
 
 }

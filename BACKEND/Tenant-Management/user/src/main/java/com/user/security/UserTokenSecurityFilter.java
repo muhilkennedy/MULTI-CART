@@ -11,7 +11,10 @@ import org.springframework.stereotype.Component;
 import com.base.server.BaseSession;
 import com.base.util.PropertiesUtil;
 import com.i18n.util.LocaleUtil;
+import com.platform.entity.PlatformUser;
 import com.platform.util.JWTUtil;
+import com.platform.util.PlatformUtil;
+import com.user.entity.Employee;
 import com.user.entity.User;
 import com.user.messages.UserMessages;
 import com.user.service.UserService;
@@ -51,21 +54,30 @@ public class UserTokenSecurityFilter implements Filter {
 					if (JWTUtil.validateToken(jwtToken)) {
 						String userRootId = JWTUtil.getUserIdFromToken(jwtToken);
 						if (StringUtils.isNotBlank(userRootId)) {
-							User user = (User) empService.findById(Long.valueOf(userRootId));
-							String tokenUserUniqueName = JWTUtil.getUserUniqueNameFromToken(jwtToken);
-							String tokenIpAddress = JWTUtil.getIpAddressFromToken(jwtToken);
-							if (user == null || !user.getUniquename().equals(tokenUserUniqueName)
-									|| !httpRequest.getRemoteAddr().equals(tokenIpAddress)) {
-								httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, LocaleUtil
-										.getLocalisedString(UserMessages.INVALID_ACCESS.getKey(), null, BaseSession.getLocale()));
-								return;
-							} else if (!user.isActive()) {
-								httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, LocaleUtil
-										.getLocalisedString(UserMessages.INACTIVE.getKey(), null, user.getLocale()));
-								return;
+							if (Long.parseLong(userRootId) == PlatformUtil.SYSTEM_USER_ROOTID) {
+								PlatformUser systemUser = PlatformUser.getSystemUser();
+								Employee user = new Employee();
+								user.setUniquename(systemUser.getUniquename());
+								user.setRootid(systemUser.getRootid());
+								BaseSession.setUser(user);
 							}
-							BaseSession.setUser(user);
-							BaseSession.setLocale(user.getLocale());
+							else {
+								User user = (User) empService.findById(Long.valueOf(userRootId));
+								String tokenUserUniqueName = JWTUtil.getUserUniqueNameFromToken(jwtToken);
+								String tokenIpAddress = JWTUtil.getIpAddressFromToken(jwtToken);
+								if (user == null || !user.getUniquename().equals(tokenUserUniqueName)
+										|| !httpRequest.getRemoteAddr().equals(tokenIpAddress)) {
+									httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, LocaleUtil
+											.getLocalisedString(UserMessages.INVALID_ACCESS.getKey(), null, BaseSession.getLocale()));
+									return;
+								} else if (!user.isActive()) {
+									httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, LocaleUtil
+											.getLocalisedString(UserMessages.INACTIVE.getKey(), null, user.getLocale()));
+									return;
+								}
+								BaseSession.setUser(user);
+								BaseSession.setLocale(user.getLocale());
+							}
 							chain.doFilter(request, response);
 						} else {
 							httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED,

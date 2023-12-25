@@ -2,8 +2,10 @@ package com.base.api;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,15 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.base.entity.ConfigType;
 import com.base.messages.ConfigRequest;
 import com.base.service.ConfigurationService;
-import com.google.firebase.messaging.FirebaseMessagingException;
 import com.platform.annotations.UserPermission;
 import com.platform.annotations.ValidateUserToken;
-import com.platform.cloud.messaging.DirectNotification;
-import com.platform.cloud.messaging.SubscriptionRequest;
-import com.platform.cloud.messaging.TopicNotification;
+import com.platform.messages.ConfigurationType;
 import com.platform.messages.GenericResponse;
 import com.platform.messages.Response;
-import com.platform.service.GoogleMessagingService;
 import com.platform.user.Permissions;
 
 import jakarta.validation.Valid;
@@ -58,19 +56,25 @@ public class BaseController {
 		return response.setStatus(Response.Status.OK).build();
 	}
 	
-	@PostMapping("/notification")
-	public void direct(@RequestBody DirectNotification request) {
-		GoogleMessagingService.getInstance().sendNotificationToTarget(request);
+	@UserPermission(values = { Permissions.SUPER_USER })
+	@GetMapping(value = "/config", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<ConfigType> getConfigs(@RequestParam(value = "tenantId", required = false) Long tenantId,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "fromTime", required = false) Long fromTime) {
+		GenericResponse<ConfigType> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK)
+				.setDataList(StringUtils.isNotBlank(type) ? configService.findAllConfig(ConfigurationType.valueOf(type))
+						: configService.findAllConfigs())
+				.build();
 	}
 
-	@PostMapping("/topic/notification")
-	public void topic(@RequestBody TopicNotification request) {
-		GoogleMessagingService.getInstance().sendNotificationToTarget(request);
-	}
-
-	@PostMapping("/topic/subscription")
-	public void subscribeToTopic(@RequestBody SubscriptionRequest request) throws FirebaseMessagingException {
-		GoogleMessagingService.getInstance().subscribeToTopic(request);
+	@UserPermission(values = { Permissions.SUPER_USER })
+	@GetMapping(value = "/config/pull", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<ConfigType> getConfigs(@RequestParam(value = "tenantId", required = false) Long tenantId,
+			@RequestParam(value = "fromTime", required = false) Long fromTime) {
+		GenericResponse<ConfigType> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setDataList(configService.findAllConfigsFromTimeUpdated(fromTime))
+				.build();
 	}
 
 }

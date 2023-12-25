@@ -113,6 +113,11 @@ public class Tenant extends BaseEntity implements Serializable, TenantBaseObject
 	public Long getTenantRootId() {
 		return getObjectId();
 	}
+	
+	@Override
+	public boolean isSystemTenant() {
+		return getRootid() == PlatformUtil.SYSTEM_REALM_ROOTID;
+	}
 
 	@Override
 	public boolean isSystemTenant() {
