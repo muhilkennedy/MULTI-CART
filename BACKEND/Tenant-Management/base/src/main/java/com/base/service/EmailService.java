@@ -136,7 +136,7 @@ public class EmailService {
 	private JobDataMap createJobDataMap(List<String> recipientEmail, List<String> cc, String subject, String body,
 			Map<String, File> inlineImages, List<File> attachmemnts) {
 		JobDataMap dataMap = new JobDataMap();
-		dataMap.put(EmailTask.KEY_TENANATID, BaseSession.getCurrentTenant().getRootId());
+		dataMap.put(EmailTask.KEY_TENANATID, BaseSession.getCurrentTenant().getRootid());
 		dataMap.put(EmailTask.KEY_RECIPIENTS, recipientEmail);
 		dataMap.put(EmailTask.KEY_CARBONCOPY, cc);
 		dataMap.put(EmailTask.KEY_SUBJECT, subject);
@@ -225,7 +225,7 @@ public class EmailService {
 		templates.stream().forEach(template -> {
 			try {
 				BaseEntity dummyTenant = new BaseEntity();
-				dummyTenant.setRootId(template.getRootId());
+				dummyTenant.setRootid(template.getRootid());
 				PlatformBaseSession.setTenant(template);
 				File file = fileStore.getFileById(template.getStoreid());
 				File destFile = EmailUtil.getLocalEmailTemplatesDirectory();
@@ -251,7 +251,7 @@ public class EmailService {
 			template = new EmailTemplate();
 			template.setName(templateName);
 			FileStore store = fileStore.uploadToFileStore(StoreType.GCP, file, true, PlatformUtil.TEMPLATES_FOLDER);
-			template.setStoreid(store.getRootId());
+			template.setStoreid(store.getRootid());
 		} else {
 			Optional<FileStore> store = fileStore.getFileStoreById(template.getStoreid());
 			if (store.isEmpty()) {

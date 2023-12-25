@@ -83,7 +83,8 @@ public class EmployeeController {
 	@GetMapping(value = "/fetch", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GenericResponse<User> fetchUser(@RequestParam(value = "uniqueName", required = false) String uniqueName,
 			@RequestParam(value = "userId", required = false) Long rootId,
-			@RequestParam(value = "emailId", required = false) String emailId) {
+			@RequestParam(value = "emailId", required = false) String emailId,
+			@RequestParam(value = "tenantId", required = false) Long tenantId) {
 		GenericResponse<User> response = new GenericResponse<>();
 		if (!StringUtils.isEmpty(uniqueName)) {
 			return response.setStatus(Response.Status.OK).setData(empService.findByUniqueName(uniqueName)).build();
@@ -135,7 +136,7 @@ public class EmployeeController {
 		employee.setDesignation(empRequest.getDesignation());
 		User reportsToEmp = empService.findByUniqueName(empRequest.getReportsTo());
 		if (reportsToEmp != null) {
-			employee.setReportsto(reportsToEmp.getRootId());
+			employee.setReportsto(reportsToEmp.getRootid());
 		}
 		employee = (Employee) empService.register(employee);
 		EmployeeInfo empInfo = new EmployeeInfo();

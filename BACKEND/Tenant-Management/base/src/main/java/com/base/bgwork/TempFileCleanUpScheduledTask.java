@@ -24,7 +24,7 @@ public class TempFileCleanUpScheduledTask extends BGJob {
 	}
 
 	@Override
-	public void run() {
+	public void run(JobExecutionContext context) {
 		Log.base.info("Starting TempFileCleanUpScheduledTask");
 		FileUtil.cleanUpTempDirectory();
 		Log.base.info("Completed TempFileCleanUpScheduledTask");
@@ -32,7 +32,7 @@ public class TempFileCleanUpScheduledTask extends BGJob {
  
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		this.run();
+		this.run(arg0);
 	}
 
 }

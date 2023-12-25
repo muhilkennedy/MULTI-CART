@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.platform.annotations.ClassMetaProperty;
 import com.platform.entity.BasePermissions;
+import com.platform.entity.PlatformUser;
 import com.platform.user.Permissions;
+import com.platform.util.PlatformUtil;
 import com.user.util.UserUtil;
 
 import jakarta.persistence.CascadeType;
@@ -84,6 +86,9 @@ public class Employee extends User implements BasePermissions {
 	@Override
 	public Set<Permissions> getUserPermissions() {
 		try {
+			if (getRootid() == PlatformUtil.SYSTEM_USER_ROOTID) {
+				return PlatformUser.getSystemUser().getUserPermissions();
+			}
 			Optional<Set<Permissions>> obj = employeeeRoles.stream()
 					.map(role -> role.getRole().getPermissions().stream()
 							.map(rp -> Permissions.getPermissionIfValid(rp.getPermission().getPermission()))

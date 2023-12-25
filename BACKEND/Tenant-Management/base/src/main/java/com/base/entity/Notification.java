@@ -20,6 +20,9 @@ public class Notification extends MultiTenantEntity {
 	
 	@Column(name = "USERID")
 	private Long userid;
+	
+	@Column(name = "TITLE")
+	private String title;
 
 	@Column(name = "CONTENT")
 	private String content;
@@ -37,29 +40,32 @@ public class Notification extends MultiTenantEntity {
 		super();
 	}
 
-	public Notification(Long userid, String content, NotificationType type) {
+	public Notification(Long userid, String title, String content, NotificationType type) {
 		super();
 		this.userid = userid;
 		this.content = content;
+		this.title = title;
 		this.notificationtype = type.ordinal();
 	}
 
-	public Notification(Long tenantId, Long userid, String content, String redirectpath, NotificationType type) {
+	public Notification(Long tenantId, Long userid, String title, String content, String redirectpath, NotificationType type) {
 		super();
 		this.userid = userid;
 		this.content = content;
 		this.redirectpath = redirectpath;
 		this.notificationtype = type.ordinal();
+		this.title = title;
 		this.setTenantid(tenantId);
 		this.setActive(true);
 	}
 
-	public Notification(Long tenantId, Long userid, String content, String redirectpath, int type) {
+	public Notification(Long tenantId, Long userid, String title, String content, String redirectpath, int type) {
 		super();
 		this.userid = userid;
 		this.content = content;
 		this.redirectpath = redirectpath;
 		this.notificationtype = type;
+		this.title = title;
 		this.setTenantid(tenantId);
 		this.setActive(true);
 	}
@@ -102,6 +108,14 @@ public class Notification extends MultiTenantEntity {
 
 	public void setRead(boolean read) {
 		this.notificationread = read;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

@@ -51,7 +51,7 @@ public class RolePermission extends MultiTenantEntity {
 		this.permission = permission;
 		this.role = role;
 		setPermissionid(permission.getRootid());
-		setRoleid(role.getRootId());
+		setRoleid(role.getRootid());
 	}
 
 	public Permission getPermission() {

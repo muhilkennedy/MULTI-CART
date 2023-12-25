@@ -60,27 +60,27 @@ public class BaseEntity implements Serializable, BaseObject {
 		super();
 	}
 
-	public long getRootId() {
+	public long getRootid() {
 		return rootid;
 	}
 
-	public void setRootId(long rootId) {
+	public void setRootid(long rootId) {
 		this.rootid = rootId;
 	}
 
-	public long getTimeUpdated() {
+	public long getTimeupdated() {
 		return timeupdated;
 	}
 
-	public void setTimeUpdated(long timeUpdated) {
+	public void setTimeupdated(long timeUpdated) {
 		this.timeupdated = timeUpdated;
 	}
 
-	public long getTimeCreated() {
+	public long getTimecreated() {
 		return timecreated;
 	}
 
-	public void setTimeCreated(long timeCreated) {
+	public void setTimecreated(long timeCreated) {
 		this.timecreated = timeCreated;
 	}
 
@@ -100,19 +100,19 @@ public class BaseEntity implements Serializable, BaseObject {
 		this.active = active;
 	}
 
-	public long getModifiedBy() {
+	public long getModifiedby() {
 		return modifiedby;
 	}
 
-	public void setModifiedBy(long modifiedBy) {
+	public void setModifiedby(long modifiedBy) {
 		this.modifiedby = modifiedBy;
 	}
 
-	public long getCreatedBy() {
+	public long getCreatedby() {
 		return createdby;
 	}
 
-	public void setCreatedBy(long createdBy) {
+	public void setCreatedby(long createdBy) {
 		this.createdby = createdBy;
 	}
 	

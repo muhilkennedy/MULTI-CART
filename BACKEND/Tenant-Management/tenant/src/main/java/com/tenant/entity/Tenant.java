@@ -7,6 +7,7 @@ import com.platform.annotations.ClassMetaProperty;
 import com.platform.annotations.PIIData;
 import com.platform.entity.TenantBaseObject;
 import com.platform.user.Permissions;
+import com.platform.util.PlatformUtil;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -111,6 +112,11 @@ public class Tenant extends BaseEntity implements Serializable, TenantBaseObject
 	@Override
 	public Long getTenantRootId() {
 		return getObjectId();
+	}
+	
+	@Override
+	public boolean isSystemTenant() {
+		return getRootid() == PlatformUtil.SYSTEM_REALM_ROOTID;
 	}
 
 }
