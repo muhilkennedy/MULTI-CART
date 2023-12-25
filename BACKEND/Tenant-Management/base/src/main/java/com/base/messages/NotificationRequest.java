@@ -20,8 +20,6 @@ public class NotificationRequest implements Serializable {
 	private String title;
 	@NotBlank
 	private String content;
-	@NotBlank
-	private String title;
 	private int type;
 	private String recirectPath;
 	private boolean broadcastNotification;

@@ -171,6 +171,7 @@ public class TaskServiceImpl implements TaskService {
 			NotificationRequest request = new NotificationRequest(emp.getObjectId(),
 					String.format("New %s Task has been assigned to you!", task.getTasktype()), task.getTitle(),
 					NotificationType.INFO, "/task");
+			request.setPushNotification(true);
 			this.notify.createNotification(request);
 		} catch (SchedulerException e) {
 			Log.user.error("Error creating notification : {}", e);
