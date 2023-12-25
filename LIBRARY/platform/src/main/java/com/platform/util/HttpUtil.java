@@ -2,12 +2,15 @@ package com.platform.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -18,12 +21,10 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.platform.entity.PlatformTenant;
-import com.platform.exception.TenantException;
+import com.google.gson.reflect.TypeToken;
 import com.platform.messages.GenericResponse;
 
 /**
@@ -99,7 +100,11 @@ public class HttpUtil {
 			throws URISyntaxException {
 		HttpGet request = new HttpGet(url);
 		if (headers != null && !headers.isEmpty()) {
-			request.setHeaders((Header[]) headers.toArray());
+			Header[] headersArray = new Header[headers.size()];
+			for (int i = 0; i < headers.size(); ++i) {
+				headersArray[i] = headers.get(i);
+			}
+			request.setHeaders(headersArray);
 		}
 		URI uri = prepareURI(request, params);
 		request.setURI(uri);
@@ -112,7 +117,11 @@ public class HttpUtil {
 		StringEntity entity = new StringEntity(jsonBody);
 		request.setEntity(entity);
 		if (headers != null && !headers.isEmpty()) {
-			request.setHeaders((Header[]) headers.toArray());
+			Header[] headersArray = new Header[headers.size()];
+			for (int i = 0; i < headers.size(); ++i) {
+				headersArray[i] = headers.get(i);
+			}
+			request.setHeaders(headersArray);
 		}
 		URI uri = prepareURI(request, params);
 		request.setURI(uri);
@@ -164,11 +173,16 @@ public class HttpUtil {
 		if (response.getDataList() != null && !response.getDataList().isEmpty()) {
 			Gson gson = new Gson();
 			String json = gson.toJson(response.getDataList());
-			response.getDataList().parallelStream().forEach(data -> {
-				dataList.add(gson.fromJson(json, cls));
-			});
+			Type listType = new TypeToken<List>() {}.getType();
+			dataList = new Gson().fromJson(json, listType);
 		}
 		return dataList;
+	}
+	
+	public static List<Header> getDefaultSystemHeaders() {
+		Header tenantHeader = new BasicHeader(HttpUtil.HEADER_TENANT, PlatformUtil.INTERNAL_SYSTEM);
+		Header authHeader = new BasicHeader(HttpHeaders.AUTHORIZATION, JWTUtil.generateSystemUserToken());
+		return Arrays.asList(tenantHeader, authHeader);
 	}
 
 }

@@ -64,8 +64,8 @@ public class GoogleStorageService implements AbstractStorage {
 	}
 
 	public static void initForTenants(Map<Long, String> gcpConfig, Map<Long, String> gcpBucket) throws IOException {
-		if (instance == null) {
-			synchronized (GoogleStorageService.class) {
+		synchronized (GoogleStorageService.class) {
+			if (instance == null) {
 				Map<Long, StorageConfig> gcpStores = new HashMap<Long, StorageConfig>();
 				for (Map.Entry<Long, String> entry : gcpConfig.entrySet()) {
 					gcpStores.put(entry.getKey(),

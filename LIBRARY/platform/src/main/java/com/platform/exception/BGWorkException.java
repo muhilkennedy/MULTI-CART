@@ -11,6 +11,10 @@ public class BGWorkException extends CustomWrapperException {
 	public BGWorkException() {
 		super();
 	}
+	
+	public BGWorkException(Exception e) {
+		super(e);
+	}
 
 	public BGWorkException(String message) {
 		super(message);

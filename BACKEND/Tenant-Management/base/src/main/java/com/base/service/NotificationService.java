@@ -61,7 +61,7 @@ public class NotificationService implements BaseService {
 		}
 		BaseEntity emp = employeeService.findById(notificationRequest.getUserId());
 		Assert.notNull(emp, "Invalid UserId");
-		Notification notification = new Notification(BaseSession.getTenantId(), emp.getRootid(),
+		Notification notification = new Notification(BaseSession.getTenantId(), emp.getRootId(),
 				notificationRequest.getTitle(), notificationRequest.getContent(), notificationRequest.getRecirectPath(),
 				notificationRequest.getType());
 		notificationRepository.save(notification).block();
@@ -90,7 +90,8 @@ public class NotificationService implements BaseService {
 	/**
 	 * @param notificationRequest
 	 * recursive method to create notification for all users in batch
-	 */
+  */
+
 	public void broadCastNotificationJob(NotificationRequest notificationRequest) {
 		List<BaseEntity> employees = (List<BaseEntity>) employeeService
 				.findAll(BaseUtil.getPageable("timecreated", "desc", 0, 100));

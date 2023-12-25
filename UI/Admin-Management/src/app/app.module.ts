@@ -52,6 +52,8 @@ import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { MaterialModule } from './material.module';
 import { LoginComponent } from './views/login/login.component';
 import { ResetPasswordComponent } from './views/reset-password/reset-password.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 // import { AngularFireModule, FirebaseApp } from '@angular/fire/compat';
 
 const APP_CONTAINERS = [
@@ -147,7 +149,9 @@ export function init_tenant(initializer: TenantInitializer) {
     FormsModule,
     CommonModule ,
     CalloutModule,
-    ModalModule
+    ModalModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireMessagingModule,
   ],
   exports: [
     

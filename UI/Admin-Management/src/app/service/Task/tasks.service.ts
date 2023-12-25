@@ -14,12 +14,14 @@ export class TasksService {
     return this.http.post<any>(`${environment.backendProxy}/task`, body);
   }
 
-  getTasks(type: string, status: string, broadCasted: boolean): Observable<any>{
+  getTasks(pageSize: number, pageNumber: number, type: string, status: string, broadCasted: boolean): Observable<any>{
     return this.http.get(`${environment.backendProxy}/task`, {
       params: {
         type: type,
         status: status,
-        broadCasted : broadCasted
+        broadCasted : broadCasted,
+        pageSize: pageSize,
+        pageNumber: pageNumber
       }
     });
   }

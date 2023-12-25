@@ -249,6 +249,7 @@ public class BGWorkUtil {
 			Log.base.info("scheduleBasicJob : Existing scheduled cron job : {}", scheduler.getJobDetail(key));
 		}
 	}
+
 	/**
 	 * @param jobClass
 	 * @return
@@ -296,7 +297,6 @@ public class BGWorkUtil {
 	 */
 	public static JobDetail createBasicJobDetail(Class<? extends Job> jobClass, JobKey key, boolean isRecurring,
 			boolean isDurable) throws SchedulerException {
-		deleteJobIfExists(key);
 		JobDetail job = JobBuilder.newJob().ofType(jobClass).withIdentity(key).storeDurably(isDurable)
 				.requestRecovery(true).withDescription(jobClass.getName()).build();
 		quartzService.createQuartzJobInfo(job.getKey().getName(), job.getKey().getGroup(), isRecurring);
@@ -331,7 +331,6 @@ public class BGWorkUtil {
 	 */
 	public static JobDetail createAdvancedJobDetail(Class<? extends Job> jobClass, JobKey key, JobDataMap jobData,
 			boolean isRecurring, boolean isDurable) throws SchedulerException {
-		deleteJobIfExists(key);
 		JobDetail job = JobBuilder.newJob().ofType(jobClass).withIdentity(key).storeDurably(isDurable)
 				.requestRecovery(true).withDescription(jobClass.getName()).setJobData(jobData).build();
 		quartzService.createQuartzJobInfo(job.getKey().getName(), job.getKey().getGroup(), isRecurring);

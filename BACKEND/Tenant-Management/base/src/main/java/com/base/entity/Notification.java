@@ -43,13 +43,16 @@ public class Notification extends MultiTenantEntity {
 	public Notification(Long userid, String title, String content, NotificationType type) {
 		super();
 		this.userid = userid;
+		this.title = title;
 		this.content = content;
 		this.title = title;
 		this.notificationtype = type.ordinal();
 	}
 
-	public Notification(Long tenantId, Long userid, String title, String content, String redirectpath, NotificationType type) {
+	public Notification(Long tenantId, Long userid, String title, String content, String redirectpath,
+			NotificationType type) {
 		super();
+		this.title = title;
 		this.userid = userid;
 		this.content = content;
 		this.redirectpath = redirectpath;
@@ -61,6 +64,7 @@ public class Notification extends MultiTenantEntity {
 
 	public Notification(Long tenantId, Long userid, String title, String content, String redirectpath, int type) {
 		super();
+		this.title = title;
 		this.userid = userid;
 		this.content = content;
 		this.redirectpath = redirectpath;

@@ -20,6 +20,8 @@ public class NotificationRequest implements Serializable {
 	private String title;
 	@NotBlank
 	private String content;
+	@NotBlank
+	private String title;
 	private int type;
 	private String recirectPath;
 	private boolean broadcastNotification;
@@ -37,6 +39,7 @@ public class NotificationRequest implements Serializable {
 		this.title = title;
 		this.type = type.ordinal();
 		this.recirectPath = recirectPath;
+		this.title = title;
 	}
 
 	public Long getUserId() {
