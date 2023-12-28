@@ -29,4 +29,12 @@ export class TenantService {
     return this.http.get(`${environment.backendProxy}/admin/email/inbox`);
   }
 
+  updateValue(field: string, value: string): Observable<any> {
+    return this.http.put<any>(`${environment.backendProxy}/admin/tenant/${field}`, null, {
+      params: {
+        value: value
+      }
+    })
+  }
+
 }

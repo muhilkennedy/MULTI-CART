@@ -32,6 +32,10 @@ public class PlatformUser extends PlatformBaseEntity implements UserBaseObject {
 		return getUniquename();
 	}
 	
+	public PlatformUser(){
+		super();
+	}
+	
 	public static PlatformUser getSystemUser() {
 		// Default SYSTEM user with all permissions.
 		PlatformUser user = new PlatformUser();

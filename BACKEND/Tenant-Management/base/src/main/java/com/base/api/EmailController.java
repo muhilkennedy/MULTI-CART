@@ -74,7 +74,7 @@ public class EmailController {
 	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_PROMOTIONS })
 	@GetMapping(value = "/download/{templateName}")
-	public void donwloadTemplate(@PathVariable String templateName, HttpServletResponse response) throws IOException {
+	public void downloadTemplate(@PathVariable String templateName, HttpServletResponse response) throws IOException {
 		File downloadFile = null;
 		try (OutputStream os = response.getOutputStream()) {
 			downloadFile = emailService.downloadTemplateFile(templateName);

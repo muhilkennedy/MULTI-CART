@@ -9,7 +9,7 @@
                 <div class=" form-group">
                   <label>Select Realm</label>
                   <mat-select style="border-style: dashed;" [(ngModel)]="selectedRealm" name="realm" (selectionChange)="getRealmData($event.value)">
-                    <mat-option *ngFor="let realm of realms" [value]="realm.rootId">
+                    <mat-option *ngFor="let realm of realms" [value]="realm.rootid">
                       {{realm.name}}
                     </mat-option>
                   </mat-select>

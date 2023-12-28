@@ -23,7 +23,11 @@
 		"TODO: need to update",
 		"forgotPasswordUrl"
 	],
-	"BIRTHDAY_WISHES":[
-		"TODO: update"
+	"EMPLOYEE_BIRTHDAY_WISHES":[
+		"tenantLogo",
+		"userName",
+		"tenantName",
+		"tenantMobile",
+		"tenantEmail"
 	]
 }

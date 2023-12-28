@@ -53,7 +53,7 @@ export class ListEmployeeComponent implements OnInit {
 
   toggleEmployeeStatus(employee: any) {
     this.spinner.show();
-    this.userService.toggleEmployeeStatus(employee.rootId)
+    this.userService.toggleEmployeeStatus(employee.rootid)
                     .subscribe({
                       next: (resp: any) => {
                         this.notification.fireAndWaitWarn({message : "Employee " + employee.uniquename + " status has been updated!"});
@@ -129,15 +129,15 @@ export class ListEmployeeComponent implements OnInit {
   }
 
   loadMoreInfoModal(employee: any){
-    
+    this.toggleMoreModal();
   }
 
   handleMoreModal(event: boolean){
-
+    this.showMoreModal = event;
   }
 
   toggleMoreModal(){
-    
+    this.showMoreModal = !this.showMoreModal;
   }
 
 }

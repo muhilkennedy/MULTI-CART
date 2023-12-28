@@ -128,6 +128,20 @@ public class GoogleStorageService implements AbstractStorage {
 		}
 		return null;
 	}
+	
+	@Override
+	public String getFileUrl(Optional<?> blobId) {
+		if (blobId.isPresent()) {
+			if (blobId.get() instanceof BlobId) {
+				BlobId bId = (BlobId) blobId.get();
+				Blob blob = storage().get(bId);
+				if(blob != null) {
+					return blob.getMediaLink();
+				}
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public String saveFile(File file) throws IOException {

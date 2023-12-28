@@ -24,6 +24,7 @@ public class EmployeeEmailService {
 
 	private static final String EMP_REG = "EMPLOYEE_REGISTRATION";
 	private static final String EMP_PWD_RST = "EMPLOYEE_PASSWORD_RESET";
+	private static final String EMP_BIRTHDAY = "EMPLOYEE_BIRTHDAY_WISHES";
 	private static final String PASSWORD_RESET_URL = "/#/password/reset?uniqueName=%s&otp=%s";
 
 	@Autowired
@@ -60,6 +61,22 @@ public class EmployeeEmailService {
 		try {
 			emailService.sendMail(user.getEmailid(), String.format("Reset Password : %s", user.getUniquename()),
 					emailService.constructEmailBody(EMP_PWD_RST, contentMap), null);
+		} catch (IOException | TemplateException e) {
+			Log.user.error("Exception sending mail to user {0} :: error :: {1}", user.getEmailid(), e);
+		}
+	}
+	
+	public void sendBirthdayWishesEmail(User user) {
+		TenantDetails tenantDetails = ((Tenant) BaseSession.getTenant()).getTenantDetail();
+		Map<String, String> contentMap = new HashedMap<String, String>();
+		contentMap.put("userName", String.format("%s %s", user.getFname(), user.getLname()));
+		contentMap.put("tenantName", ((Tenant) BaseSession.getTenant()).getName());
+		contentMap.put("tenantLogo", tenantDetails.getDetails().getLogoUrl());
+		contentMap.put("tenantMobile", tenantDetails.getContact());
+		contentMap.put("tenantEmail", tenantDetails.getEmailid());
+		try {
+			emailService.sendMail(user.getEmailid(), String.format("Wishing you a Happy Birthday"),
+					emailService.constructEmailBody(EMP_BIRTHDAY, contentMap), null);
 		} catch (IOException | TemplateException e) {
 			Log.user.error("Exception sending mail to user {0} :: error :: {1}", user.getEmailid(), e);
 		}

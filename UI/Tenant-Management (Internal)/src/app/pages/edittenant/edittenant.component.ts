@@ -172,7 +172,7 @@ export class EdittenantComponent implements OnInit {
   }
 
   getSelectedRealm(){
-    return this.realms.filter(realm => realm.rootId == this.selectedRealm).pop();
+    return this.realms.filter(realm => realm.rootid == this.selectedRealm).pop();
   }
 
   onConfigUpdate(){

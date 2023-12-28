@@ -2,6 +2,7 @@ package com.base.hibernate.configuration;
 
 import com.base.entity.BaseEntity;
 import com.base.server.BaseSession;
+import com.platform.util.PlatformUtil;
 
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -39,7 +40,7 @@ public class BaseEntityListener {
 	
 	private long getCurrentUser() {
 		if (BaseSession.getUser() == null) {
-			return 0L;
+			return PlatformUtil.SYSTEM_USER_ROOTID;
 		}
 		return BaseSession.getUser().getRootid();
 	}

@@ -187,5 +187,76 @@ public class TenantServiceImpl implements TenantService {
 		tenant.getTenantDetail().getDetails().setClientUrl(clientUrl);
 		return (Tenant) tenantDao.saveAndFlush(tenant);
 	}
+
+	@Override
+	public Tenant updateTenantName(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.setName(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantEmail(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setEmailid(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantContact(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setContact(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantTagline(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setTagline(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantStreet(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setStreet(value);
+		;
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantCity(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setCity(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantPincode(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setPincode(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantFssai(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().getDetails().setFssai(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantGstin(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().getDetails().setGstin(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantGmap(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().getDetails().setGmapUrl(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
 	
 }

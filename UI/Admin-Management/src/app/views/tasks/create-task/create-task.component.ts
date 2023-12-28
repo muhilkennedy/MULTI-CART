@@ -60,7 +60,7 @@ export class CreateTaskComponent implements OnInit {
 
   createTask() {
     this.spinner.show();
-    let selectedAssigneeIds = this.selectedAssignees.map(assignee => assignee.rootId);
+    let selectedAssigneeIds = this.selectedAssignees.map(assignee => assignee.rootid);
     let body = {
       type: this.typeFormGroup.controls['type'].value,
       title: this.basicFormGroup.controls['title'].value,

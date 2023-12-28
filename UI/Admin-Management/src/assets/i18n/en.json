@@ -136,5 +136,10 @@
   "Maximum length " : "Maximum length ",
   "Please enter a valid emailId" : "Please enter a valid emailId",
   "Invalid value entered for this field" : "Invalid value entered for this field",
-  "NO EXPIRY" : "NO EXPIRY"
+  "NO EXPIRY" : "NO EXPIRY",
+  "UNREAD NOTIFICATIONS" : "UNREAD NOTIFICATIONS",
+  "View Notifications" : "View Notifications",
+  "PENDING TASKS" : "PENDING TASKS",
+  "View Tasks" : "View Tasks",
+  "File Store" : "File Store"
 }

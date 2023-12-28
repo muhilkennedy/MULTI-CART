@@ -11,6 +11,7 @@ import com.base.bgwork.BGWorkUtil;
 import com.base.server.BaseSession;
 import com.base.util.Log;
 import com.platform.exception.BGWorkException;
+import com.user.exception.TaskException;
 import com.user.service.TaskService;
 
 /**
@@ -25,13 +26,18 @@ public class TaskStatusUpdaterScheduledTask extends BGJob {
 	
 	@Override
 	public void schedule() throws SchedulerException {
-		BGWorkUtil.scheduleCronJob(this.getClass().getSimpleName(), this.getClass(), "0 * 0 ? * * *");
+//		BGWorkUtil.scheduleCronJob(this.getClass().getSimpleName(), this.getClass(), "0 * 0 ? * * *");
+		BGWorkUtil.scheduleCronJob(this.getClass().getSimpleName(), this.getClass(), "0 0/1 * ? * * *", true);
 	}
 	
 	@Override
-	public void run(JobExecutionContext context) {
+	public void run(JobExecutionContext context) throws BGWorkException {
 		Log.tenant.info("Executing Task status check for tenant : {}", BaseSession.getTenantUniqueName());
-		taskService.checkAndUpdateTaskStatus();
+		try {
+			taskService.checkAndUpdateTaskStatus();
+		} catch (TaskException e) {
+			throw new BGWorkException(e.getMessage());
+		}
 	}
 
 	@Override

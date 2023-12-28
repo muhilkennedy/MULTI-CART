@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.LocaleUtils;
 
-import com.base.entity.BaseEntity;
 import com.platform.entity.BaseObject;
 import com.platform.entity.UserBaseObject;
 import com.platform.session.PlatformBaseSession;
@@ -30,7 +29,7 @@ public class BaseSession {
 		return tenant.get();
 	}
 	
-	public static void setCurrentTenant(BaseEntity tnt) {
+	public static void setCurrentTenant(BaseObject tnt) {
 		setTenant(tnt);
 		currentTenant.set(tnt);
 	}

@@ -20,6 +20,7 @@ import com.base.service.QuartzJobService;
 import com.base.util.Log;
 import com.platform.entity.PlatformTenant;
 import com.platform.entity.PlatformUser;
+import com.platform.entity.UserBaseObject;
 import com.platform.exception.BGWorkException;
 import com.platform.exception.TenantException;
 import com.platform.messages.AuditOperation;
@@ -108,12 +109,13 @@ public abstract class BGJob implements Job {
 
 	protected void setupSession(String tenantUniqueName) throws TenantException {
 		PlatformTenant tenant = TenantService.findByUniqueName(tenantUniqueName);
-		BaseSession.setTenant(tenant);
+		BaseSession.setCurrentTenant(tenant);
+		BaseSession.setUser(PlatformUser.getSystemUser());
 	}
 
 	protected void setupSession(String tenantUniqueName, Long userId) throws TenantException {
 		PlatformTenant tenant = TenantService.findByUniqueName(tenantUniqueName);
-		BaseSession.setTenant(tenant);
+		BaseSession.setCurrentTenant(tenant);
 		PlatformUser user = UserService.findById(userId);
 		BaseSession.setUser(user);
 	}

@@ -21,6 +21,10 @@ public interface AbstractStorage {
 	Object saveFile(File file, boolean isInternalOnly) throws IOException;
 
 	Object saveFile(File file, String dir, boolean isInternalOnly) throws IOException;
+	
+	default String getFileUrl(Optional<?> blobIdOrFilePath) {
+		return null;
+	}
 
 	default String getConfigKey() {
 		return null;

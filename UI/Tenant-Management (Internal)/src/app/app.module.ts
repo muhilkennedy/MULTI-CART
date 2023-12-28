@@ -37,7 +37,7 @@ export class TenantInitializer {
           .subscribe({
             next: (resp: any) => {
                   this.tenantService.getCurrentTenant().tenantId = resp.data.tenantId;
-                  this.tenantService.getCurrentTenant().rootId = resp.data.rootId;
+                  this.tenantService.getCurrentTenant().rootId = resp.data.rootid;
                   this.tenantService.getCurrentTenant().tenantActive = resp.data.active;
                   this.tenantService.getCurrentTenant().tenantName = resp.data.tenantName;
                   this.tenantService.getCurrentTenant().locale = resp.data.locale;

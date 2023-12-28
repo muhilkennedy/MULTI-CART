@@ -1,5 +1,8 @@
 package com.user.jpa.repository;
 
+import java.sql.Date;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,5 +43,15 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
 	@Query(findAllBroadCastTaskQuery)
 	Page<Task> findAllBroadCastTask(@Param("ownerId") Long ownerId, Pageable pageable);
+	
+	String findAllStartDateBreachedTasksQuery = "select tsk from Task tsk where tsk.tenantid=:tenantId and tsk.startdate=:startDate and tsk.status=:status";
+
+	@Query(findAllStartDateBreachedTasksQuery)
+	List<Task> findAllStartDateBreachedTasks(@Param("tenantId") Long tenantId, @Param("startDate") Date startDate, @Param("status") String status);
+
+	String findAllEndDateBreachedTasksQuery = "select tsk from Task tsk where tsk.tenantid=:tenantId and tsk.enddate=:endDate and tsk.status=:status";
+
+	@Query(findAllEndDateBreachedTasksQuery)
+	List<Task> findAllEndDateBreachedTasks(@Param("tenantId") Long tenantId, @Param("endDate") Date endDate, @Param("status") String status);
 
 }

@@ -47,5 +47,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 	@Query(value = findLikeEmployeeNameQuery)
 	List<Employee> findLikeEmployeeName(@Param("name") String name);
+	
+	String findEmployeesByDobQuery = "select emp from Employee emp inner join EmployeeInfo info on emp.rootid = info.employee.rootid where emp.tenantid = :tenantId and info.dob = :dob";
 
+	@Query(value = findEmployeesByDobQuery)
+	List<Employee> findEmployeesByDob(@Param("dob") String dob, @Param("tenantId") Long tenantId);
 }

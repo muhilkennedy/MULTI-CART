@@ -37,3 +37,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     transform: scale(1.5);
 }
 
+.maticon{
+    cursor: pointer;
+}
+
+.maticon:hover {
+    cursor: pointer;
+    transform: scale(1.5);
+}
+
+.dark-overlay
+{
+    position: fixed !important;
+}
+

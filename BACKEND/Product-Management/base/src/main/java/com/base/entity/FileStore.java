@@ -1,5 +1,6 @@
 package com.base.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.platform.annotations.ClassMetaProperty;
 
 import jakarta.persistence.Column;
@@ -19,6 +20,10 @@ public class FileStore extends FileBlob {
 	
 	@Column(name = "ACLRESTRICTED")
 	private boolean acl;
+	
+	@JsonIgnore
+	@Column(name = "ISCLIENTFILE")
+	private boolean clientfile;
 
 	public boolean isAcl() {
 		return acl;
@@ -26,6 +31,14 @@ public class FileStore extends FileBlob {
 
 	public void setAcl(boolean acl) {
 		this.acl = acl;
+	}
+
+	public boolean isClientfile() {
+		return clientfile;
+	}
+
+	public void setClientfile(boolean clientfile) {
+		this.clientfile = clientfile;
 	}
 
 }

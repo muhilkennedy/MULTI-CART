@@ -48,6 +48,15 @@ export class CommonUtil {
         return errorList;
     }
 
+    static convertSize(bytes: number, decimals = 2): string {
+        let units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        let i = 0;
+        for (i; bytes > 1024; i++) {
+          bytes /= 1024;
+        }
+        return parseFloat(bytes.toFixed(decimals)) + ' ' + units[i]
+    }
+
 }
 
 export enum Colors {

@@ -14,6 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 /**
  * @author Muhil Kennedy
@@ -45,9 +47,11 @@ public class Task extends MultiTenantEntity {
     @JoinColumn(name = "OWNERID", referencedColumnName = "rootid")
     private Employee owner;
 
+    @Temporal(TemporalType.DATE)
 	@Column(name = "STARTDATE")
 	private Date startdate;
 
+    @Temporal(TemporalType.DATE)
 	@Column(name = "ENDDATE")
 	private Date enddate;
 	

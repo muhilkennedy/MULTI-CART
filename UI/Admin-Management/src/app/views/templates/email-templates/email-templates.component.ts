@@ -73,7 +73,6 @@ export class EmailTemplatesComponent implements OnInit {
             next: async (resp: any) => {
               let contentDisposition = resp.headers.get('content-disposition');
               let filename = contentDisposition.split(';')[1].split('filename')[1].split('=')[1].trim();
-              console.log(filename);
               saveAs(resp.body, filename);
             },
             error: (err: any) => {

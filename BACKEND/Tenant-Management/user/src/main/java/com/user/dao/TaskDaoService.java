@@ -1,5 +1,6 @@
 package com.user.dao;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.base.entity.BaseEntity;
+import com.base.server.BaseSession;
 import com.base.service.BaseDaoService;
+import com.platform.messages.TaskStatus;
 import com.user.entity.Task;
 import com.user.entity.TaskAssignee;
 import com.user.jpa.repository.TaskAssigneeRepository;
@@ -88,6 +91,14 @@ public class TaskDaoService implements BaseDaoService {
 	
 	public int getTasksCount(Long ownerId, String status) {
 		return taskAssigneeRepo.getPendingTasksCount(ownerId, status);
+	}
+	
+	public List<Task> getAllTasksBreachedStartDate(Date startDate, TaskStatus status) {
+		return taskRepository.findAllStartDateBreachedTasks(BaseSession.getTenantId(), startDate, status.name());
+	}
+	
+	public List<Task> getAllTasksBreachedEndDate(Date endDate, TaskStatus status) {
+		return taskRepository.findAllEndDateBreachedTasks(BaseSession.getTenantId(), endDate, status.name());
 	}
 
 }

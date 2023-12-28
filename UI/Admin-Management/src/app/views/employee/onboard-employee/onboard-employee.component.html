@@ -76,21 +76,17 @@
             <ng-template matStepLabel>{{"Additional Employee Details" | translate}}</ng-template>
             <c-row>
                 <c-col xs="6">
-                    <mat-form-field class="example-full-width">
-                        <mat-label>{{"Reports To" | translate}}</mat-label>
-                        <input type="text"
-                               placeholder="Type Employee Name to Search"
-                               matInput
-                               [formControl]="autoCompleteControl"
-                               [matAutocomplete]="auto"
-                               (keyup)="getTypeAheadEmployeeAction($event)">
-                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                            <app-spinner [show]="empLoader"></app-spinner>
-                          <mat-option [value]="opt.uniquename" *ngFor="let opt of filteredOptions | async" > <!-- (onSelectionChange)="convertToProductItem(opt)" -->
-                            {{opt.fname}} <span></span> {{opt.lname}}
-                          </mat-option>
+                      <mat-form-field>
+                        <app-spinner [show]="loadEmpSpinner"></app-spinner>
+                        <mat-label>{{"Assignees" | translate}}</mat-label>
+                        <input type="text" placeholder="Pick one" aria-label="Number" matInput
+                            (keyup)="action()" [formControl]="assigneeControl" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let option of employees" [value]="getFullName(option)" (onSelectionChange)="addAssignee(option)">
+                                {{option.fname}} {{option.lname}}
+                            </mat-option>
                         </mat-autocomplete>
-                      </mat-form-field>
+                    </mat-form-field>
                 </c-col>
                 <c-col xs="6">
                     <mat-form-field>

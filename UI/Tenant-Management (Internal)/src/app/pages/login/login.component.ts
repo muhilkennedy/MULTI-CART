@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
         {
           next: (resp: HttpResponse<any>) => {
             this.userService.getCurrentUser().userEmail = resp.body.data.emailid;
-            this.userService.getCurrentUser().userId = resp.body.data.rootId;
+            this.userService.getCurrentUser().userId = resp.body.data.i;
             this.userService.getCurrentUser().userName = resp.body.data.fname + resp.body.data.lname;
             this.userService.getCurrentUser().token = resp.headers.get("X-Token");;
             this.cookieService.set("X-Token", this.userService.getCurrentUser().token);

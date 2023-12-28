@@ -1,22 +1,24 @@
 package com.base.api;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.base.entity.FileStore;
 import com.base.server.BaseSession;
@@ -32,6 +34,8 @@ import com.platform.messages.StoreType;
 import com.platform.service.StorageService;
 import com.platform.user.Permissions;
 import com.platform.util.FileUtil;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author Muhil
@@ -49,36 +53,64 @@ public class FileStoreController {
 	private ConfigurationService configService;
 
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_PROMOTIONS })
-	@GetMapping(value = "/download", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Resource> getFile(@RequestParam("fileId") Long fileId) throws IOException {
-		File file = null;
-		try {
-			file = fileService.getFileById(fileId);
-			InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s", file.getName()));
-			return ResponseEntity.ok().headers(headers).contentLength(file.length())
-					.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+	@GetMapping(value = "/download/{fileId}")
+	public void getFile(@PathVariable Long fileId, HttpServletResponse response) throws IOException {
+		File downloadFile = null;
+		try (OutputStream os = response.getOutputStream()) {
+			downloadFile = fileService.getFileById(fileId);
+			Assert.notNull(downloadFile, "File is not available");
+			byte[] isr = Files.readAllBytes(downloadFile.toPath());
+			ByteArrayOutputStream out = new ByteArrayOutputStream(isr.length);
+			out.write(isr, 0, isr.length);
+			response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+			response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+			// Use 'inline' for preview and 'attachement' for download in browser.
+			response.addHeader("Content-Disposition", "attachment; filename=" + downloadFile.getName());
+			out.writeTo(os);
 		} finally {
-			if (file != null) {
-				FileUtil.deleteDirectoryOrFile(file);
-			}
+			response.flushBuffer();
+			FileUtil.deleteDirectoryOrFile(downloadFile);
 		}
+	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN, Permissions.MANAGE_PROMOTIONS })
+	@PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<FileStore> updateEmployeeDocumentProof(@RequestParam("file") MultipartFile file,
+			@RequestParam("internalFile") boolean internalFile) throws IllegalStateException, IOException {
+		GenericResponse<FileStore> response = new GenericResponse<>();
+		return response
+				.setStatus(Response.Status.OK).setData(fileService
+						.uploadClientFileToFileStore(BaseUtil.generateFileFromMutipartFile(file), internalFile))
+				.build();
 	}
 
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<Page<FileStore>> getFileDetails(@RequestParam("pageNumber") int pageNumber,
-			@RequestParam("pageSize") int pageSize) throws IOException {
+	public GenericResponse<Page<FileStore>> getFileDetails(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+			@RequestParam(value="pageSize", defaultValue = "20") int pageSize) throws IOException {
 		GenericResponse<Page<FileStore>> response = new GenericResponse<>();
 		String sortBy = "fileName";
 		String sortDir = "ASC";
 		Page<FileStore> page = fileService
-				.getAllFilesStored(BaseUtil.getPageable(sortBy, sortDir, pageNumber, pageSize));
+				.getAllClientUploadedFilesStored(BaseUtil.getPageable(sortBy, sortDir, pageNumber, pageSize));
 		if (page.getContent() != null && page.getContent().size() > 0) {
 			return response.setStatus(Response.Status.OK).setData(page).build();
 		}
 		return response.setStatus(Response.Status.NO_CONTENT).build();
+	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@GetMapping(value = "/utilizedlimit", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Long> getUserUtilizedLimit() throws IOException {
+		GenericResponse<Long> response = new GenericResponse<>();
+		Long val = fileService.getTotalSizeUtilizedByUser();
+		return response.setStatus(Response.Status.OK).setData(val==null? 0L : val).build();
+	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_PROMOTIONS })
+	@DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteFile(@RequestParam("fileId") Long fileId) throws IOException {
+		fileService.deleteFile(fileId);
 	}
 	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })

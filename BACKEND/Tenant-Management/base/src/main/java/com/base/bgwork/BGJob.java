@@ -23,13 +23,17 @@ import com.base.service.BaseService;
 import com.base.service.QuartzJobService;
 import com.base.util.DatabaseUtil;
 import com.base.util.Log;
+import com.platform.entity.BaseObject;
 import com.platform.exception.BGWorkException;
 import com.platform.messages.AuditOperation;
+import com.platform.util.PlatformUtil;
 
 import jakarta.annotation.PostConstruct;
 
 /**
  * @author muhil.
+ * NOTE: make sure to add tenant filter for all JPA queries
+ *         executed via scheduled job.(unable to unwarp hibernate session in quartz job)
  */
 @Component
 public abstract class BGJob implements Job {
@@ -117,12 +121,12 @@ public abstract class BGJob implements Job {
 
 	protected void setupSession(Long tenantId) {
 		BaseEntity tenant = baseTenantService.findById(tenantId);
-		BaseSession.setTenant(tenant);
+		BaseSession.setCurrentTenant(tenant);
 	}
 
 	protected void setupSession(Long tenantId, Long userId) {
 		BaseEntity tenant = baseTenantService.findById(tenantId);
-		BaseSession.setTenant(tenant);
+		BaseSession.setCurrentTenant(tenant);
 		BaseEntity user = baseEmployeeService.findById(userId);
 		BaseSession.setUser(user);
 	}

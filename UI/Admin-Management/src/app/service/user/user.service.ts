@@ -36,7 +36,7 @@ export class UserService {
     return this.http.get(`${environment.backendProxy}/employee/ping`);
   }
 
-  createEmployee(body: any) {
+  createEmployee(body: any): Observable<any> {
     return this.http.post<any>(`${environment.backendProxy}/employee`, body)
   }
 
@@ -49,7 +49,7 @@ export class UserService {
     });
   }
 
-  updateEmployeeProof(uniqueName: string, proofDoc: File) {
+  updateEmployeeProof(uniqueName: string, proofDoc: File): Observable<any> {
     const formData = new FormData();
     formData.append("uniqueName", uniqueName);
     formData.append("document", proofDoc, proofDoc.name);

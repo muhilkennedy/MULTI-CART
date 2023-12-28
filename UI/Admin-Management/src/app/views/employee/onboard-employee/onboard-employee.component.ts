@@ -2,7 +2,6 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Observable, map, startWith } from 'rxjs';
 import { UserService } from 'src/app/service/user/user.service';
 import { CommonUtil } from 'src/app/service/util/common-util.service';
 import { NotificationService, NotificationType } from 'src/app/service/util/notification.service';
@@ -20,10 +19,11 @@ export class OnboardEmployeeComponent implements OnInit {
   gender: string = 'MALE';
   genders: Array<string> = ["MALE", 'FEMALE'];
 
-  empLoader = false;
-  autoCompleteControl = new FormControl('');
-  employees: string[] = [];
-  filteredOptions: Observable<any[]> | undefined;
+  //TODO: can be moved to a typeahaed component
+  assigneeControl = new FormControl('');
+  employees: any[] = new Array();
+  selectedAssignee: any = null;
+  loadEmpSpinner: boolean = false;
 
   basicFormGroup: any = this._formBuilder.group({
     fname: ['', Validators.required],
@@ -96,14 +96,14 @@ export class OnboardEmployeeComponent implements OnInit {
 
   onboardEmployee() {
     this.spinner.show();
-    let roleIds = this.allRoles.filter(role => this.advFormGroup.controls['roles'].value?.includes(role.rolename)).map(role => role.rootId);
+    let roleIds = this.allRoles.filter(role => this.advFormGroup.controls['roles'].value?.includes(role.rolename)).map(role => role.rootid);
     let body = {
       fname: this.basicFormGroup.controls['fname'].value,
       lname: this.basicFormGroup.controls['lname'].value,
       emailId: this.basicFormGroup.controls['emailId'].value,
       mobile: this.basicFormGroup.controls['mobile'].value,
       designation: this.advFormGroup.controls['designation'].value,
-      reportsTo : this.autoCompleteControl.value,
+      reportsTo : CommonUtil.isNullOrEmptyOrUndefined(this.selectedAssignee)? null : this.selectedAssignee.uniquename,
       dob: this.datePipe.transform(this.basicFormGroup.controls['dob'].value, CommonUtil.DATE_FORMAT_PLAIN),
       gender: this.gender,
       roleIds: roleIds,
@@ -129,41 +129,33 @@ export class OnboardEmployeeComponent implements OnInit {
                     })
   }
 
-  getTypeAheadEmployeeAction(event: any) {
-    let searchTerm = '';
-    searchTerm += event.target.value;
-    console.log(searchTerm);
-    this.getEmployeesMatchingTerm(searchTerm);
+  action() {
+    if (!CommonUtil.isNullOrEmptyOrUndefined(this.assigneeControl.value) && this.assigneeControl.value!.length > 3) {
+      this.loadEmployees();
+    }
   }
 
-  private _filter(value: any): string[] {
-    if (value === undefined || value === "") {
-      return new Array();
-    }
-    const filterValue = value.toLowerCase();
-    return this.employees.filter((option: any) => option.fname.toLowerCase().includes(filterValue) || option.lname.toLowerCase().includes(filterValue));
+  loadEmployees() {
+    this.loadEmpSpinner = true;
+    this.userService.getAllMatchingEmployeesForName(this.assigneeControl.value!)
+      .subscribe({
+        next: (resp: any) => {
+          this.employees = resp.dataList;
+          this.loadEmpSpinner = false;
+        },
+        error: (err: any) => {
+          this.notificationService.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+          this.loadEmpSpinner = false;
+        }
+      })
   }
 
-  getEmployeesMatchingTerm(searchTerm: string) {
-    if (searchTerm.length % 2) {
-      this.empLoader = true;
-      this.userService.getAllMatchingEmployeesForName(searchTerm)
-        .subscribe({
-          next: (resp: any) => {
-            this.employees = resp.dataList;
-            this.filteredOptions = this.autoCompleteControl.valueChanges.pipe(
-              startWith(''),
-              map(value => this._filter(value))
-            );
-          },
-          error: (err: any) => {
+  addAssignee(employee: any) {
+    this.selectedAssignee = employee;
+  }
 
-          },
-          complete: () => {
-            this.empLoader = false;
-          }
-        })
-    }
+  getFullName(employee: any){
+    return employee.fname + " " + employee.lname;
   }
 
 }
