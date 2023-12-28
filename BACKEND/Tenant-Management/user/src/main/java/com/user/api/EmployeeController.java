@@ -2,6 +2,7 @@ package com.user.api;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.base.server.BaseSession;
 import com.base.util.BaseUtil;
+import com.base.util.Log;
 import com.platform.annotations.UserPermission;
 import com.platform.annotations.ValidateUserToken;
 import com.platform.exception.UserNotFoundException;
@@ -86,6 +88,7 @@ public class EmployeeController {
 			@RequestParam(value = "emailId", required = false) String emailId,
 			@RequestParam(value = "tenantId", required = false) Long tenantId) {
 		GenericResponse<User> response = new GenericResponse<>();
+		empService.sendBirthdayWishesMail();
 		if (!StringUtils.isEmpty(uniqueName)) {
 			return response.setStatus(Response.Status.OK).setData(empService.findByUniqueName(uniqueName)).build();
 		} else if (rootId != null) {
@@ -121,22 +124,31 @@ public class EmployeeController {
 	/**
 	 * Admin Management endpoints
 	 * @throws UserNotFoundException 
+	 * @throws ParseException 
 	 * */
 	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_USERS })
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<User> createEmployee(@RequestBody EmployeeRequest empRequest) throws UserNotFoundException {
+	public GenericResponse<User> createEmployee(@RequestBody EmployeeRequest empRequest) throws UserNotFoundException, ParseException {
 		GenericResponse<User> response = new GenericResponse<>();
 		Employee employee = new Employee();
 		// TODO: validations as required.
+		try {
+			PlatformUtil.SIMPLE_UI_DATE_ONLY_FORMAT.parse(empRequest.getDob());
+		} catch (ParseException e) {
+			Log.user.error("DOB parse exception : {}", e);
+			throw e;
+		}
 		employee.setEmailid(empRequest.getEmailId());
 		employee.setFname(empRequest.getFname());
 		employee.setLname(empRequest.getLname());
 		employee.setMobile(empRequest.getMobile());
 		employee.setDesignation(empRequest.getDesignation());
-		User reportsToEmp = empService.findByUniqueName(empRequest.getReportsTo());
-		if (reportsToEmp != null) {
-			employee.setReportsto(reportsToEmp.getRootid());
+		if (StringUtils.isNotBlank(empRequest.getReportsTo())) {
+			User reportsToEmp = empService.findByUniqueName(empRequest.getReportsTo());
+			if (reportsToEmp != null) {
+				employee.setReportsto(reportsToEmp.getRootid());
+			}
 		}
 		employee = (Employee) empService.register(employee);
 		EmployeeInfo empInfo = new EmployeeInfo();

@@ -118,5 +118,9 @@ public class EmployeeDaoService implements UserDaoService {
 	public List<Employee> getTypeAheadEmployees(String name) {
 		return employeeRepository.findLikeEmployeeName(name);
 	}
+	
+	public List<Employee> findEmployeesByDob(String dob) {
+		return employeeRepository.findEmployeesByDob(dob, BaseSession.getTenantId());
+	}
 
 }

@@ -79,13 +79,15 @@ public class NotificationController {
 	
 	@PostMapping("/push")
 	public void direct(@RequestBody DirectNotification request) {
-		if (request.getUserId() == null) {
+		if (request.getUserIds() == null) {
 			PushMessageService.getInstance().sendNotificationToTarget(request);
 		}
-		Flux<Notificationtoken> userTokens = tokenService.findAllUserTokens(request.getUserId());
-		userTokens.toStream().forEach(token -> {
-			request.setTarget(token.getToken());
-			PushMessageService.getInstance().sendNotificationToTarget(request);
+		request.getUserIds().stream().forEach(userId -> {
+			Flux<Notificationtoken> userTokens = tokenService.findAllUserTokens(userId);
+			userTokens.toStream().forEach(token -> {
+				request.setTarget(token.getToken());
+				PushMessageService.getInstance().sendNotificationToTarget(request);
+			});
 		});
 	}
 

@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/service/user/user.service';
 import { TenantService } from 'src/app/service/Tenant/tenant.service';
 import { TasksService } from 'src/app/service/Task/tasks.service';
+import { WidgetService } from 'src/app/service/widget/widget.service';
 import { UserNotficationService } from 'src/app/service/user-notification/user-notfication.service';
 
 @Component({
@@ -30,7 +31,8 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
   public newNotifications = new Array(5)
 
   constructor(private router: Router, private tenantService: TenantService, private taskService: TasksService,
-    private cookieService: CookieService, private userService: UserService, private notificationService: UserNotficationService) {
+    private cookieService: CookieService, private userService: UserService, private notificationService: UserNotficationService,
+      private widgetService: WidgetService) {
     super();
   }
 
@@ -49,6 +51,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
       .subscribe({
         next: (resp: any) => {
           this.taskCount = resp.data;
+          this.widgetService.pendingTaskCount = this.taskCount;
         },
         error: (err: any) => {
           console.log("failed to load tasks count");
@@ -59,6 +62,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
       .subscribe({
         next: (resp: any) => {
           this.notificationCount = resp.data;
+          this.widgetService.notificationsCount = this.notificationCount;
         },
         error: (err: any) => {
           console.log("failed to load tasks count");

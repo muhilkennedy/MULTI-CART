@@ -8,7 +8,7 @@ import { SpinnerService } from '../../app/service/util/sipnner.service';
 })
 export class SpinnerComponent implements OnInit {
 
-  @Input() color?: string = "accent";
+  @Input() color?: string = "warn";
   @Input() diameter?: number = 50;
   @Input() show: boolean = false;
 

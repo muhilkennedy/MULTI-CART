@@ -117,4 +117,88 @@ public class TenantAdminController {
 		tenantService.updateAllowedOrigins(tenantRequest.getAdminUrl(), tenantRequest.getClientUrl());
 		return response.setStatus(Response.Status.OK).build();
 	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PutMapping(value = "/name", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> updateTenantName(@RequestParam(value = "tenantId", required = false) Long tenantId,
+			@RequestParam("value") String value) throws IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.updateTenantName(value)).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PutMapping(value = "/contact", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> updateTenantContact(
+			@RequestParam(value = "tenantId", required = false) Long tenantId, @RequestParam("value") String value)
+			throws IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.updateTenantContact(value)).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PutMapping(value = "/email", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> updateTenantEmail(@RequestParam(value = "tenantId", required = false) Long tenantId,
+			@RequestParam("value") String value) throws IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.updateTenantEmail(value)).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PutMapping(value = "/tagline", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> updateTenantTagLine(
+			@RequestParam(value = "tenantId", required = false) Long tenantId, @RequestParam("value") String value)
+			throws IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.updateTenantTagline(value)).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PutMapping(value = "/street", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> updateTenantStreet(@RequestParam(value = "tenantId", required = false) Long tenantId,
+			@RequestParam("value") String value) throws IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.updateTenantStreet(value)).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PutMapping(value = "/city", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> updateTenantCity(@RequestParam(value = "tenantId", required = false) Long tenantId,
+			@RequestParam("value") String value) throws IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.updateTenantCity(value)).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PutMapping(value = "/pincode", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> updateTenantPincode(
+			@RequestParam(value = "tenantId", required = false) Long tenantId, @RequestParam("value") String value)
+			throws IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.updateTenantPincode(value)).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PutMapping(value = "/gstin", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> updateTenantGstin(@RequestParam(value = "tenantId", required = false) Long tenantId,
+			@RequestParam("value") String value) throws IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.updateTenantGstin(value)).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PutMapping(value = "/fssai", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> updateTenantFssai(@RequestParam(value = "tenantId", required = false) Long tenantId,
+			@RequestParam("value") String value) throws IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.updateTenantFssai(value)).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@PutMapping(value = "/gmap", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Tenant> updateTenantGmap(@RequestParam(value = "tenantId", required = false) Long tenantId,
+			@RequestParam("value") String value) throws IOException {
+		GenericResponse<Tenant> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(tenantService.updateTenantGmap(value)).build();
+	}
+	
 }

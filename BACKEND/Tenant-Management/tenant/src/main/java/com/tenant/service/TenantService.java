@@ -39,4 +39,24 @@ public interface TenantService extends BaseService {
 
 	Tenant updateAllowedOrigins(String adminUrl, String clientUrl);
 	
+	Tenant updateTenantName(String value);
+	
+	Tenant updateTenantEmail(String value);
+	
+	Tenant updateTenantContact(String value);
+	
+	Tenant updateTenantTagline(String value);
+	
+	Tenant updateTenantStreet(String value);
+	
+	Tenant updateTenantCity(String value);
+	
+	Tenant updateTenantPincode(String value);
+	
+	Tenant updateTenantFssai(String value);
+	
+	Tenant updateTenantGstin(String value);
+	
+	Tenant updateTenantGmap(String value);
+	
 }

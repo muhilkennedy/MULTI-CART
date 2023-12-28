@@ -136,5 +136,10 @@
   "Maximum length " : "அதிகபட்ச நீளம் ",
   "Please enter a valid emailId" : "சரியான மின்னஞ்சல் ஐடியை உள்ளிடவும்",
   "Invalid value entered for this field" : "இந்த புலத்திற்கு தவறான மதிப்பு உள்ளிடப்பட்டுள்ளது",
-  "NO EXPIRY" : "காலாவதி இல்லை"
+  "NO EXPIRY" : "காலாவதி இல்லை",
+  "UNREAD NOTIFICATIONS" : "படிக்காத அறிவிப்புகள்",
+  "View Notifications" : "அறிவிப்புகளைப் பார்க்கவும்",
+  "PENDING TASKS" : "நிலுவை பணிகள்",
+  "View Tasks" : "பணிகளைக் பார்க்கவும்",
+  "File Store" : "கோப்பு அங்காடி"
 }

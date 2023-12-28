@@ -53,6 +53,11 @@ const routes: Routes = [
           import('./views/profile/profile.module').then((m) => m.ProfileModule)
       },
       {
+        path: 'filestore',
+        loadChildren: () =>
+          import('./views/file-store/file-store.module').then((m) => m.FileStoreModule)
+      },
+      {
         path: 'templates',
         loadChildren: () =>
           import('./views/templates/templates.module').then((m) => m.TemplatesModule)

@@ -175,8 +175,23 @@ public class TaskServiceImpl implements TaskService {
 			this.notify.createNotification(request);
 		} catch (SchedulerException e) {
 			Log.user.error("Error creating notification : {}", e);
+			auditService.logAuditInfo(AuditOperation.SCHEDULEDTASKERROR, e.getMessage());
 		}
 		return assignee;
+	}
+	
+	private void notifyTaskChangesToUsers(Task task, String message) {
+		task.getAssignees().stream().forEach(assignee -> {
+			NotificationRequest request = new NotificationRequest(assignee.getAssignee().getObjectId(), message,
+					task.getTitle(), NotificationType.INFO, "/task");
+			request.setPushNotification(true);
+			try {
+				this.notify.createNotification(request);
+			} catch (SchedulerException e) {
+				Log.base.error("Exception notifying users : {}", e);
+				auditService.logAuditInfo(AuditOperation.SCHEDULEDTASKERROR, e.getMessage());
+			}
+		});
 	}
 
 	@Override
@@ -197,11 +212,39 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public void checkAndUpdateTaskStatus() {
-		// TODO Auto-generated method stub
-
+	public void checkAndUpdateTaskStatus() throws TaskException {
+		try {
+			Date today = new Date(PlatformUtil.SIMPLE_UI_DATE_ONLY_FORMAT
+					.parse(PlatformUtil.SIMPLE_UI_DATE_ONLY_FORMAT.format(new java.util.Date())).getTime());
+			List<Task> tasks = daoService.getAllTasksBreachedStartDate(today, TaskStatus.NOT_STARTED);
+			tasks.stream().forEach(task -> {
+				String oldStatus = task.getStatus();
+				task.setStatus(TaskStatus.PENDING.name());
+				notifyTaskChangesToUsers(task,
+						String.format("Task status updated from {%S} to {%s}", oldStatus, task.getStatus()));
+				daoService.save(task);
+				task.getAssignees().stream().forEach(assignee -> {
+					assignee.setStatus(TaskStatus.PENDING.name());
+					daoService.saveTaskAssignee(assignee);
+				});
+			});
+			tasks = daoService.getAllTasksBreachedEndDate(today, TaskStatus.COMPLETED);
+			tasks.stream().forEach(task -> {
+				task.setStatus(TaskStatus.EXPIRED.name());
+				daoService.save(task);
+			});
+			tasks = daoService.getAllTasksBreachedEndDate(today, TaskStatus.PENDING);
+			tasks.stream().forEach(task -> {
+				task.setStatus(TaskStatus.EXPIRED.name());
+				notifyTaskChangesToUsers(task, "Pending task has breached due date");
+				daoService.save(task);
+			});
+		} catch (ParseException e) {
+			Log.user.error("Exception on checkAndUpdateTaskStatus : {}", e);
+			throw new TaskException(e.getMessage());
+		}
 	}
-	
+
 	@Override
 	public int getTasksCount(TaskStatus status) {
 		return daoService.getTasksCount(BaseSession.getUser().getRootid(), status.name());

@@ -1,12 +1,14 @@
 package com.platform.cloud.messaging;
 
+import java.util.List;
+
 /**
  * @author Muhil 
  */
 public class DirectNotification extends AppNotification {
 
 	private String target;
-	private Long userId;
+	private List<Long> userIds;
 
 	public String getTarget() {
 		return target;
@@ -16,12 +18,12 @@ public class DirectNotification extends AppNotification {
 		this.target = target;
 	}
 
-	public Long getUserId() {
-		return userId;
+	public List<Long> getUserIds() {
+		return userIds;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setUserIds(List<Long> userIds) {
+		this.userIds = userIds;
 	}
 
 }

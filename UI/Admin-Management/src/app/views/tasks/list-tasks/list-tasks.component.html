@@ -59,10 +59,8 @@
         <!-- assignees Column -->
         <ng-container matColumnDef="Assignees">
             <th mat-header-cell *matHeaderCellDef> {{"Assignees" | translate}} </th>
-            <td mat-cell *matCellDef="let element"> 
-                <button mat-icon-button color="primary" matTooltip= "View Assignees">
-                    <mat-icon>supervised_user_circle</mat-icon>
-                </button>
+            <td mat-cell *matCellDef="let element">
+                <mat-icon color="primary" class="maticon" matTooltip= "View Assignees">supervised_user_circle</mat-icon>
             </td>
         </ng-container>
 
@@ -70,15 +68,15 @@
         <ng-container matColumnDef="Actions">
             <th mat-header-cell *matHeaderCellDef> {{"Actions" | translate}} </th>
             <td mat-cell *matCellDef="let element">
-                <button *ngIf="element.tasktype == 'TODO'" mat-icon-button color="primary" matTooltip= "Complete">
-                    <mat-icon style="color: #429900;">task_alt</mat-icon>
-                </button>
-                <button *ngIf="element.tasktype == 'APPROVAL'" mat-icon-button color="primary" matTooltip= "Approve">
-                    <mat-icon style="color: #429900;">fact_check</mat-icon>
-                </button>
-                <!-- <button mat-icon-button color="primary" matTooltip= "View Assignees">
-                    <mat-icon color="warn">delete</mat-icon>
-                </button> -->
+                <div *ngIf="element.status == 'PENDING'">
+                    <mat-icon *ngIf="element.tasktype == 'TODO'" style="color: #429900" class="maticon" matTooltip= "Complete">task_alt</mat-icon>
+                    <span *ngIf="element.tasktype == 'TODO'"> &nbsp; </span>
+                    <mat-icon *ngIf="element.tasktype == 'TODO'" style="color: #429900" class="maticon" matTooltip= "Undo Task">remove_done</mat-icon>
+                    
+                    <mat-icon *ngIf="element.tasktype == 'APPROVAL'" style="color: #429900" class="maticon" matTooltip= "Approve">fact_check</mat-icon>
+                    <span *ngIf="element.tasktype == 'APPROVAL'"> &nbsp; </span>
+                    <mat-icon *ngIf="element.tasktype == 'APPROVAL'" color="warn" class="maticon" matTooltip= "Decline">highlight_off</mat-icon>
+                </div>
             </td>
         </ng-container>
 

@@ -50,7 +50,7 @@ public class BaseSession {
 		PlatformBaseSession.setUser((UserBaseObject)usr);
 		user.set(usr);
 	}
-
+	
 	public static BaseEntity getUser() {
 		return user.get();
 	}

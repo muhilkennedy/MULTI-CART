@@ -29,7 +29,7 @@ public interface TaskService extends BaseService {
 	
 	Task updateTaskStatus(Long taskId, String status);
 	
-	void checkAndUpdateTaskStatus();
+	void checkAndUpdateTaskStatus() throws TaskException;
 
 	Page<Task> findAllTaskUserIsPartOf(Pageable pageable);
 	

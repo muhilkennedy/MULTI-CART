@@ -23,6 +23,7 @@ import { DashboardComponent } from './dashboard.component';
 import { I18nModule } from 'src/app/i18n/i18n.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { ComponentsModule } from 'src/common-components/components.module';
+import { WidgetsModule } from '../../widgets/widgets.module'
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { ComponentsModule } from 'src/common-components/components.module';
     TableModule,
     I18nModule,
     TranslateModule,
-    ComponentsModule
+    ComponentsModule,
+    WidgetsModule
   ],
   declarations: [DashboardComponent]
 })

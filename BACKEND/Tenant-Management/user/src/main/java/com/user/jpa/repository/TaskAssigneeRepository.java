@@ -13,8 +13,8 @@ import com.user.entity.TaskAssignee;
  */
 @Repository
 public interface TaskAssigneeRepository extends JpaRepository<TaskAssignee, Long> {
-	
-	String getPendingTasksCountQuery = "select count(1) from TaskAssignee tsk where tsk.assignee.rootid=:assigneeId and tsk.status=:status";
+
+	String getPendingTasksCountQuery = "select count(1) from Task tsk inner join TaskAssignee ta on tsk.rootid = ta.task.rootid where ta.assignee.rootid=:assigneeId and ta.status=:status and tsk.status=:status";
 
 	@Query(getPendingTasksCountQuery)
 	Integer getPendingTasksCount(@Param("assigneeId") Long assigneeId, @Param("status") String status);

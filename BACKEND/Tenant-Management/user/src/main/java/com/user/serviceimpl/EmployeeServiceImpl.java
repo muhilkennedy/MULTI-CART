@@ -2,6 +2,7 @@ package com.user.serviceimpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ import com.platform.cache.UserCache;
 import com.platform.service.StorageService;
 import com.platform.user.Permissions;
 import com.platform.util.ImageUtil;
+import com.platform.util.PlatformUtil;
 import com.platform.util.SecurityUtil;
 import com.user.dao.EmployeeDaoService;
 import com.user.entity.Employee;
@@ -183,7 +185,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void sendBirthdayWishesMail() {
-		// TODO: query employees for dob and send out email
+		String today = PlatformUtil.SIMPLE_UI_DATE_ONLY_FORMAT.format(new Date());
+		List<Employee> employees = empDaoService.findEmployeesByDob(today);
+		employees.stream().forEach(employee -> emailService.sendBirthdayWishesEmail(employee));
 	}
 
 }

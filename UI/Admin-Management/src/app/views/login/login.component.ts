@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
           {
             next: (resp: any) => {
               this.userService.getCurrentUser().userEmail = resp.data.emailid;
-              this.userService.getCurrentUser().userId = resp.data.rootId;
+              this.userService.getCurrentUser().userId = resp.data.rootid;
               this.userService.getCurrentUser().userName = resp.data.fname + resp.data.lname;
               this.router.navigate(['/dashboard']);
             },
