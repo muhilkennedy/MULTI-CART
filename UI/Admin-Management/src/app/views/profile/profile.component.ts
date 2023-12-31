@@ -18,64 +18,89 @@ export class ProfileComponent implements OnInit {
 
   languages: any;
   selectedLanguage: any;
+  secondaryemail!: string;
 
   constructor(private userService: UserService, private spinner: SpinnerService,
-              private notification: NotificationService, public translate: TranslateService,
-              private cookieService: CookieService) {
+    private notification: NotificationService, public translate: TranslateService,
+    private cookieService: CookieService) {
     this.languages = SupportedLanguages.languages;
   }
 
   ngOnInit(): void {
     // this.spinner.show();
     this.user = this.userService.getCurrentUserResponse();
-    if(CommonUtil.isNullOrEmptyOrUndefined(this.user)){
+    if (CommonUtil.isNullOrEmptyOrUndefined(this.user)) {
       // for testing only, will not be invoked in prod unless hard refresh happens
       this.userService.pingUser()
-          .subscribe({
-            next: (resp: any) => {
-              this.user = resp.data;
-            },
-            error: (err: any) => {
-              this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
-            }
-          })
-    }
-  }
-
-  getProfilePicture(){
-    if(CommonUtil.isNullOrEmptyOrUndefined(this.user.employeeInfo) || CommonUtil.isNullOrEmptyOrUndefined(this.user.employeeInfo.profilepic)){
-      return "../../../assets/img/avatars/profile.png";
-    }
-    else{
-      return this.user.employeeInfo.profilepic;
-    }
-  }
-
-  onPictureSeclected(event : any){
-    this.spinner.show();
-    let picture: File = event.target.files[0];
-    if(CommonUtil.isNullOrEmptyOrUndefined(picture)){
-      return;
-    }
-    this.userService.uploadProfilePic(picture)
         .subscribe({
           next: (resp: any) => {
             this.user = resp.data;
           },
           error: (err: any) => {
             this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
-            this.spinner.hide();
-          },
-          complete: () => {
-            this.spinner.hide();
           }
         })
+    }
   }
 
-  changeLanguage(langCode: string){
+  getProfilePicture() {
+    if (CommonUtil.isNullOrEmptyOrUndefined(this.user.employeeInfo) || CommonUtil.isNullOrEmptyOrUndefined(this.user.employeeInfo.profilepic)) {
+      return "../../../assets/img/avatars/profile.png";
+    }
+    else {
+      return this.user.employeeInfo.profilepic;
+    }
+  }
+
+  onPictureSeclected(event: any) {
+    this.spinner.show();
+    let picture: File = event.target.files[0];
+    if (CommonUtil.isNullOrEmptyOrUndefined(picture)) {
+      return;
+    }
+    this.userService.uploadProfilePic(picture)
+      .subscribe({
+        next: (resp: any) => {
+          this.user = resp.data;
+        },
+        error: (err: any) => {
+          this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+          this.spinner.hide();
+        },
+        complete: () => {
+          this.spinner.hide();
+        }
+      })
+  }
+
+  changeLanguage(langCode: string) {
     this.translate.use(langCode);
     this.cookieService.set("lang", langCode);
     window.location.reload();
+  }
+
+  onSecondartMailUpdate() {
+    this.spinner.show();
+    this.userService.updateSecondaryEmail(this.secondaryemail)
+      .subscribe({
+        next: (resp: any) => {
+          this.user = resp.data;
+        },
+        error: (err: any) => {
+          this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+          this.spinner.hide();
+        },
+        complete: () => {
+          this.spinner.hide();
+        }
+      })
+  }
+
+  isMailValid() {
+    if (CommonUtil.isNullOrEmptyOrUndefined(this.secondaryemail)) {
+      return false;
+    }
+    return true;
   }
 
 }

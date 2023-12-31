@@ -32,7 +32,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
 
   constructor(private router: Router, private tenantService: TenantService, private taskService: TasksService,
     private cookieService: CookieService, private userService: UserService, private notificationService: UserNotficationService,
-      private widgetService: WidgetService) {
+      public widgetService: WidgetService) {
     super();
   }
 

@@ -28,6 +28,7 @@ export class ResetPasswordComponent implements OnInit {
 
   empUniqueName!: string;
   otp!: string;
+  activation!: boolean;
 
   constructor(private userService: UserService, private tenantService: TenantService, private route: ActivatedRoute,
     private spinner: SpinnerService, private notification: NotificationService, private router: Router,
@@ -43,6 +44,7 @@ export class ResetPasswordComponent implements OnInit {
       .subscribe((params: any) => {
         this.empUniqueName = params.uniqueName;
         this.otp = params.otp;
+        this.activation = params.activation;
       }
       );
   }
@@ -69,6 +71,7 @@ export class ResetPasswordComponent implements OnInit {
       uniqueName: this.empUniqueName,
       otp: this.otp,
       newPassword: this.newPassword,
+      activation: this.activation,
       captchaResponse: reCaptchaResponse
     }
     this.spinner.show();

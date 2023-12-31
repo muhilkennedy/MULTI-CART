@@ -17,6 +17,10 @@ export class SiteSettingsService {
   getAllGCPConfigurationKeys(): Observable<any> {
     return this.http.get(`${environment.backendProxy}/admin/file/gcp/configurationkeys`);
   }
+
+  getAllGoogleOauthConfigKeys(): Observable<any> {
+    return this.http.get(`${environment.backendProxy}/admin/oauth/google/configurationkeys`);
+  }
   
   addConfiguartion(body: any): Observable<any> {
     return this.http.post(`${environment.backendProxy}/admin/base/config`, body);

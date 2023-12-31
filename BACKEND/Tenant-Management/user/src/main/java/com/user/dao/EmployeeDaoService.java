@@ -40,6 +40,10 @@ public class EmployeeDaoService implements UserDaoService {
 	public Flux<?> findAllReactive() {
 		return empReactiveRepo.findAll(BaseSession.getTenantId());
 	}
+	
+	public Flux<Long> findAllUserIdsReactive() {
+		return empReactiveRepo.findUserIdsByTenant(BaseSession.getTenantId());
+	}
 
 	@Override
 	public Flux<?> saveAll(List<?> entities) {
@@ -95,6 +99,11 @@ public class EmployeeDaoService implements UserDaoService {
 	@Override
 	public User findByEmailId(String emailId) {
 		return employeeRepository.findByEmailId(emailId);
+	}
+	
+	@Override
+	public User findBySecondaryEmailId(String emailId) {
+		return employeeRepository.findBySecondaryEmail(emailId);
 	}
 
 	@Override

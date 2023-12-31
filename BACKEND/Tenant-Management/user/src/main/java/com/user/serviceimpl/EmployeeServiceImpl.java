@@ -60,6 +60,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
+	public User save(User user) {
+		return (User) empDaoService.save(user);
+	}
+	
+	@Override
 	public User register(User user) {
 		Employee employee = (Employee) user;
 		String generatedPassword = SecurityUtil.generateRandomPassword();
@@ -67,18 +72,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 				String.format("Generated password for user {%s} is {%s}", employee.getEmailid(), generatedPassword));
 		employee.setPassword(BCrypt.hashpw(generatedPassword, BCrypt.gensalt(SecurityUtil.PASSWORD_SALT_ROUNDS)));
 		employee = (Employee) empDaoService.saveAndFlush(employee);
-		emailService.sendWelcomeActivationEmail(user, generatedPassword);
 		return employee;
 	}
-	
+
 	@Override
 	public User createEmployeeInfo(Employee employee, EmployeeInfo info) {
 		employee.setEmployeeInfo(info);
 		info.setEmployee(employee);
 		UserInfo userInfo = new UserInfo();
 		userInfo.setSkipTutorial(false);
+		String code = UUID.randomUUID().toString();
+		Log.user.debug("Account Activation code : {} : {}", employee.getUniquename(), code);
+		userInfo.setActivationCode(code);
 		info.setDetails(userInfo);
-		return (User) empDaoService.saveAndFlush(employee);
+		User user = (User) empDaoService.save(employee);
+		emailService.sendWelcomeActivationEmail(user, PlatformUtil.EMPTY_STRING, code);
+		return user;
 	}
 
 	@Override
@@ -99,6 +108,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public User findByEmailId(String emailId) {
 		return empDaoService.findByEmailId(emailId);
+	}
+	
+	@Override
+	public User findBySecondaryEmailId(String emailId) {
+		return empDaoService.findBySecondaryEmailId(emailId);
 	}
 
 	@Override
@@ -124,6 +138,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public Flux findAllUsersReactive() {
 		return empDaoService.findAllReactive();
+	}
+	
+	@Override
+	public Flux findAllUserIdsReactive() {
+		return empDaoService.findAllUserIdsReactive();
 	}
 
 	@Override
@@ -156,19 +175,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void initiatePasswordReset(User user) {
-		String otp = UUID.randomUUID().toString();
-		Log.user.debug("Password reset otp : {} : {}", user.getUniquename(), otp);
-		UserCache.getInstance().addOtp(user.getUniquename(), otp);
+		String otp = passwordOtp(user.getUniquename());
 		emailService.sendPasswordResetEmail(user, otp);
 	}
 
 	@Override
 	public void resetPassword(User user, String password, String otp) throws UserException {
 		if (otp.equals(UserCache.getInstance().getOtp(user.getUniquename()))) {
+			Log.user.info("User initiated password reset : {}", user.getUniquename());
 			user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(SecurityUtil.PASSWORD_SALT_ROUNDS)));
 			empDaoService.saveAndFlush(user);
 			UserCache.getInstance().removeOtp(user.getUniquename());
-		} else {
+
+		}
+		else {
 			throw new UserException("Invalid OTP");
 		}
 	}
@@ -188,6 +208,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String today = PlatformUtil.SIMPLE_UI_DATE_ONLY_FORMAT.format(new Date());
 		List<Employee> employees = empDaoService.findEmployeesByDob(today);
 		employees.stream().forEach(employee -> emailService.sendBirthdayWishesEmail(employee));
+	}
+
+	private String passwordOtp(String userUniqueName) {
+		String otp = UUID.randomUUID().toString();
+		Log.user.debug("Password reset otp : {} : {}", userUniqueName, otp);
+		UserCache.getInstance().addOtp(userUniqueName, otp);
+		return otp;
+	}
+	
+	@Override
+	public User updateSecondaryEmail(String email) {
+		Employee user = (Employee) BaseSession.getUser();
+		user.setSecondaryemail(email);
+		return (User) empDaoService.save(user);
+	}
+
+	@Override
+	public void activateAccount(User user, String password, String otp) throws UserException {
+		if(user instanceof Employee) {
+			Employee employee = (Employee) user;
+			if (otp.equals(employee.getEmployeeInfo().getDetails().getActivationCode())) {
+				Log.user.info("Employee account activation password reset : {}", user.getUniquename());
+				employee.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(SecurityUtil.PASSWORD_SALT_ROUNDS)));
+				employee.getEmployeeInfo().getDetails().setActivationCode(null);
+				empDaoService.saveAndFlush(employee);
+			}
+			else {
+				throw new UserException("Invalid OTP");
+			}
+		}
 	}
 
 }

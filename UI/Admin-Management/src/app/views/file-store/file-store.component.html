@@ -12,14 +12,14 @@
                 <c-row>
                     <c-col sm="6">
                         <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3">
-                            <div class="text-medium-emphasis small">{{"Total Files"}}</div>
+                            <div class="text-medium-emphasis small">{{"Total Files" | translate}}</div>
                             <div class="fs-5 fw-semibold">{{totalFiles}}</div>
                         </div>
                     </c-col>
                     <c-col sm="6">
                         <div class="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
                             <div class="text-medium-emphasis small">
-                                {{"Utilized Limit"}}
+                                {{"Utilized Limit" | translate}}
                             </div>
                             <div class="fs-5 fw-semibold">{{convertSize(totalFileSize)}}</div>
                         </div>
@@ -51,8 +51,11 @@
                 
                         <!-- IsInternal Column -->
                         <ng-container matColumnDef="IsInternal">
-                            <th mat-header-cell *matHeaderCellDef> {{"Internal File" | translate}} </th>
-                            <td mat-cell *matCellDef="let element"> {{element.acl}} </td>
+                            <th mat-header-cell *matHeaderCellDef> {{"Access Control" | translate}} </th>
+                            <td mat-cell *matCellDef="let element"> 
+                                <c-badge matTooltip="Restricted Access" *ngIf="element.acl" color="warning">{{"INTERNAL" | translate}}</c-badge>
+                                <c-badge matTooltip="Public Access" *ngIf="!element.acl" color="success">{{"PUBLIC" | translate}}</c-badge>
+                            </td>
                         </ng-container>
                 
                         <!-- CreatedOn Column -->

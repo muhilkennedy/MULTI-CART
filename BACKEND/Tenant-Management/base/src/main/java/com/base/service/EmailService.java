@@ -157,7 +157,7 @@ public class EmailService {
 					createJobDataMap(Arrays.asList(recipientEmail), subject, body, inlineImages), EmailJob.JOB_GROUP);
 		} catch (SchedulerException e) {
 			Log.base.error("Exception sending email : {}", e);
-			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+			audit.logAuditInfo(AuditOperation.EMAILERROR, e.getMessage());
 		}
 	}
 
@@ -167,7 +167,7 @@ public class EmailService {
 					EmailJob.JOB_GROUP);
 		} catch (SchedulerException e) {
 			Log.base.error("Exception sending email : {}", e);
-			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+			audit.logAuditInfo(AuditOperation.EMAILERROR, e.getMessage());
 		}
 	}
 
@@ -179,7 +179,7 @@ public class EmailService {
 					EmailJob.JOB_GROUP);
 		} catch (SchedulerException e) {
 			Log.base.error("Exception sending email : {}", e);
-			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+			audit.logAuditInfo(AuditOperation.EMAILERROR, e.getMessage());
 		}
 	}
 
@@ -190,7 +190,7 @@ public class EmailService {
 					subject, body, inlineImages, attachments), EmailJob.JOB_GROUP);
 		} catch (SchedulerException e) {
 			Log.base.error("Exception sending email : {}", e);
-			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+			audit.logAuditInfo(AuditOperation.EMAILERROR, e.getMessage());
 		}
 	}
 
@@ -202,7 +202,7 @@ public class EmailService {
 					EmailJob.JOB_GROUP);
 		} catch (SchedulerException e) {
 			Log.base.error("Exception sending email : {}", e);
-			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+			audit.logAuditInfo(AuditOperation.EMAILERROR, e.getMessage());
 		}
 	}
 
@@ -213,7 +213,7 @@ public class EmailService {
 					createJobDataMap(recipientEmail, cc, subject, body, inlineImages, attachments), EmailJob.JOB_GROUP);
 		} catch (SchedulerException e) {
 			Log.base.error("Exception sending email : {}", e);
-			audit.logAuditInfo(AuditOperation.ERROR, e.getMessage());
+			audit.logAuditInfo(AuditOperation.EMAILERROR, e.getMessage());
 		}
 	}
 

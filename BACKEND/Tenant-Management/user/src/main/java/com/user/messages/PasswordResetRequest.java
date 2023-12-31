@@ -16,6 +16,8 @@ public class PasswordResetRequest extends ReCaptchaRequest {
 	private String otp;
 	@NotBlank
 	private String newPassword;
+	@NotBlank
+	private boolean activation;
 
 	public String getUniqueName() {
 		return uniqueName;
@@ -39,6 +41,14 @@ public class PasswordResetRequest extends ReCaptchaRequest {
 
 	public void setNewPassword(String newPassword) {
 		this.newPassword = newPassword;
+	}
+
+	public boolean isActivation() {
+		return activation;
+	}
+
+	public void setActivation(boolean activation) {
+		this.activation = activation;
 	}
 
 }

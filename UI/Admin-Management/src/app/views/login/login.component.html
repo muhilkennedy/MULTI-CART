@@ -25,8 +25,7 @@
                       cFormControl
                       placeholder="{{'Password' | translate}}"
                       type="password"
-                      [(ngModel)]="password"
-                    />
+                      [(ngModel)]="password"/>
                   </c-input-group>
                   <c-row>
                     <c-col xs="6">
@@ -41,6 +40,14 @@
                     <ng-container *ngTemplateOutlet="forgotPassword"></ng-container>
                     </c-col>
                   </c-row>
+                  <br/>
+                  <c-row>
+                    <c-col xs="2"></c-col>
+                    <c-col xs="4">
+                      <asl-google-signin-button type='standard' size='medium'></asl-google-signin-button>
+                    </c-col>
+                    <c-col xs="2"></c-col>
+                  </c-row>
                 </form>
               </c-card-body>
             </c-card>
@@ -52,9 +59,6 @@
                     {{tenantTag}}
                   </p>
                   <img style="width: -webkit-fill-available;" [src]="tenantLogo" alt="Tenant Logo"/>
-                  <!-- <button [active]="true" cButton class="mt-3" color="primary" routerLink="/register">
-                    Register Now!
-                  </button> -->
                 </div>
               </c-card-body>
             </c-card>

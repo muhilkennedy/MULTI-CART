@@ -80,7 +80,12 @@ public class UserController {
 			throw new UserNotFoundException();
 		}
 		if (captchaService.verify(request.getCaptchaResponse())) {
-			empService.resetPassword(user, request.getNewPassword(), request.getOtp());
+			if(request.isActivation()) {
+				empService.activateAccount(user,request.getNewPassword(), request.getOtp());
+			}
+			else {
+				empService.resetPassword(user, request.getNewPassword(), request.getOtp());
+			}
 			return response.setStatus(Response.Status.OK).build();
 		}
 		else {

@@ -13,14 +13,14 @@ public enum StoreType {
 	NFS, GCP;
 
 	public static enum GCP_CONSTANTS {
-		
+
 		GCPBUCKET, GCPCONFIG;
-		
+
 		public static Stream<GCP_CONSTANTS> stream() {
 			return Stream.of(GCP_CONSTANTS.values());
 		}
 	}
-
+	
 	public static Stream<StoreType> stream() {
 		return Stream.of(StoreType.values());
 	}

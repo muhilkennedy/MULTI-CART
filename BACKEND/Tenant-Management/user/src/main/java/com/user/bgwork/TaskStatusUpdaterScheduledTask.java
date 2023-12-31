@@ -26,8 +26,7 @@ public class TaskStatusUpdaterScheduledTask extends BGJob {
 	
 	@Override
 	public void schedule() throws SchedulerException {
-//		BGWorkUtil.scheduleCronJob(this.getClass().getSimpleName(), this.getClass(), "0 * 0 ? * * *");
-		BGWorkUtil.scheduleCronJob(this.getClass().getSimpleName(), this.getClass(), "0 0/1 * ? * * *", true);
+		BGWorkUtil.scheduleCronJob(this.getClass().getSimpleName(), this.getClass(), "0 * 0 ? * * *");
 	}
 	
 	@Override

@@ -205,5 +205,13 @@ public class EmployeeController {
 		return response.setStatus(Response.Status.OK)
 				.setData(empService.updateProfilePicture(BaseUtil.generateFileFromMutipartFile(picture))).build();
 	}
+	
+	@PutMapping(value = "/secondaryemail", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<User> updateSecondaryMail(@RequestBody EmployeeRequest request)
+			throws IllegalStateException, IOException {
+		GenericResponse<User> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK)
+				.setData(empService.updateSecondaryEmail(request.getEmailId())).build();
+	}
 
 }

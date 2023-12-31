@@ -32,6 +32,10 @@ export class UserService {
     return this.http.post<any>(`${environment.backendProxy}/user/employee/login`, body, { observe: 'response' })
   }
 
+  googleLogin(body: any): Observable<any> {
+    return this.http.post<any>(`${environment.backendProxy}/social/login/google`, body, { observe: 'response' })
+  }
+
   pingUser(): Observable<any> {
     return this.http.get(`${environment.backendProxy}/employee/ping`);
   }
@@ -108,6 +112,13 @@ export class UserService {
     const formData = new FormData();
     formData.append("picture", file, file.name);
     return this.http.post<any>(`${environment.backendProxy}/employee/profilepic`, formData)
+  }
+
+
+  updateSecondaryEmail(email: string): Observable<any> {
+    return this.http.put<any>(`${environment.backendProxy}/employee/secondaryemail`, {
+      emailId : email
+    })
   }
 
 }

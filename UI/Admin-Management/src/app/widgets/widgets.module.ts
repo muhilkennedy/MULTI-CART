@@ -9,15 +9,20 @@ import { MaterialModule } from '../material.module';
 import { PendingtasksWidgetComponent } from './pendingtasks-widget/pendingtasks-widget.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { NotificationsWidgetComponent } from './notifications-widget/notifications-widget.component';
+import { CalendarWidgetComponent } from './calendar-widget/calendar-widget.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
   declarations: [
     PendingtasksWidgetComponent,
-    NotificationsWidgetComponent
+    NotificationsWidgetComponent,
+    CalendarWidgetComponent
   ],
   exports: [
     PendingtasksWidgetComponent,
-    NotificationsWidgetComponent
+    NotificationsWidgetComponent,
+    CalendarWidgetComponent
   ],
   imports: [
     CommonModule,
@@ -47,7 +52,11 @@ import { NotificationsWidgetComponent } from './notifications-widget/notificatio
     PopoverModule,
     CalloutModule,
     WidgetModule,
-    TranslateModule
+    TranslateModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
   ]
 })
 export class WidgetsModule {

@@ -29,7 +29,6 @@ import com.user.dao.TaskDaoService;
 import com.user.entity.Employee;
 import com.user.entity.Task;
 import com.user.entity.TaskAssignee;
-import com.user.entity.User;
 import com.user.exception.TaskException;
 import com.user.messages.TaskRequest;
 import com.user.service.EmployeeService;
@@ -95,6 +94,7 @@ public class TaskServiceImpl implements TaskService {
 		}
 		if (request.isBroadCast()) {
 			JobDataMap map = new JobDataMap();
+			request.setOwnerId(owner.getObjectId());
 			map.put("request", request);
 			map.put("tenant", BaseSession.getTenant().getRootid());
 			map.put("user", BaseSession.getUser().getRootid());
@@ -111,25 +111,21 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	public void broadcastTask(TaskRequest request) throws TaskException {
-		List<User> employees = empService.findAllUsersReactive().collectList().block();
-		for (User usr : employees) {
-			createTask(request, (Employee) usr, true);
-		}
-	}
-	
-	private Task createTask(TaskRequest request, Employee owner) throws TaskException{
-		return createTask(request, owner, false);
+		List<Long> employees = empService.findAllUserIdsReactive().collectList().block();
+		request.setAssigneeIds(employees);
+		Employee owner = (Employee) empService.findById(request.getOwnerId());
+		createTask(request, owner);
 	}
 
 	//TODO: better segregation can be done.
-	private Task createTask(TaskRequest request, Employee owner, boolean isBroadCast) throws TaskException {
+	private Task createTask(TaskRequest request, Employee owner) throws TaskException {
 		Task task = new Task();
 		task.setTitle(request.getTitle());
 		task.setDescription(request.getDescription());
 		task.setTasktype(request.getType().name());
 		task.setStatus(TaskStatus.NOT_STARTED.name());
 		task.setOwner(owner);
-		task.setBroadcast(isBroadCast);
+		task.setBroadcast(request.isBroadCast());
 		try {
 			if (StringUtils.isNotBlank(request.getStartDate())) {
 				task.setStartdate(
@@ -148,7 +144,7 @@ public class TaskServiceImpl implements TaskService {
 		}
 		daoService.save(task);
 		List<TaskAssignee> assignees = new ArrayList<>();
-		if (!isBroadCast && request.getAssigneeIds() != null && !request.getAssigneeIds().isEmpty()) {
+		if (request.getAssigneeIds() != null && !request.getAssigneeIds().isEmpty()) {
 			request.getAssigneeIds().stream().forEach(assigneeId -> {
 				Employee emp = (Employee) empService.findById(assigneeId);
 				assignees.add(createTaskAssignee(emp, task));

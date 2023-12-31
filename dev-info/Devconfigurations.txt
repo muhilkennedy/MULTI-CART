@@ -57,12 +57,39 @@ Docker setup:
 https://www.docker.com/
 docker ps
 
-docker build --tag=asc1:latest .
-docker run -p 8080:8080 -it --entrypoint /bin/bash asc1
+docker build --tag=name:latest .
+docker run -p 8080:8080 -it --entrypoint /bin/bash name
 
 Inside cont.
 export SPRING_PROFILES_ACTIVE=local
 java ${JAVA_OPTS} -jar app.jar --install.root=/target/ --flyway.enabled=false
+
+
+Kubernetes setup : 
+-------------------
+kubectl get all
+
+kubectl run my-ngnix --image=nginx:alpine
+kubectl get pods
+kubectl describe pod my-ngnix
+kubectl get service
+kubectl get deployment (deployment enclosed replicaset automatically)
+kubectl port-forward my-ngnix 8080:80
+kubectl delete pod my-ngnix
+
+kubectl create -f yamlfile --dry-run --save-config
+kubectl apply
+kubectl edit
+kubectl patch
+
+kubectl exec my-ngnix -t sh
+
+make sure to create liveness probe and rediness probe for checking status respectively
+
+kubectl scale deployment name --replicas=5 (replicas can be put inside yaml)
+
+services -> map ports/ manage networking to auto detect IP based on labels as DNS
+
 
 
 Hashi vault setup:(optional)
@@ -175,10 +202,9 @@ publish report to sonar -> mvn sonar:sonar
 
 fail2ban setup:(optional) (prevent DOS attack incase of local server)
 --------------
+
+
 -------------
-
-
-
 Firebase Setup : 
 ----------------
 - npm install firebase
@@ -212,4 +238,8 @@ Mac steps:
 npm install -g firebase-tools
 alias firebase="`npm config get prefix`/bin/firebase"
 sh-3.2$ firebase login
+
+-------------
+
+
 

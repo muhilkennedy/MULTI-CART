@@ -52,6 +52,27 @@ export class ListTasksComponent implements OnInit, OnChanges {
     }     
   }
 
+  isOnedayBeforeExpiry(date: any): boolean{
+    let yesterday: Date = new Date(date);
+    yesterday.setDate(yesterday.getDate() - 1);
+    let before = this.datepipe.transform(yesterday, CommonUtil.DATE_FORMAT_PLAIN);
+    let today = this.datepipe.transform(new Date().getTime(), CommonUtil.DATE_FORMAT_PLAIN);
+    return (today == before);
+  }
+
+  getDueDateColor(date: any){
+    if(CommonUtil.isNullOrEmptyOrUndefined(date)){
+      return "secondary";
+    }
+    else if (this.isOnedayBeforeExpiry(date)){
+      return "warning";
+    }
+    else if (date <= new Date().getTime()){
+      return "danger";
+    }
+    return "success";
+  }
+
   handlePageEvent(e: PageEvent) {
     this.totalPages = e.length;
     this.pageSize = e.pageSize;

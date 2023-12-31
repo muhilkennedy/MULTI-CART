@@ -30,7 +30,7 @@ public class FileBlob extends MultiTenantEntity {
 
 	@JsonIgnore
 	@Lob
-	@Column(name = "BLOBINFO")
+	@Column(name = "BLOBINFO", length = 1000)
 	private byte[] blobinfo;
 
 	@Column(name = "EXTENSION")

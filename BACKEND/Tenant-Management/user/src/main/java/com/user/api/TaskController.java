@@ -76,9 +76,10 @@ public class TaskController {
 	}
 
 	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<Task> updateTaskStatus(@RequestParam(value = "status") String status,
+	public GenericResponse<Task> updateTaskStatus(@RequestParam(value = "markComplete") boolean completed,
 			@RequestParam(value = "taskId", required = false) Long taskId) {
 		GenericResponse<Task> response = new GenericResponse<>();
-		return response.setStatus(Response.Status.OK).setData(taskService.updateTaskStatus(taskId, status)).build();
+		return response.setStatus(Response.Status.OK).setData(taskService.updateTaskStatus(taskId,
+				completed ? TaskStatus.COMPLETED.name() : TaskStatus.DECLINED.name())).build();
 	}
 }

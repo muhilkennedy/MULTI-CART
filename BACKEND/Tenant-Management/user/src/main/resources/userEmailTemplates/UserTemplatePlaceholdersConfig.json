@@ -5,7 +5,8 @@
 		"password",
 		"mobile",
 		"email",
-		"tenantAdminUrl"
+		"tenantAdminUrl",
+		"passwordResetUrl"
 	],
 	"EMPLOYEE_FORGOT_PASSWORD": [
 		"tenantLogo",

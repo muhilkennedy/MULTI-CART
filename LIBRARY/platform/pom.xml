@@ -35,6 +35,7 @@
 		<poi.version>5.2.3</poi.version>
 		<commons.text.version>1.10.0</commons.text.version>
 		<firebase.admin.version>9.2.0</firebase.admin.version>
+		<google.apis.version>v2-rev157-1.25.0</google.apis.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -167,6 +168,11 @@
 		    <groupId>com.google.firebase</groupId>
 		    <artifactId>firebase-admin</artifactId>
 		    <version>${firebase.admin.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.google.apis</groupId>
+		    <artifactId>google-api-services-oauth2</artifactId>
+		    <version>${google.apis.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.commons</groupId>

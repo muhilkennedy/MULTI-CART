@@ -20,5 +20,11 @@ public interface EmployeeReactiveRepository extends BaseReactiveRepository<Emplo
 
 	@Query(findByTenantQuery)
 	Flux<Employee> findAll(@Param("tenantId") Long tenantId);
+	
+	String findUserIdsByTenantQuery = "select rootid from Employee where tenantid=:tenantId";
+
+	@Query(findUserIdsByTenantQuery)
+	Flux<Long> findUserIdsByTenant(@Param("tenantId") Long tenantId);
+
 
 }

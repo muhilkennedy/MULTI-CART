@@ -46,13 +46,13 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 	private TenantService tenantService;
 	
 	//move to config file
-	private static List<String> Whitelisted_URI = Arrays.asList("/actuator/");
+	private static List<String> Whitelisted_URI = Arrays.asList("/actuator/", "/socialredirect/");
 	
     @Override
     protected boolean shouldNotFilter (HttpServletRequest request)
     {
         return Whitelisted_URI.parallelStream().filter(uri -> request.getRequestURI() != null && request.getRequestURI().contains(
-            uri)).findAny().isPresent();
+            uri)).peek(uri -> Log.tenant.debug("Filtered URI -> {}", uri)).findAny().isPresent();
     }
 
 	@Override
@@ -103,18 +103,16 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 			}
 		}
 		// Set current session as new tenant (tenantId passed in parameter takes precedence here)
-		if (tenant.getParent() == null) {
-			String idParam = request.getParameter(PlatformUtil.TENANT_PARAM);
-			if (!StringUtils.isAllBlank(idParam)) {
-				Long id = Long.parseLong(idParam);
-				tenant = (Tenant) tenantService.findById(id);
-				if (tenant != null) {
-					BaseSession.setTenant(tenant);
-					Log.base.info("Tenant Session Updated for {} to {} based on request",
-							BaseSession.getCurrentTenant().getUniqueId(), tenant.getUniquename());
-				} else {
-					throw new RuntimeException("Invalid Request for Tenant");
-				}
+		String idParam = request.getParameter(PlatformUtil.TENANT_PARAM);
+		if (!StringUtils.isAllBlank(idParam)) {
+			Long id = Long.parseLong(idParam);
+			tenant = (Tenant) tenantService.findById(id);
+			if (tenant != null) {
+				BaseSession.setTenant(tenant);
+				Log.base.info("Tenant Session Updated for {} to {} based on request",
+						BaseSession.getCurrentTenant().getUniqueId(), tenant.getUniquename());
+			} else {
+				throw new RuntimeException("Invalid Request for Tenant");
 			}
 		}
 		Log.tenant.debug("Tenant filter validation successful");

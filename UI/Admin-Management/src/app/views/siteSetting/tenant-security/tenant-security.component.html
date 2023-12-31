@@ -1,0 +1,17 @@
+<c-row *ngFor="let field of googleOauthConfigKeys; let i = index">
+    <c-col xs="12">
+        <mat-form-field style="width: 100%;">
+            <mat-label>{{field | translate}}</mat-label>
+            <input matInput [name]="field" [placeholder]="field" [(ngModel)]="googleOauthConfigFields[i]" required>
+        </mat-form-field>
+    </c-col>
+</c-row>
+<c-row>
+    <c-col xs="6"></c-col>
+    <c-col xs="6">
+        <button style="width: 100%;" cButton class="me-1" variant="outline" size="sm" color="warning"
+            (click)="onGoogleOauthUpdate()"> {{"SAVE" |
+            translate}}
+        </button>
+    </c-col>
+</c-row>
