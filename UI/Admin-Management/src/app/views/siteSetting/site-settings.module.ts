@@ -37,6 +37,7 @@ import { MaterialModule } from '../../material.module';
 import { SiteSettingsComponent } from './site-settings/site-settings.component';
 import { SiteSettingsRoutingModule } from './sitesettings-routing.module';
 import { TenantInfoComponent } from './tenant-info/tenant-info.component';
+import { TenantSecurityComponent } from './tenant-security/tenant-security.component';
 
 @NgModule({
   imports: [
@@ -76,7 +77,8 @@ import { TenantInfoComponent } from './tenant-info/tenant-info.component';
   ],
   declarations: [
     SiteSettingsComponent,
-    TenantInfoComponent
+    TenantInfoComponent,
+    TenantSecurityComponent
   ],
 })
 export class SiteSettingsModule { }

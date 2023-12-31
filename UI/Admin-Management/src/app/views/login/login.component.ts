@@ -6,6 +6,10 @@ import { SpinnerService } from 'src/app/service/util/sipnner.service';
 import { CookieService } from 'ngx-cookie-service';
 import { CommonUtil } from 'src/app/service/util/common-util.service';
 import { NotificationService, NotificationType } from 'src/app/service/util/notification.service';
+import { GoogleLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { map, tap } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +28,8 @@ export class LoginComponent implements OnInit {
   showFPModal = false;
 
   constructor(tenantService: TenantService, private userService: UserService, private notification: NotificationService,
-    private spinner: SpinnerService, private router: Router, private cookieService: CookieService) {
+    private spinner: SpinnerService, private router: Router, private cookieService: CookieService,
+    private socialAuthService: SocialAuthService, private sanitizer: DomSanitizer) {
     this.tenantName = tenantService.getCurrentTenant().tenantName;
     this.tenantTag = tenantService.getCurrentTenant().details.tagline;
     this.tenantLogo = tenantService.getCurrentTenant().details.details.logoUrl;
@@ -51,6 +56,40 @@ export class LoginComponent implements OnInit {
             }
           }
         )
+    }
+    else{
+      this.socialAuthService.authState.subscribe({
+        next: (resp) => {
+          //gets response on successfull google login - SocialUser
+          //console.log(resp);
+          //we can get access token to connnect to other google api services
+          //this.socialAuthService.getAccessToken(GoogleLoginProvider.PROVIDER_ID).then(accessToken => console.log(accessToken));
+          this.spinner.show();
+          this.userService.googleLogin(resp)
+            .subscribe(
+              {
+                next: (resp: any) => {
+                  this.userService.getCurrentUser().userEmail = resp.body.data.emailid;
+                  this.userService.getCurrentUser().userId = resp.body.data.rootId;
+                  this.userService.getCurrentUser().userName = resp.body.data.fname + resp.body.data.lname;
+                  this.userService.getCurrentUser().token = resp.headers.get(CommonUtil.TOKEN_KEY);;
+                  this.cookieService.set(CommonUtil.TOKEN_KEY, this.userService.getCurrentUser().token);
+                  this.router.navigate(['/dashboard']);
+                },
+                error: (error: any) => {
+                  this.spinner.hide();
+                  this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(error));
+                },
+                complete: () => {
+                  this.spinner.hide();
+                }
+              }
+            )
+        },
+        error: (err) => {
+          this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+        }
+      })
     }
   }
 
@@ -112,4 +151,22 @@ export class LoginComponent implements OnInit {
         }
       })
   }
+
+  loginWithGoogle(): void {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then((resp) => {
+        console.log(resp);
+      });
+    this.socialAuthService.authState.subscribe({
+      next: (resp) => {
+        console.log(resp);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+
+
+  }
+
 }

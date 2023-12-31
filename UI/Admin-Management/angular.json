@@ -39,6 +39,7 @@
               "src/firebase-messaging-sw.js"
             ],
             "styles": [
+              "node_modules/angular-calendar/css/angular-calendar.css",
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/scss/styles.scss"
             ],
@@ -115,6 +116,7 @@
               "src/firebase-messaging-sw.js"
             ],
             "styles": [
+              "node_modules/angular-calendar/css/angular-calendar.css",
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/scss/styles.scss"
             ],

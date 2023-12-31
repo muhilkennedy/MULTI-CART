@@ -19,6 +19,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 	@Query(findByEmailQuery)
 	Employee findByEmailId(@Param("emailId") String emailId);
+	
+	String findBySecondaryEmailQuery = "select emp from Employee emp where secondaryemail=:emailId";
+
+	@Query(findBySecondaryEmailQuery)
+	Employee findBySecondaryEmail(@Param("emailId") String emailId);
 
 	String findUserForLoginQuery = "select emp from Employee emp where emailid=:emailId or mobile=:mobile or uniquename=:uniqueName";
 

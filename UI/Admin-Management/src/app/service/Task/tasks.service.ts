@@ -30,4 +30,12 @@ export class TasksService {
     return this.http.get(`${environment.backendProxy}/task/${status}/count`);
   }
 
+  updateTask(markComplete: boolean): Observable<any>{
+    return this.http.put(`${environment.backendProxy}/task`, null, {
+      params:{
+        markComplete: markComplete
+      }
+    });
+  }
+
 }

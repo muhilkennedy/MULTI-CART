@@ -54,6 +54,9 @@ import { LoginComponent } from './views/login/login.component';
 import { ResetPasswordComponent } from './views/reset-password/reset-password.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
+import { FacebookLoginProvider, GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 // import { AngularFireModule, FirebaseApp } from '@angular/fire/compat';
 
 const APP_CONTAINERS = [
@@ -61,6 +64,17 @@ const APP_CONTAINERS = [
   DefaultHeaderComponent,
   DefaultLayoutComponent
 ];
+
+const fbLoginOptions = {
+  scope: 'pages_messaging,pages_messaging_subscriptions,email,pages_show_list,manage_pages',
+  return_scopes: true,
+  enable_profile_selector: true
+};
+
+const googleLoginOptions = {
+  scopes: 'profile email', //https://www.googleapis.com/auth/calendar.readonly openid
+  oneTapEnabled: false //shows login popup
+};
 
 @Injectable()
 export class TenantInitializer {
@@ -152,6 +166,9 @@ export function init_tenant(initializer: TenantInitializer) {
     ModalModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireMessagingModule,
+    SocialLoginModule,
+    GoogleSigninButtonModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
   exports: [
     
@@ -181,7 +198,25 @@ export function init_tenant(initializer: TenantInitializer) {
     IconSetService,
     Title,
     TranslatePipe,
-    DatePipe
+    DatePipe,
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              environment.google_oauth_client, googleLoginOptions
+            )
+          },
+          // {
+          //   id: FacebookLoginProvider.PROVIDER_ID,
+          //   provider: new FacebookLoginProvider('clientId', fbLoginOptions)
+          // }
+        ]
+      } as SocialAuthServiceConfig,
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -3,6 +3,7 @@ import { UserNotficationService } from '../../../service/user-notification/user-
 import { EventSourcePolyfill } from 'ng-event-source';
 import { NotificationType } from 'src/app/service/util/notification.service';
 import { Router } from '@angular/router';
+import { WidgetService } from 'src/app/service/widget/widget.service';
 
 export class UserNotification{
 
@@ -71,7 +72,7 @@ export class UserNotificationComponent implements OnInit {
 
   notifications: UserNotification[] = new Array();
 
-  constructor(private notificationService: UserNotficationService, private router: Router) {
+  constructor(private notificationService: UserNotficationService, private router: Router, private widgetService: WidgetService) {
 
   }
 
@@ -101,6 +102,7 @@ export class UserNotificationComponent implements OnInit {
       next: (resp: any) => {
         let index = this.notifications.indexOf(notification);
         this.notifications.splice(index, 1);
+        --this.widgetService.notificationsCount;
       },
       error: (err: any) => {
         alert("Failed to close notification");

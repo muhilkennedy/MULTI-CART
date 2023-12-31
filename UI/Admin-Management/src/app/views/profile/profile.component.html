@@ -84,8 +84,22 @@
               </select>
             </c-card-header>
             <c-card-body style="overflow: auto;">
-                <label cLabel for="formFile">{{"Upload New Profile Picture" | translate}}</label>
-                <input #file cFormControl id="formFile" name="chooser" accept="image/*" type="file" (change)="onPictureSeclected($event)"/>
+                <c-row>
+                    <label cLabel for="formFile">{{"Upload New Profile Picture" | translate}}</label>
+                    <input #file cFormControl id="formFile" name="chooser" accept="image/*" type="file" (change)="onPictureSeclected($event)"/>
+                </c-row>
+                <br/>
+                <c-row>
+                    <mat-form-field>
+                        <mat-label>{{"Secondary Email" | translate}}</mat-label>
+                        <input matInput type="text" [(ngModel)]="secondaryemail">
+                        <button matSuffix *ngIf="isMailValid()"
+                            mat-icon-button (click)="onSecondartMailUpdate()">
+                            <mat-icon color="warn">save</mat-icon>
+                        </button>
+                        <mat-hint>({{"Adviced to update with google mailId for social login" | translate}}!)</mat-hint>
+                    </mat-form-field>
+                </c-row>
             </c-card-body>
         </c-card>
     </c-col>

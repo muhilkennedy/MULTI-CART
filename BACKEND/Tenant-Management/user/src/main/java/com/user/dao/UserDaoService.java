@@ -15,5 +15,9 @@ public interface UserDaoService extends BaseDaoService, BaseReactiveDaoService{
 	User findUserForLogin(User user);
 	
 	User findByUniqueName(String uniqueName);
+
+	default User findBySecondaryEmailId(String emailId) {
+		return null;
+	};
 	
 }

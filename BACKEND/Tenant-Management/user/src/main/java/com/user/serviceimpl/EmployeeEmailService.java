@@ -25,13 +25,12 @@ public class EmployeeEmailService {
 	private static final String EMP_REG = "EMPLOYEE_REGISTRATION";
 	private static final String EMP_PWD_RST = "EMPLOYEE_PASSWORD_RESET";
 	private static final String EMP_BIRTHDAY = "EMPLOYEE_BIRTHDAY_WISHES";
-	private static final String PASSWORD_RESET_URL = "/#/password/reset?uniqueName=%s&otp=%s";
+	private static final String PASSWORD_RESET_URL = "/#/password/reset?uniqueName=%s&otp=%s&activation=%s";
 
 	@Autowired
 	private EmailService emailService;
 
-	// TODO: complete this
-	public void sendWelcomeActivationEmail(User user, String generatedPassword) {
+	public void sendWelcomeActivationEmail(User user, String generatedPassword, String otp) {
 		Map<String, String> contentMap = new HashedMap<String, String>();
 		contentMap.put("userName", String.format("%s %s", user.getFname(), user.getLname()));
 		contentMap.put("password", String.valueOf(user.getUniqueId()));
@@ -39,6 +38,9 @@ public class EmployeeEmailService {
 		contentMap.put("email", user.getEmailid());
 		contentMap.put("tenantLogo",
 				((Tenant) BaseSession.getCurrentTenant()).getTenantDetail().getDetails().getLogoUrl());
+		TenantDetails tenantDetails = ((Tenant) BaseSession.getCurrentTenant()).getTenantDetail();
+		contentMap.put("forgotPasswordUrl", tenantDetails.getDetails().getAdminUrl()
+				.concat(String.format(PASSWORD_RESET_URL, user.getUniquename(), otp, true)));
 		try {
 			emailService.sendMail(user.getEmailid(), String.format("Welcome %s", user.getFname()),
 					emailService.constructEmailBody(EMP_REG, contentMap), null);
@@ -65,7 +67,7 @@ public class EmployeeEmailService {
 			Log.user.error("Exception sending mail to user {0} :: error :: {1}", user.getEmailid(), e);
 		}
 	}
-	
+
 	public void sendBirthdayWishesEmail(User user) {
 		TenantDetails tenantDetails = ((Tenant) BaseSession.getTenant()).getTenantDetail();
 		Map<String, String> contentMap = new HashedMap<String, String>();

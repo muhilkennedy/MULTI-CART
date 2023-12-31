@@ -5,6 +5,6 @@ package com.platform.messages;
  */
 public enum ConfigurationType {
 
-	URL, EMAIL, STORAGE, ORIGIN, SMS;
+	URL, EMAIL, STORAGE, ORIGIN, SMS, OAUTH;
 
 }
