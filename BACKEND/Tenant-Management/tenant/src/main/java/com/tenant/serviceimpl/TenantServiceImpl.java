@@ -2,7 +2,6 @@ package com.tenant.serviceimpl;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +20,6 @@ import com.platform.messages.ConfigurationType;
 import com.platform.messages.StoreType;
 import com.platform.service.StorageService;
 import com.platform.util.ImageUtil;
-import com.platform.util.PlatformUtil;
 import com.tenant.dao.TenantDaoService;
 import com.tenant.entity.Tenant;
 import com.tenant.entity.TenantDetails;
@@ -31,7 +29,6 @@ import com.tenant.model.TenantInfo;
 import com.tenant.service.TenantService;
 
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 /**
  * @author muhil
@@ -149,12 +146,14 @@ public class TenantServiceImpl implements TenantService {
 		for (TenantSubscription sub : subs) {
 			Instant currentInstant = Instant.now();
 			Instant subscriptionStartDate = Instant.ofEpochMilli(sub.getStartdate().getTime());
+			Instant subscriptionEndDate = Instant.ofEpochMilli(sub.getEnddate().getTime());
 			Log.tenant.debug("checkAndRenewTenant : {} : subscriptionStartDate {}", BaseSession.getTenantUniqueName(),
 					subscriptionStartDate);
 			if (!sub.isActive() && currentInstant.isAfter(subscriptionStartDate)) {
 				sub.setActive(true);
 				tenantDao.saveTenantSubscription(sub);
-			} else if (sub.isActive() && currentInstant.isBefore(subscriptionStartDate)) {
+			} else if (sub.isActive() && (currentInstant.isBefore(subscriptionStartDate)
+					|| currentInstant.isAfter(subscriptionEndDate))) {
 				sub.setActive(false);
 				tenantDao.saveTenantSubscription(sub);
 			}
@@ -164,6 +163,7 @@ public class TenantServiceImpl implements TenantService {
 				|| (activeSubscription == null && BaseSession.getTenant().isActive())) {
 			toggleTenantState(BaseSession.getTenantUniqueName());
 		}
+		//TODO: send out email to notify
 	}
 	
 	@Override
@@ -184,8 +184,79 @@ public class TenantServiceImpl implements TenantService {
 	public Tenant updateAllowedOrigins(String adminUrl, String clientUrl) {
 		Tenant tenant = (Tenant) BaseSession.getTenant();
 		tenant.getTenantDetail().getDetails().setAdminUrl(adminUrl);
-		tenant.getTenantDetail().getDetails().setAdminUrl(clientUrl);
+		tenant.getTenantDetail().getDetails().setClientUrl(clientUrl);
 		return (Tenant) tenantDao.saveAndFlush(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantName(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.setName(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantEmail(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setEmailid(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantContact(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setContact(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantTagline(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setTagline(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantStreet(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setStreet(value);
+		;
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantCity(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setCity(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantPincode(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().setPincode(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantFssai(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().getDetails().setFssai(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantGstin(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().getDetails().setGstin(value);
+		return (Tenant) tenantDao.save(tenant);
+	}
+
+	@Override
+	public Tenant updateTenantGmap(String value) {
+		Tenant tenant = (Tenant) BaseSession.getTenant();
+		tenant.getTenantDetail().getDetails().setGmapUrl(value);
+		return (Tenant) tenantDao.save(tenant);
 	}
 	
 }

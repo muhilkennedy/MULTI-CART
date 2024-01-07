@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +44,17 @@ import jakarta.ws.rs.core.MediaType;
  * @author Muhil
  * send email based on config provided.
  */
-public class EmailTask implements Runnable {
+public class EmailTask implements Runnable, Serializable {
 
+	private static final long serialVersionUID = 5197522508772980267L;
+	public static final String KEY_TENANATID = "tenantId";
+	public static final String KEY_RECIPIENTS = "recipient";
+	public static final String KEY_SUBJECT = "subject";
+	public static final String KEY_BODY = "body";
+	public static final String KEY_INLINEIMAGES = "inlineImages";
+	public static final String KEY_CARBONCOPY = "cc";
+	public static final String KEY_ATTACHMENTS = "attachments";
+	
 	private Long tenantId;
 	private String businessEmail;
 	private String businessPassword;
@@ -156,9 +166,19 @@ public class EmailTask implements Runnable {
 	public void run() {
 		try {
 			// check for email status
+			execute();
+		} catch (Exception e) {
+			Log.platform.error("Error in Side Thread : " + e.getMessage());
+		}
+	}
+	
+	public void execute() throws Exception {
+		try {
+			// check for email status
 			sendEmail();
 		} catch (Exception e) {
 			Log.platform.error("Error in Side Thread : " + e.getMessage());
+			throw new Exception(e);
 		} finally {
 			if (inlineImages != null) {
 				for (Map.Entry<String, File> entry : inlineImages.entrySet()) {
@@ -178,8 +198,15 @@ public class EmailTask implements Runnable {
 		if (tenantId != null) {
 			Log.platform.debug("Loaded tenant based email config : {}", tenantId);
 			props = EmailCache.getInstance().get(tenantId);
-			businessEmail = props.getProperty(EmailConfigurations.MAIL_USER_ID.getProperty());
-			businessPassword = props.getProperty(EmailConfigurations.MAIL_USER_PASSWORD.getProperty());
+			try {
+				businessEmail = props.getProperty(EmailConfigurations.MAIL_USER_ID.getProperty());
+				businessPassword = props.getProperty(EmailConfigurations.MAIL_USER_PASSWORD.getProperty());
+			}
+			catch (Exception e) {
+				Log.platform.error("Error in fetching tenant business email/password.");
+				Log.platform.warn("Rolling back to default system email configuration.");
+				props = PlatformConfiguration.getEmailProperties();
+			}
 		}
 		if(StringUtils.isAllBlank(businessEmail)) {
 			Log.platform.debug("Loaded default email config");
@@ -254,13 +281,13 @@ public class EmailTask implements Runnable {
 					}
 				});
 			}
-			Log.platform.info("sendEmail :: Sending email to Recipient - {}", StringUtils.join(recipientEmail, ","));
+			Log.platform.info("sendEmail :: Sending email to Recipient(s) - {}", StringUtils.join(recipientEmail, ","));
 			Transport.send(message);
-			Log.platform.info("sendEmail :: Email sent Successfully to Recipient - {}",
+			Log.platform.info("sendEmail :: Email sent Successfully to Recipient(s) - {}",
 					StringUtils.join(recipientEmail, ","));
 
 		} catch (Exception e) {
-			Log.platform.error("sendEmail :: Error Sending email to Recipient - {} - {}",
+			Log.platform.error("sendEmail :: Error Sending email to Recipient(s) - {} - {}",
 					StringUtils.join(recipientEmail, ","), e);
 			throw e;
 		}

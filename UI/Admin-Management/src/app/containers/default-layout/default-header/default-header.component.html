@@ -18,7 +18,7 @@
         </a>
       </c-nav-item> -->
       <!-- <c-container [fluid]="true"> -->
-      <c-breadcrumb-router class="ms-2"></c-breadcrumb-router>
+      <!-- <c-breadcrumb-router class="ms-2"></c-breadcrumb-router> -->
       <!-- </c-container> -->
     </c-header-nav>
 
@@ -32,18 +32,12 @@
         <a routerLink="./" cNavLink>
           <svg cIcon name="cilList" size="lg"></svg>
         </a>
-      </c-nav-item>
+      </c-nav-item>-->
       <c-nav-item>
-        <a routerLink="./" cNavLink>
+        <a [href]="mailInbox" cNavLink matTooltip="MAIL INBOX">
           <svg cIcon name="cilEnvelopeOpen" size="lg"></svg>
         </a>
-      </c-nav-item> -->
-      <select #langSelect (change)="changeLanguage(langSelect.value)">
-        <option
-          *ngFor="let lang of languages"
-          [value]="lang.code"
-          [attr.selected]="lang.code === translate.currentLang ? '' : null">{{lang.name}}</option>
-      </select>
+      </c-nav-item>
     </c-header-nav>
     <c-header-nav class="ms-3">
       <ng-container *ngTemplateOutlet="userDropdown"></ng-container>
@@ -65,12 +59,12 @@
       class="py-0"
     >
       <c-avatar
+        style="overflow: hidden;"
         cTextColor="primary"
-        shape="rounded-1"
+        shape="rounded-circle"
         size="md"
-        src="./assets/img/avatars/profile.png"
-        status="success"
-      >
+        [src]="getProfilePicture()">
+        <!-- status="success" -->
       </c-avatar>
     </button>
     <ul cDropdownMenu class="pt-0 pr-5 w-auto">
@@ -78,20 +72,26 @@
         <h6 cDropdownHeader class="bg-light fw-semibold py-2">{{"Account" | translate}}</h6>
       </li>
       <li>
-        <a routerLink="./" cDropdownItem>
+        <a [href]="mailInbox" cDropdownItem>
+          <svg cIcon class="me-2" name="cilEnvelopeOpen"></svg>
+          {{"Mail Inbox" | translate}}
+        </a>
+      </li>
+      <li>
+        <a routerLink="/notifications" cDropdownItem>
           <svg cIcon class="me-2" name="cilBell"></svg>
           {{"Updates" | translate}}
           <c-badge class="ms-2 float-end" color="info">
-            42
+            {{widgetService.notificationsCount}}
           </c-badge>
         </a>
       </li>
       <li>
-        <a routerLink="./" cDropdownItem>
+        <a routerLink="/task" cDropdownItem>
           <svg cIcon class="me-2" name="cilTask"></svg>
           {{"Tasks" | translate}}
           <c-badge class="ms-2 float-end" color="danger">
-            42
+            {{taskCount}}
           </c-badge>
         </a>
       </li>
@@ -100,24 +100,15 @@
       </li>
       <li></li>
       <li>
-        <a routerLink="./" cDropdownItem>
+        <a routerLink="/profile" cDropdownItem>
           <svg cIcon class="me-2" name="cilUser"></svg>
           {{"Profile" | translate}}
         </a>
       </li>
       <li>
-        <a routerLink="./" cDropdownItem>
-          <svg cIcon class="me-2" name="cilSettings"></svg>
-          {{"Settings" | translate}}
-        </a>
-      </li>
-      <li>
-        <a routerLink="./" cDropdownItem>
-          <svg cIcon class="me-2" name="cilCreditCard"></svg>
-          {{"Payments" | translate}}
-          <!-- <c-badge class="ms-2 float-end" color="secondary">
-            42
-          </c-badge> -->
+        <a routerLink="/filestore" cDropdownItem>
+          <svg cIcon class="me-2" name="cilFile"></svg>
+          {{"File Store" | translate}}
         </a>
       </li>
       <li>

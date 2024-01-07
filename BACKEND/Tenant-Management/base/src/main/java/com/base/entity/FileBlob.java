@@ -24,12 +24,13 @@ public class FileBlob extends MultiTenantEntity {
 	@Column(name = "MEDIAURL")
 	private String mediaurl;
 
+	@JsonIgnore
 	@Column(name = "STORETYPE")
 	private String storetype;
 
 	@JsonIgnore
 	@Lob
-	@Column(name = "BLOBINFO")
+	@Column(name = "BLOBINFO", length = 1000)
 	private byte[] blobinfo;
 
 	@Column(name = "EXTENSION")
@@ -37,6 +38,9 @@ public class FileBlob extends MultiTenantEntity {
 
 	@Column(name = "FILENAME")
 	private String fileName;
+	
+	@Column(name = "SIZE")
+	private Long size;
 
 	public String getMediaurl() {
 		return mediaurl;
@@ -78,12 +82,21 @@ public class FileBlob extends MultiTenantEntity {
 		this.fileName = fileName;
 	}
 
+	@JsonIgnore
 	public Object getBlobInfo() {
 		return SerializationUtils.deserialize(this.blobinfo);
 	}
 
 	public void setBlobInfo(Object blobinfo) throws JsonProcessingException {
 		this.blobinfo = SerializationUtils.serialize(blobinfo);
+	}
+
+	public Long getSize() {
+		return size;
+	}
+
+	public void setSize(Long size) {
+		this.size = size;
 	}
 
 }

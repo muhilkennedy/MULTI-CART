@@ -100,7 +100,8 @@ import {
   cilFlightTakeoff,
   cilAccountLogout,
   cilLockUnlocked,
-  cilHandshake
+  cilHandshake,
+  cilCart
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -205,7 +206,8 @@ export const iconSubset = {
   cilFlightTakeoff,
   cilAccountLogout,
   cilLockUnlocked,
-  cilHandshake
+  cilHandshake,
+  cilCart
 };
 
 export enum IconSubset {
@@ -300,5 +302,6 @@ export enum IconSubset {
   cilUserFollow = 'cilUserFollow',
   cilUserUnfollow = 'cilUserUnfollow',
   cilImagePlus='cilImagePlus',
-  cilPlus='cilPlus'
+  cilPlus='cilPlus',
+  cilCart='cilCart'
 }

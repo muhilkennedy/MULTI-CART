@@ -22,11 +22,11 @@ export class AppComponent implements OnInit {
     private iconSetService: IconSetService,
     private idleService: IdleService
   ) {
-    titleService.setTitle(this.title);
-    iconSetService.icons = { ...iconSubset };
+    this.titleService.setTitle(this.title);
+    this.iconSetService.icons = { ...iconSubset };
     //TODO: validate inactive user and sign out/show popup. for active users refresh the token!
-    idleService.idle$.subscribe(s => console.log('idle for 5mins'));
-    idleService.wake$.subscribe(s => console.log('user action identified!'));
+    this.idleService.idle$.subscribe(s => console.log('idle for 5mins'));
+    this.idleService.wake$.subscribe(s => console.log('user action identified!'));
   }
 
   ngOnInit(): void {

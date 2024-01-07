@@ -1,0 +1,8 @@
+<c-alert [visible]="notification.active" [dismissible]="true" [color]="getType(notification)" fade
+  *ngFor="let notification of notifications" (visibleChange)="msgRead(notification)">
+  <div (click)="navigate(notification)" style="cursor: pointer;">
+    <strong>{{notification.title}}</strong>
+    <br />
+    <small>{{notification.content}}</small>
+  </div>
+</c-alert>

@@ -23,7 +23,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
         .subscribe({
           next: (resp: any) => {
             this.userService.getCurrentUser().userEmail = resp.data.emailid;
-            this.userService.getCurrentUser().userId = resp.data.rootId;
+            this.userService.getCurrentUser().userId = resp.data.rootid;
             this.userService.getCurrentUser().userName = resp.data.fname + resp.data.lname;
           },
           error: (err) => {

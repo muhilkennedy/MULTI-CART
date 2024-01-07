@@ -2,7 +2,9 @@ package com.user.serviceimpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,9 +16,14 @@ import org.springframework.stereotype.Service;
 
 import com.base.entity.BaseEntity;
 import com.base.entity.FileStore;
+import com.base.server.BaseSession;
 import com.base.service.FileStoreService;
 import com.base.util.Log;
+import com.platform.cache.UserCache;
+import com.platform.service.StorageService;
 import com.platform.user.Permissions;
+import com.platform.util.ImageUtil;
+import com.platform.util.PlatformUtil;
 import com.platform.util.SecurityUtil;
 import com.user.dao.EmployeeDaoService;
 import com.user.entity.Employee;
@@ -26,6 +33,7 @@ import com.user.entity.UserInfo;
 import com.user.exception.UserException;
 import com.user.service.EmployeeService;
 
+import jakarta.ws.rs.NotFoundException;
 import reactor.core.publisher.Flux;
 
 /**
@@ -52,24 +60,34 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
+	public User save(User user) {
+		return (User) empDaoService.save(user);
+	}
+	
+	@Override
 	public User register(User user) {
 		Employee employee = (Employee) user;
 		String generatedPassword = SecurityUtil.generateRandomPassword();
-		Log.user.debug(String.format("Generated password for user {%s} is {%s}", employee.getEmailid(), generatedPassword));
-		employee.setPassword(generatedPassword);
+		Log.user.debug(
+				String.format("Generated password for user {%s} is {%s}", employee.getEmailid(), generatedPassword));
+		employee.setPassword(BCrypt.hashpw(generatedPassword, BCrypt.gensalt(SecurityUtil.PASSWORD_SALT_ROUNDS)));
 		employee = (Employee) empDaoService.saveAndFlush(employee);
-		emailService.sendWelcomeActivationEmail(user, generatedPassword);
 		return employee;
 	}
-	
+
 	@Override
 	public User createEmployeeInfo(Employee employee, EmployeeInfo info) {
 		employee.setEmployeeInfo(info);
 		info.setEmployee(employee);
 		UserInfo userInfo = new UserInfo();
 		userInfo.setSkipTutorial(false);
+		String code = UUID.randomUUID().toString();
+		Log.user.debug("Account Activation code : {} : {}", employee.getUniquename(), code);
+		userInfo.setActivationCode(code);
 		info.setDetails(userInfo);
-		return (User) empDaoService.saveAndFlush(employee);
+		User user = (User) empDaoService.save(employee);
+		emailService.sendWelcomeActivationEmail(user, PlatformUtil.EMPTY_STRING, code);
+		return user;
 	}
 
 	@Override
@@ -91,6 +109,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public User findByEmailId(String emailId) {
 		return empDaoService.findByEmailId(emailId);
 	}
+	
+	@Override
+	public User findBySecondaryEmailId(String emailId) {
+		return empDaoService.findBySecondaryEmailId(emailId);
+	}
 
 	@Override
 	public User findByUniqueName(String uniqueName) {
@@ -99,8 +122,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public User toggleStatus(Long rootId) {
-		// TODO Auto-generated method stub
-		return null;
+		User emp = (User) empDaoService.findById(rootId);
+		if (emp == null) {
+			throw new NotFoundException();
+		}
+		emp.setActive(!emp.isActive());
+		return (User) empDaoService.saveAndFlush(emp);
 	}
 
 	@Override
@@ -111,6 +138,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public Flux findAllUsersReactive() {
 		return empDaoService.findAllReactive();
+	}
+	
+	@Override
+	public Flux findAllUserIdsReactive() {
+		return empDaoService.findAllUserIdsReactive();
 	}
 
 	@Override
@@ -131,9 +163,81 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void uploadEmployeeDocumentProof(Employee employee, File document) throws IOException {
-		FileStore store = fileService.uploadToFileStore(document, true, "/Proof");
-		employee.getEmployeeInfo().setProofFileId(store.getRootId());
+		FileStore store = fileService.uploadToFileStore(document, true, "/EmployeeProof/" + employee.getUniquename());
+		employee.getEmployeeInfo().setProofFileId(store.getRootid());
 		empDaoService.save(employee);
+	}
+
+	@Override
+	public List<Employee> findMatchingTypeAheadEmployees(String name) {
+		return empDaoService.getTypeAheadEmployees(name);
+	}
+
+	@Override
+	public void initiatePasswordReset(User user) {
+		String otp = passwordOtp(user.getUniquename());
+		emailService.sendPasswordResetEmail(user, otp);
+	}
+
+	@Override
+	public void resetPassword(User user, String password, String otp) throws UserException {
+		if (otp.equals(UserCache.getInstance().getOtp(user.getUniquename()))) {
+			Log.user.info("User initiated password reset : {}", user.getUniquename());
+			user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(SecurityUtil.PASSWORD_SALT_ROUNDS)));
+			empDaoService.saveAndFlush(user);
+			UserCache.getInstance().removeOtp(user.getUniquename());
+
+		}
+		else {
+			throw new UserException("Invalid OTP");
+		}
+	}
+
+	@Override
+	public User updateProfilePicture(File file) throws IOException {
+		Employee user = (Employee) BaseSession.getUser();
+		file = ImageUtil.getPNGThumbnailImage(file);
+		String fileUrl = StorageService.getStorage().saveFile(file, user.getUniquename());
+		Log.user.debug("Profile picture url : {}", fileUrl);
+		user.getEmployeeInfo().setProfilepic(fileUrl);
+		return (User) empDaoService.save(user);
+	}
+
+	@Override
+	public void sendBirthdayWishesMail() {
+		String today = PlatformUtil.SIMPLE_UI_DATE_ONLY_FORMAT.format(new Date());
+		List<Employee> employees = empDaoService.findEmployeesByDob(today);
+		employees.stream().forEach(employee -> emailService.sendBirthdayWishesEmail(employee));
+	}
+
+	private String passwordOtp(String userUniqueName) {
+		String otp = UUID.randomUUID().toString();
+		Log.user.debug("Password reset otp : {} : {}", userUniqueName, otp);
+		UserCache.getInstance().addOtp(userUniqueName, otp);
+		return otp;
+	}
+	
+	@Override
+	public User updateSecondaryEmail(String email) {
+		Employee user = (Employee) BaseSession.getUser();
+		user.setSecondaryemail(email);
+		return (User) empDaoService.save(user);
+	}
+
+	@Override
+	public void activateAccount(User user, String password, String otp) throws UserException {
+		if(user instanceof Employee) {
+			Employee employee = (Employee) user;
+			if (otp.equals(employee.getEmployeeInfo().getDetails().getActivationCode())) {
+				Log.user.info("Employee account activation password reset : {}", user.getUniquename());
+				employee.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(SecurityUtil.PASSWORD_SALT_ROUNDS)));
+				employee.getEmployeeInfo().getDetails().setActivationCode(null);
+				empDaoService.saveAndFlush(employee);
+			}
+			else {
+				throw new UserException("Invalid OTP");
+			}
+		}
 	}
 
 }

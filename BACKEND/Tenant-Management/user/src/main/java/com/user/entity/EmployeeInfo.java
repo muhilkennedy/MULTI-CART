@@ -3,6 +3,8 @@ package com.user.entity;
 import com.base.entity.MultiTenantEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.platform.annotations.ClassMetaProperty;
+import com.platform.annotations.PIIData;
+import com.platform.user.Permissions;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -22,6 +24,7 @@ public class EmployeeInfo extends MultiTenantEntity {
 
 	private static final long serialVersionUID = 1L;
 
+	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
 	@Column(name = "DOB")
 	private String dob;
 
@@ -29,7 +32,10 @@ public class EmployeeInfo extends MultiTenantEntity {
 	private String gender;
 	
 	@Column(name = "PROOFBLOBID")
-	private Long proofFileId;
+	private Long proofblobid;
+	
+	@Column(name = "PROFILEPIC")
+	private String profilepic;
 	
 	@Column(name = "DETAILS", length = 5000)
 	@Convert(converter = UserInfoConvertor.class)
@@ -73,11 +79,19 @@ public class EmployeeInfo extends MultiTenantEntity {
 	}
 
 	public Long getProofFileId() {
-		return proofFileId;
+		return proofblobid;
 	}
 
 	public void setProofFileId(Long proofFileId) {
-		this.proofFileId = proofFileId;
+		this.proofblobid = proofFileId;
+	}
+
+	public String getProfilepic() {
+		return profilepic;
+	}
+
+	public void setProfilepic(String profilepic) {
+		this.profilepic = profilepic;
 	}
 
 }

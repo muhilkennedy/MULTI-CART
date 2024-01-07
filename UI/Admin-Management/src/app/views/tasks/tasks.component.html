@@ -1,0 +1,77 @@
+<c-row>
+    <app-spinner></app-spinner>
+    <c-col md="12">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>{{"Tasks" | translate | uppercase }}</strong>
+                <!-- <c-dropdown variant="btn-group">
+                    <button cButton color="primary" size="sm">{{"TASKS" | translate}}</button>
+                    <button cButton cDropdownToggle color="primary" size="sm" split>
+                      <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul cDropdownMenu>
+                      <li><button cDropdownItem>{{"Created By Me" | translate}}</button></li>
+                      <li><button cDropdownItem>{{"Assigned To Me"}}</button></li>
+                    </ul>
+                  </c-dropdown> -->
+                <button style="float: right;" cButton class="me-1" color="primary" variant="outline" size="sm"
+                    (click)="createTaskAction()"> {{"CREATE TASK" | translate}}</button>
+            </c-card-header>
+            <c-card-body style="overflow: auto;">
+                <c-nav variant="tabs" class="justify-content-center">
+                    <c-nav-item>
+                      <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0" cNavLink (click)="selectedTab = 'Not_Started'">
+                        {{"Not_Started" | translate | uppercase}}
+                      </a>
+                    </c-nav-item>
+                    <c-nav-item>
+                      <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1" cNavLink (click)="selectedTab = 'Pending'">
+                        {{"Pending" | translate | uppercase}}
+                      </a>
+                    </c-nav-item>
+                    <c-nav-item>
+                      <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="2" cNavLink (click)="selectedTab = 'Completed'">
+                        {{"Completed" | translate | uppercase}}
+                      </a>
+                    </c-nav-item>
+                    <c-nav-item>
+                        <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="3" cNavLink (click)="selectedTab = 'Declined'">
+                          {{"Declined" | translate | uppercase}}
+                        </a>
+                    </c-nav-item>
+                    <c-nav-item>
+                        <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="4" cNavLink (click)="selectedTab = 'Expired'">
+                          {{"Expired" | translate | uppercase}}
+                        </a>
+                    </c-nav-item>
+                    <c-nav-item>
+                        <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="5" cNavLink (click)="selectedTab = 'Broadcasted'">
+                          {{"Broadcasted" | translate | uppercase}}
+                        </a>
+                    </c-nav-item>
+                  </c-nav>
+                  <c-tab-content #tabContent="cTabContent" [activeTabPaneIdx]="0" cRounded="bottom">
+                    <c-tab-pane class="p-3 preview" role="tabpanel">
+                      <app-list-tasks *ngIf="selectedTab == 'Not_Started'" status="Not_Started"></app-list-tasks>
+                    </c-tab-pane>
+                    <c-tab-pane class="p-3 preview" role="tabpanel">
+                        <app-list-tasks *ngIf="selectedTab == 'Pending'" status="Pending"></app-list-tasks>
+                    </c-tab-pane>
+                    <c-tab-pane class="p-3 preview" role="tabpanel">
+                        <app-list-tasks *ngIf="selectedTab == 'Completed'" status="Completed"></app-list-tasks>
+                    </c-tab-pane>
+                    <c-tab-pane class="p-3 preview" role="tabpanel">
+                        <app-list-tasks *ngIf="selectedTab == 'Declined'" status="Declined"></app-list-tasks>
+                    </c-tab-pane>
+                    <c-tab-pane class="p-3 preview" role="tabpanel">
+                        <app-list-tasks *ngIf="selectedTab == 'Expired'" status="Expired"></app-list-tasks>
+                    </c-tab-pane>
+                    <c-tab-pane class="p-3 preview" role="tabpanel">
+                        <app-list-tasks *ngIf="selectedTab == 'Broadcasted'" status="Broadcasted"></app-list-tasks>
+                    </c-tab-pane>
+                  </c-tab-content>
+                
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>

@@ -2,14 +2,20 @@ package com.user.entity;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.base.entity.MultiTenantEntity;
 import com.base.util.Log;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.platform.annotations.PIIData;
+import com.platform.entity.UserBaseObject;
 import com.platform.security.AttributeEncryptor;
+import com.platform.user.Permissions;
 import com.platform.util.EncryptionUtil;
+import com.platform.util.PlatformUtil;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -24,7 +30,7 @@ import jakarta.persistence.PrePersist;
  */
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class User extends MultiTenantEntity {
+public class User extends MultiTenantEntity implements UserBaseObject {
 
 	private static final long serialVersionUID = 1L;
 
@@ -37,13 +43,17 @@ public class User extends MultiTenantEntity {
 	@Column(name = "LNAME")
 	private String lname;
 
+	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS}, visibleCharacters = 4)
 	@Column(name = "MOBILE")
 	@Convert(converter = AttributeEncryptor.class)
 	private String mobile;
 
+	@JsonIgnore
 	@Column(name = "MOBILEHASH")
 	private String mobilehash;
 
+	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
+	//TODO: impl has field and compare @Convert(converter = AttributeEncryptor.class)
 	@Column(name = "EMAILID")
 	private String emailid;
 
@@ -141,7 +151,7 @@ public class User extends MultiTenantEntity {
 			updateMobileHash();
 		}
 	}
-	
+
 	public void updateMobileHash() {
 		try {
 			this.mobilehash = EncryptionUtil.hash_SHA256(mobile);
@@ -154,10 +164,19 @@ public class User extends MultiTenantEntity {
 	protected void generateUniqueName() throws SQLException {
 		// NO-OP
 	}
-	
+
 	@Override
 	public String getUniqueId() {
 		return this.uniquename;
+	}
+
+	@Override
+	public Set<Permissions> getUserPermissions() {
+		return Collections.<Permissions>emptySet();
+	}
+
+	public boolean isSystemUser() {
+		return getRootid() == PlatformUtil.SYSTEM_USER_ROOTID;
 	}
 
 }

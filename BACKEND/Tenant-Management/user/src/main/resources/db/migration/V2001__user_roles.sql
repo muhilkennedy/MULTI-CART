@@ -11,7 +11,7 @@ INSERT INTO permission (rootid, permission) values(22101999, "CustomerSupport");
 INSERT INTO permission (rootid, permission) values(789, "ManageUsers");
 INSERT INTO permission (rootid, permission) values(5099, "EditUsers");
 INSERT INTO permission (rootid, permission) values(22, "EditOrders");
-INSERT INTO permission (rootid, permission) values(218, "MangeOrders");
+INSERT INTO permission (rootid, permission) values(218, "ManageOrders");
 INSERT INTO permission (rootid, permission) values(18, "EditPromotions");
 INSERT INTO permission (rootid, permission) values(9890, "ManageProducts");
 INSERT INTO permission (rootid, permission) values(1064, "EditProducts");

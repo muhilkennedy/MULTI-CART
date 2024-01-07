@@ -1,1 +1,137 @@
-<p>list-employee works!</p>
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{"Employee Details"}}</strong>
+        </c-card-header>
+        <c-card-body style="overflow: auto;">
+            <div class="mat-elevation-z8" style="overflow: auto;">
+                <table mat-table [dataSource]="employees">
+            
+                    <!-- Emp Id Column -->
+                    <ng-container matColumnDef="EmployeeId">
+                        <th mat-header-cell *matHeaderCellDef> {{"Employee ID" | translate}} </th>
+                        <td mat-cell *matCellDef="let element">
+                            <img *ngIf="showEmployeeBdayCard(element)" src="../../../../assets/img/bday.gif" style="height: 2rem;" class="zoom"/>
+                            <svg *ngIf="isEmployeeFemale(element); else male" cIcon name="cilUserFemale" size="xs" title="GenderIcon"></svg> 
+                            <ng-template #male>
+                                <svg  cIcon name="cilUser" size="xs" title="GenderIcon" ></svg> 
+                                <ng-container *ngTemplateOutlet="moreModal"></ng-container>
+                            </ng-template>
+                        <span style="cursor: pointer;" class="zoom" (click)="loadMoreInfoModal(element)" matTooltip= "View More Details">{{element.uniquename}}</span> </td>
+                    </ng-container>
+            
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="Name">
+                        <th mat-header-cell *matHeaderCellDef> {{"Name" | translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.fname}} <span></span> {{element.lname}} </td>
+                    </ng-container>
+            
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="Status">
+                        <th mat-header-cell *matHeaderCellDef> {{"Status" | translate}} </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-slide-toggle [checked]="element.active" (change)="toggleEmployeeStatus(element)">
+                            </mat-slide-toggle>
+                        </td>
+                    </ng-container>
+            
+                    <!-- Mobile Column -->
+                    <ng-container matColumnDef="Mobile">
+                        <th mat-header-cell *matHeaderCellDef> {{"Mobile Number" | translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.mobile}} </td>
+                    </ng-container>
+            
+                    <!-- Email Column -->
+                    <ng-container matColumnDef="Email">
+                        <th mat-header-cell *matHeaderCellDef> {{"Email Id" | translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.emailid}}</td>
+                    </ng-container>
+            
+                    <!-- Designation Column -->
+                    <ng-container matColumnDef="Designation">
+                        <th mat-header-cell *matHeaderCellDef> {{"Designation" | translate}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element.designation}} </td>
+                    </ng-container>
+            
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="Actions">
+                        <th mat-header-cell *matHeaderCellDef> {{"Actions" | translate}} </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-icon color="accent" class="maticon" (click)="loadEmployeePermissionsModal(element.userPermissions)" matTooltip= "View Permissions">meeting_room</mat-icon>
+                            <ng-container *ngTemplateOutlet="permissionModal"></ng-container>                            
+                            <mat-icon color="warn" class="maticon" (click)="loadDeleteModal(element)" matTooltip= "Delete">delete_forever</mat-icon>
+                            <ng-container *ngTemplateOutlet="deleteModal"></ng-container>
+                        </td>
+                    </ng-container>
+            
+                    <tr mat-header-row *matHeaderRowDef="displayedEmployeesColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedEmployeesColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[25, 50, 100]" (page)="handlePageEvent($event)" [length]="totalPages"
+                    [pageSize]="pageSize" showFirstLastButtons aria-label="Select employees">
+                </mat-paginator>
+            </div>
+            
+        </c-card-body>
+      </c-card>
+    </c-col>
+</c-row>
+
+<ng-template #permissionModal>
+    <c-modal id="permissionModal" [visible]="showPermissionsModal" (visibleChange)="handlePermissionModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>{{ "Permissions" | translate}}</h5>
+            <button (click)="togglePermissionsModal()" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            <mat-list role="list" *ngFor="let permission of employeePermissions">
+                <mat-list-item role="listitem">{{ permission | translate}}</mat-list-item>
+                <mat-divider></mat-divider>
+            </mat-list>
+        </c-modal-body>
+        <c-modal-footer>
+            <button (click)="togglePermissionsModal()" cButton color="secondary">
+                {{"CLOSE" | translate}}
+            </button>
+        </c-modal-footer>
+    </c-modal>
+</ng-template>
+
+<ng-template #deleteModal>
+    <c-modal id="deletenModal" [visible]="showDeleteModal" (visibleChange)="handleDeleteModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>{{ "DELETE CONFIRMATION" | translate}}</h5>
+            <button (click)="toggleDeleteModal()" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            Employee <strong>{{getDeletableEmployeeUniqueName()}}</strong> will be deleted permanently! <br/>
+            {{"Are you sure to proceed for deletion" | translate}}?
+        </c-modal-body>
+        <c-modal-footer>
+            <button (click)="toggleDeleteModal()" cButton color="secondary">
+                {{"CLOSE" | translate}}
+            </button>
+            <button (click)="deleteEmployee()" cButton color="danger">
+                {{"DELETE" | translate}}
+            </button>
+        </c-modal-footer>
+    </c-modal>
+</ng-template>
+
+<ng-template #moreModal>
+    <c-modal id="moreModal" [visible]="showMoreModal" (visibleChange)="handleMoreModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>{{ "Employee Information" | translate}}</h5>
+            <button (click)="toggleMoreModal()" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            
+        </c-modal-body>
+        <c-modal-footer>
+            <button (click)="toggleMoreModal()" cButton color="secondary">
+                {{"CLOSE" | translate}}
+            </button>
+        </c-modal-footer>
+    </c-modal>
+</ng-template>

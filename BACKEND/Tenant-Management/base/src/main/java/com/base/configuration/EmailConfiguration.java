@@ -32,7 +32,7 @@ public class EmailConfiguration {
 		List<ConfigType> emailConfigs = configService.findAllConfig(ConfigurationType.EMAIL);
 		Map<Long, Properties> configMap = new HashMap<Long, Properties>();
 		emailConfigs.stream().forEach(config -> {
-			if (configMap.containsKey(config.getTenantid())) { 
+			if (configMap.containsKey(config.getTenantid())) {
 				configMap.get(config.getTenantid()).put(EmailUtil.getPropertyKey(config.getName()), config.getVal());
 			} else {
 				Properties property = new Properties();
@@ -44,6 +44,7 @@ public class EmailConfiguration {
 			EmailCache.getInstance().add(entry.getKey(), entry.getValue());
 		});
 		Log.base.info("Loaded Email configurations into platform cache.");
+		//Log.base.debug("Email Template Names and Placeholders : {} ", EmailTemplateNames.getAvailableTemplateNames());
 	}
 
 }

@@ -1,5 +1,5 @@
 import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, Injectable, LOCALE_ID, NgModule } from '@angular/core';
-import { CommonModule, HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { CommonModule, DatePipe, HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -23,6 +23,7 @@ import {
   BreadcrumbModule,
   ButtonGroupModule,
   ButtonModule,
+  CalloutModule,
   CardModule,
   DropdownModule,
   FooterModule,
@@ -30,6 +31,7 @@ import {
   GridModule,
   HeaderModule,
   ListGroupModule,
+  ModalModule,
   NavModule,
   ProgressModule,
   SharedModule,
@@ -49,6 +51,13 @@ import { TenantService } from './service/Tenant/tenant.service';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { MaterialModule } from './material.module';
 import { LoginComponent } from './views/login/login.component';
+import { ResetPasswordComponent } from './views/reset-password/reset-password.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
+import { FacebookLoginProvider, GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+// import { AngularFireModule, FirebaseApp } from '@angular/fire/compat';
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
@@ -56,19 +65,32 @@ const APP_CONTAINERS = [
   DefaultLayoutComponent
 ];
 
+const fbLoginOptions = {
+  scope: 'pages_messaging,pages_messaging_subscriptions,email,pages_show_list,manage_pages',
+  return_scopes: true,
+  enable_profile_selector: true
+};
+
+const googleLoginOptions = {
+  scopes: 'profile email', //https://www.googleapis.com/auth/calendar.readonly openid
+  oneTapEnabled: false //shows login popup
+};
+
 @Injectable()
 export class TenantInitializer {
 
   constructor(private router: Router, private http: HttpClient, private tenantService: TenantService) { }
 
   initializeApp(): Promise<any> {
+    // const app = initializeApp(environment.firebaseConfig);
+    // const msg = getMessaging(app);
     return new Promise((resolve, reject) => {
           console.log(`initializeApp:: Setting up Tenant`);
           this.http.get(`${environment.backendProxy}/tenant/ping`)
           .subscribe({
             next: (resp: any) => {
-                  this.tenantService.getCurrentTenant().tenantId = resp.data.tenantId;
-                  this.tenantService.getCurrentTenant().rootId = resp.data.rootId;
+                  this.tenantService.getCurrentTenant().tenantId = resp.data.uniquename;
+                  this.tenantService.getCurrentTenant().rootId = resp.data.rootid;
                   this.tenantService.getCurrentTenant().tenantActive = resp.data.active;
                   this.tenantService.getCurrentTenant().tenantName = resp.data.tenantName;
                   this.tenantService.getCurrentTenant().locale = resp.data.locale;
@@ -100,7 +122,7 @@ export function init_tenant(initializer: TenantInitializer) {
 }
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS, LoginComponent],
+  declarations: [AppComponent, ...APP_CONTAINERS, LoginComponent, ResetPasswordComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -138,7 +160,15 @@ export function init_tenant(initializer: TenantInitializer) {
     TranslateModule,
     SpinnerModule,
     UtilitiesModule,
-    FormsModule
+    FormsModule,
+    CommonModule ,
+    CalloutModule,
+    ModalModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireMessagingModule,
+    SocialLoginModule,
+    GoogleSigninButtonModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
   exports: [
     
@@ -167,7 +197,26 @@ export function init_tenant(initializer: TenantInitializer) {
     },
     IconSetService,
     Title,
-    TranslatePipe
+    TranslatePipe,
+    DatePipe,
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              environment.google_oauth_client, googleLoginOptions
+            )
+          },
+          // {
+          //   id: FacebookLoginProvider.PROVIDER_ID,
+          //   provider: new FacebookLoginProvider('clientId', fbLoginOptions)
+          // }
+        ]
+      } as SocialAuthServiceConfig,
+    }
   ],
   bootstrap: [AppComponent]
 })

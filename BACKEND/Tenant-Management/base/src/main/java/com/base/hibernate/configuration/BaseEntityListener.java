@@ -2,6 +2,7 @@ package com.base.hibernate.configuration;
 
 import com.base.entity.BaseEntity;
 import com.base.server.BaseSession;
+import com.platform.util.PlatformUtil;
 
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -17,13 +18,13 @@ public class BaseEntityListener {
     private void prePersist(Object object) {
 		if (object instanceof BaseEntity) {
 			BaseEntity entity = (BaseEntity) object;
-			if (entity.getTimeCreated() == 0L) {
-				entity.setTimeCreated(System.currentTimeMillis());
+			if (entity.getTimecreated() == 0L) {
+				entity.setTimecreated(System.currentTimeMillis());
 			}
 			entity.setActive(true);
-			entity.setTimeUpdated(System.currentTimeMillis());
-			entity.setModifiedBy(getCurrentUser());
-			entity.setCreatedBy(getCurrentUser());
+			entity.setTimeupdated(System.currentTimeMillis());
+			entity.setModifiedby(getCurrentUser());
+			entity.setCreatedby(getCurrentUser());
 		}
     }
 	
@@ -31,18 +32,18 @@ public class BaseEntityListener {
 	private void preUpdate(Object object) {
 		if (object instanceof BaseEntity) {
 			BaseEntity entity = (BaseEntity) object;
-			entity.setTimeUpdated(System.currentTimeMillis());
-			entity.setModifiedBy(getCurrentUser());
+			entity.setTimeupdated(System.currentTimeMillis());
+			entity.setModifiedby(getCurrentUser());
 			entity.setVersion(entity.getVersion() + 1);
 		}
     }
 	
 	private long getCurrentUser() {
 		if (BaseSession.getUser() == null) {
-			return 0L;
+			return PlatformUtil.SYSTEM_USER_ROOTID;
 		}
-		return BaseSession.getUser().getRootId();
+		return BaseSession.getUser().getRootid();
 	}
-	
+
 }
 

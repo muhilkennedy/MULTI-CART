@@ -17,6 +17,10 @@ export class SiteSettingsService {
   getAllGCPConfigurationKeys(): Observable<any> {
     return this.http.get(`${environment.backendProxy}/admin/file/gcp/configurationkeys`);
   }
+
+  getAllGoogleOauthConfigKeys(): Observable<any> {
+    return this.http.get(`${environment.backendProxy}/admin/oauth/google/configurationkeys`);
+  }
   
   addConfiguartion(body: any): Observable<any> {
     return this.http.post(`${environment.backendProxy}/admin/base/config`, body);
@@ -28,6 +32,14 @@ export class SiteSettingsService {
 
   loadNewEmailConfig(){
     return this.http.patch(`${environment.backendProxy}/admin/email/loadconfig`, null);
+  }
+
+  loadNewStorageConfig(){
+    return this.http.patch(`${environment.backendProxy}/admin/file/gcp/loadconfig`, null);
+  }
+
+  getAllSMSConfigurationKeys(): Observable<any> {
+    return this.http.get(`${environment.backendProxy}/admin/sms/configurationkeys`);
   }
 
 }

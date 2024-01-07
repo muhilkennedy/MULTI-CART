@@ -46,7 +46,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 	public List<Permission> findAllPermission() {
 		return rpDaoService.findAllPermission().stream().filter(permission -> !(permission.getPermission()
 				.equalsIgnoreCase(Permissions.SUPER_USER.name())
-				&& !empService.doesEmployeeHavePermission(Permissions.SUPER_USER, BaseSession.getUser().getRootId())))
+				&& !empService.doesEmployeeHavePermission(Permissions.SUPER_USER, BaseSession.getUser().getRootid())))
 				.toList();
 	}
 
@@ -70,7 +70,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 	
 	@Override
 	public Employee addRolesToEmployee(Employee employee, List<Long> roleIds) {
-		List<Role> rolesList = findAllRoles().parallelStream().filter(role -> roleIds.contains(role.getRootId()))
+		List<Role> rolesList = findAllRoles().parallelStream().filter(role -> roleIds.contains(role.getRootid()))
 				.toList();
 		List<EmployeeRole> er = rolesList.stream()
 				.map(role -> rpDaoService.saveEmployeeRoleMap(new EmployeeRole(employee, role))).toList();

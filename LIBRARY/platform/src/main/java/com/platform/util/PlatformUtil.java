@@ -11,8 +11,11 @@ public class PlatformUtil {
 	public static final String EMPTY_STRING = "";
 	public static final String EMPTY_SPACE = " ";
 	
-	public static final String DEFAULT_USER_ID = "SYSTEM";
-	public static final Long SYSTEM_USER_ROOTID= 0L;
+	public static final String INTERNAL_SYSTEM = "SYSTEM";
+	
+	public static final String DEFAULT_USER_ID = "MKEN_SYSTEM";
+	public static final Long SYSTEM_USER_ROOTID = 0L;
+	public static final Long SYSTEM_REALM_ROOTID = 0L;
 	
 	public static final String ADMIN_CUSTOMER_SUPPORT_DESIGNATION = "CustomerSupportAdmin";
 	
@@ -35,6 +38,10 @@ public class PlatformUtil {
 	public static final String TEMPLATE_EXTENTION = ".ftl";
 	public static final String TEMPLATES_FOLDER = "EmailTemplates";
 	
+	public static final String TOPIC_ADMIN_USER = "ADMINUSER";
+	public static final String TOPIC_CLIENT_USER = "CLIENTUSER";
+	
 	public static final SimpleDateFormat SIMPLE_DATE_ONLY_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	public static final SimpleDateFormat SIMPLE_UI_DATE_ONLY_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
 }

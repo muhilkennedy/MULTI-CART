@@ -19,6 +19,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 	@Query(findByEmailQuery)
 	Employee findByEmailId(@Param("emailId") String emailId);
+	
+	String findBySecondaryEmailQuery = "select emp from Employee emp where secondaryemail=:emailId";
+
+	@Query(findBySecondaryEmailQuery)
+	Employee findBySecondaryEmail(@Param("emailId") String emailId);
 
 	String findUserForLoginQuery = "select emp from Employee emp where emailid=:emailId or mobile=:mobile or uniquename=:uniqueName";
 
@@ -43,4 +48,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	@Query(findEmployeeWithPermissionQuery)
 	Employee findEmployeeWithPermission(@Param("permission") String permission, @Param("rootId") Long rootId);
 
+	String findLikeEmployeeNameQuery = "select emp from Employee emp where (fname like %:name% or lname like %:name%)";
+
+	@Query(value = findLikeEmployeeNameQuery)
+	List<Employee> findLikeEmployeeName(@Param("name") String name);
+	
+	String findEmployeesByDobQuery = "select emp from Employee emp inner join EmployeeInfo info on emp.rootid = info.employee.rootid where emp.tenantid = :tenantId and info.dob = :dob";
+
+	@Query(value = findEmployeesByDobQuery)
+	List<Employee> findEmployeesByDob(@Param("dob") String dob, @Param("tenantId") Long tenantId);
 }

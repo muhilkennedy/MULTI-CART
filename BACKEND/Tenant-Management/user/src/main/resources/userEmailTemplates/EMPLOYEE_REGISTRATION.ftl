@@ -125,7 +125,7 @@
 <tr>
 <td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
 <div align="center" class="alignment" style="line-height:10px">
-<img alt="LOGO" src="https://firebasestorage.googleapis.com/v0/b/mken-test-webapp.appspot.com/o/devTenant_logo_mken.png?alt=media&token=7e1e101f-e430-4438-bcfd-ee330a2d7b00&_gl=1*1rmr9mq*_ga*MTQxNDQ0NTU5MS4xNjk1NzMwMTMx*_ga_CW55HF8NVT*MTY5OTQxODMyNC4xMi4xLjE2OTk0MTg3MjMuMjguMC4w" style="display: block; height: auto; border: 0; width: 250px; max-width: 100%;" title="Image" width="250"/>
+<img alt="LOGO" src="${tenantLogo}" style="display: block; height: auto; border: 0; width: 250px; max-width: 100%;" title="Image" width="250"/>
 </div>
 </td>
 </tr>
@@ -201,7 +201,7 @@
 <tr>
 <td class="pad" style="padding-bottom:10px;padding-left:10px;padding-right:10px;padding-top:25px;text-align:center;">
 <div align="center" class="alignment"><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="height:62px;width:194px;v-text-anchor:middle;" arcsize="7%" stroke="false" fillcolor="#a8bf6f"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#ffffff; font-family:'Trebuchet MS', Tahoma, sans-serif; font-size:16px"><![endif]-->
-<div style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#a8bf6f;border-radius:4px;width:auto;border-top:0px solid transparent;font-weight:undefined;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:15px;padding-bottom:15px;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:15px;padding-right:15px;font-size:16px;display:inline-block;letter-spacing:normal;"><span style="word-break: break-word; line-height: 32px;">ACTIVATE MY ACCOUNT</span></span></div><!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
+<div style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#a8bf6f;border-radius:4px;width:auto;border-top:0px solid transparent;font-weight:undefined;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:15px;padding-bottom:15px;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:15px;padding-right:15px;font-size:16px;display:inline-block;letter-spacing:normal;"><span style="word-break: break-word; line-height: 32px;"><a href="${forgotPasswordUrl}">ACTIVATE MY ACCOUNT</a></span></span></div><!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
 </div>
 </td>
 </tr>
@@ -229,8 +229,7 @@
 <div align="center" class="alignment">
 <table border="0" cellpadding="0" cellspacing="0" class="social-table" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block;" width="111px">
 <tr>
-<td style="padding:0 5px 0 0px;"><a href="https://www.facebook.com/" target="_blank">
-<img alt="Facebook" height="32" src="https://firebasestorage.googleapis.com/v0/b/mken-test-webapp.appspot.com/o/social-facebook-white.png?alt=media&token=091ba5c7-91b2-4d26-bfad-df5fe37ca98f&_gl=1*17gjkiq*_ga*MTQxNDQ0NTU5MS4xNjk1NzMwMTMx*_ga_CW55HF8NVT*MTY5OTQxODMyNC4xMi4xLjE2OTk0MTg3ODYuNDQuMC4w" style="display: block; height: auto; border: 0;" title="Facebook" width="32"/></a>
+<td style="padding:0 5px 0 0px;">
 </td>
 </tr>
 </table>

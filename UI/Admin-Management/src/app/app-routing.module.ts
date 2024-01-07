@@ -5,6 +5,9 @@ import { DefaultLayoutComponent } from './containers';
 import { ErrorComponent } from 'src/common-components/error/error.component';
 import { NotFoundComponent } from 'src/common-components/notfound/notfound.component';
 import { LoginComponent } from './views/login/login.component';
+import { ResetPasswordComponent } from './views/reset-password/reset-password.component';
+import { ProfileComponent } from './views/profile/profile.component';
+import { TasksComponent } from './views/tasks/tasks.component';
 
 const routes: Routes = [
   {
@@ -15,6 +18,11 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+    pathMatch: 'full'
+  },
+  {
+    path: 'password/reset',
+    component: ResetPasswordComponent,
     pathMatch: 'full'
   },
   {
@@ -43,6 +51,31 @@ const routes: Routes = [
         path: 'pos',
         loadChildren: () =>
           import('./views/pos/pos.module').then((m) => m.PosModule)
+      },
+      {
+        path: 'profile',
+        loadChildren: () =>
+          import('./views/profile/profile.module').then((m) => m.ProfileModule)
+      },
+      {
+        path: 'filestore',
+        loadChildren: () =>
+          import('./views/file-store/file-store.module').then((m) => m.FileStoreModule)
+      },
+      {
+        path: 'templates',
+        loadChildren: () =>
+          import('./views/templates/templates.module').then((m) => m.TemplatesModule)
+      },
+      {
+        path: 'task',
+        loadChildren: () =>
+          import('./views/tasks/tasks.module').then((m) => m.TasksModule)
+      },
+      {
+        path: 'notifications',
+        loadChildren: () =>
+          import('./views/user-notification/user-notification.module').then((m) => m.UserNotificationModule)
       }
     ]
   },

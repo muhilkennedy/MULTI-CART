@@ -86,7 +86,7 @@ export class ManageuserComponent implements OnInit {
     this.selectedRoles.forEach(role => {
       this.roles.forEach(r => {
         if(r.rolename == role){
-          selectedRoleIds.push(r.rootId);
+          selectedRoleIds.push(r.rootid);
         }
       })
     })
@@ -125,7 +125,7 @@ export class ManageuserComponent implements OnInit {
   }
 
   public toggleActive(event: MatSlideToggleChange, rootId: string) {
-    this.userlist.filter(user => user.rootId == rootId).map(user => user.active = event.checked);
+    this.userlist.filter(user => user.rootid == rootId).map(user => user.active = event.checked);
     this.userService.toggleUserState(this.selectedRealm)
       .subscribe({
         next: (resp: any) => {

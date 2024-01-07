@@ -25,7 +25,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.platform</groupId>
-			<artifactId>platform</artifactId>
+			<artifactId>platform-commons</artifactId>
 			<version>${platform.version}</version>
 		</dependency>
 		<!-- server dependencies -->
@@ -52,6 +52,10 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- database connectivity dependencies -->
+		<dependency>
+		  <groupId>org.springframework.boot</groupId>
+		  <artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -125,21 +129,15 @@
 			<groupId>jakarta.ws.rs</groupId>
 			<artifactId>jakarta.ws.rs-api</artifactId>
 		</dependency>
-		<!-- social oauth login 
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-oauth2-client</artifactId>
-		</dependency>-->
-		<!-- 3rd party dependencies -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
+		<!-- job scheduler dependencies -->
 		<dependency>
 			<groupId>org.jobrunr</groupId>
 			<artifactId>jobrunr-spring-boot-starter</artifactId>
 			<version>${jobrunr.version}</version>
+		</dependency>
+		<dependency>    
+		   <groupId>org.springframework.boot</groupId>    
+		   <artifactId>spring-boot-starter-quartz</artifactId>
 		</dependency>
 	</dependencies>
 

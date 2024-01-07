@@ -1,0 +1,34 @@
+{
+	"EMPLOYEE_REGISTRATION": [
+		"tenantLogo",
+		"userName",
+		"password",
+		"mobile",
+		"email",
+		"tenantAdminUrl",
+		"passwordResetUrl"
+	],
+	"EMPLOYEE_FORGOT_PASSWORD": [
+		"tenantLogo",
+		"userName",
+		"uniqueName",
+		"mobile",
+		"email",
+		"forgotPasswordUrl"
+	],
+	"CUSTOMER_REGISTRATION": [
+		"TODO: need to update",
+		"clientUrl"
+	],
+	"CUSTOMER_FORGOT_PASSWORD": [
+		"TODO: need to update",
+		"forgotPasswordUrl"
+	],
+	"EMPLOYEE_BIRTHDAY_WISHES":[
+		"tenantLogo",
+		"userName",
+		"tenantName",
+		"tenantMobile",
+		"tenantEmail"
+	]
+}

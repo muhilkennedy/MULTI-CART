@@ -50,6 +50,14 @@ export class TenantService {
     })
   }
 
+  updateTenantUrl(body, tenant): Observable<any> {
+    return this.http.post<any>(`${environment.backendProxy}/admin/tenant/origins`, body, {
+      params: {
+        tenantId: tenant
+      }
+    })
+  }
+
   uploadLogo(file, tenant): Observable<any> {
     const formData = new FormData(); 
     formData.append("picture", file, file.name); 

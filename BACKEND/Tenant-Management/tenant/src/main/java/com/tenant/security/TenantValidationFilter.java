@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.base.server.BaseSession;
 import com.base.util.Log;
 import com.base.util.PropertiesUtil;
+import com.platform.entity.PlatformTenant;
 import com.platform.util.PlatformUtil;
 import com.tenant.entity.Tenant;
 import com.tenant.entity.TenantDetails;
@@ -45,21 +46,22 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 	private TenantService tenantService;
 	
 	//move to config file
-	private static List<String> Whitelisted_URI = Arrays.asList("/actuator/health","/actuator/metrics","/favicon.ico");
+	private static List<String> Whitelisted_URI = Arrays.asList("/actuator/", "/socialredirect/");
 	
     @Override
     protected boolean shouldNotFilter (HttpServletRequest request)
     {
         return Whitelisted_URI.parallelStream().filter(uri -> request.getRequestURI() != null && request.getRequestURI().contains(
-            uri)).findAny().isPresent();
+            uri)).peek(uri -> Log.tenant.debug("Filtered URI -> {}", uri)).findAny().isPresent();
     }
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String requestUri = request.getRequestURI();
-		Log.tenant.info("Request URI - {} from address - {}", requestUri, request.getRemoteAddr());
-		//check for null tenant header
+		Log.tenant.info("Request URI - {} : remote address - {} : user agent : {}", requestUri, request.getRemoteAddr(),
+				request.getHeader(HttpHeaders.USER_AGENT));
+		// error out if no teant header is present
 		String tenantUniqueName = request.getHeader(PlatformUtil.TENANT_HEADER);
 		if(StringUtils.isBlank(tenantUniqueName)) {
 			Log.tenant.error("Tenant Header is Empty");
@@ -67,11 +69,29 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 					"Tenant Header is Empty");
 			return;
 		}
-		Tenant tenant = tenantService.findByUniqueName(tenantUniqueName);
+		Tenant tenant = null;
+		if (tenantUniqueName.equals(PlatformUtil.INTERNAL_SYSTEM)) {
+			// TODO and check for trusted subnet to make sure communication between services.
+			PlatformTenant pTenant = PlatformTenant.getSystemTenant();
+			tenant = new Tenant();
+			tenant.setName(pTenant.getName());
+			tenant.setActive(pTenant.isActive());
+			tenant.setRootid(pTenant.getRootid());
+			tenant.setUniquename(pTenant.getUniquename());
+		}
+		else {
+			tenant = tenantService.findByUniqueName(tenantUniqueName);
+		}
 		if(!isValidTenant(tenant, response)) {
 			return;
 		}
-		BaseSession.setTenant(tenant);
+		/*
+		 * setting current tenant here indicates, he is the owner of this session. (but
+		 * based on tenant id on parameter, tenant object will be updated so object
+		 * persistance happens for tenant passed as parameter. In short tenantId passed
+		 * as parameter will take precedence.(acts as on behalf of)
+		 */
+		BaseSession.setCurrentTenant(tenant);
 		Log.base.debug("Tenant Session For {} is setup for request {}", tenant.getUniquename(), requestUri);
 		TenantDetails td = tenant.getTenantDetail();
 		if(PropertiesUtil.isProdDeployment() && td.getDetails().isInitialSetUpDone()) {
@@ -83,19 +103,16 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 			}
 		}
 		// Set current session as new tenant (tenantId passed in parameter takes precedence here)
-		if (tenant.getParent() == null) {
-			String idParam = request.getParameter(PlatformUtil.TENANT_PARAM);
-			if (!StringUtils.isAllBlank(idParam)) {
-				Long id = Long.parseLong(idParam);
-				BaseSession.setCurrentTenant(tenant);
-				tenant = (Tenant) tenantService.findById(id);
-				if (isValidTenant(tenant, response)) {
-					BaseSession.setTenant(tenant);
-					Log.base.info("Tenant Session Updated for {} to {} based on request",
-							BaseSession.getCurrentTenant().getUniqueId(), tenant.getUniquename());
-				} else {
-					throw new RuntimeException("Invalid Request for Tenant");
-				}
+		String idParam = request.getParameter(PlatformUtil.TENANT_PARAM);
+		if (!StringUtils.isAllBlank(idParam)) {
+			Long id = Long.parseLong(idParam);
+			tenant = (Tenant) tenantService.findById(id);
+			if (tenant != null) {
+				BaseSession.setTenant(tenant);
+				Log.base.info("Tenant Session Updated for {} to {} based on request",
+						BaseSession.getCurrentTenant().getUniqueId(), tenant.getUniquename());
+			} else {
+				throw new RuntimeException("Invalid Request for Tenant");
 			}
 		}
 		Log.tenant.debug("Tenant filter validation successful");

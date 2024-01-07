@@ -58,17 +58,19 @@ public class StorageConfiguration {
 			initGCPForTenants();
 			NFSStorageService.init(nfsPath, appName);
 			Log.base.info("----- PROD Storage Service intialized -----");
-		} 
-		else {
+		} else {
 			if (loadDevFile) {
-				InputStream is = getClass().getResourceAsStream("/gcs/config.json");
-				File tempFile = File.createTempFile("config", ".json");
-				FileUtils.copyInputStreamToFile(is, tempFile);
-				File decryptedFile = FileCryptoUtil.decrypt(
-						new String(Base64.getDecoder().decode(PropertiesUtil.getFileSecret()), StandardCharsets.UTF_8),
-						tempFile);
-				GoogleStorageService.init(decryptedFile, defaultGcsbucket);
-				FileUtil.deleteDirectoryOrFile(decryptedFile);
+				File tempFile = null;
+				try (InputStream is = getClass().getResourceAsStream("/gcs/config.json");) {
+					tempFile = File.createTempFile("config", ".json");
+					FileUtils.copyInputStreamToFile(is, tempFile);
+					tempFile = FileCryptoUtil
+							.decrypt(new String(Base64.getDecoder().decode(PropertiesUtil.getFileSecret()),
+									StandardCharsets.UTF_8), tempFile);
+					GoogleStorageService.init(tempFile, defaultGcsbucket);
+				} finally {
+					FileUtil.deleteDirectoryOrFile(tempFile);
+				}
 			} else {
 				initGCPForTenants();
 			}

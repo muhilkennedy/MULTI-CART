@@ -1,0 +1,245 @@
+Jdk17
+
+Spring boot - latest
+-----------
+https://start.spring.io/
+mvn clean install
+mvn spring-boot:run
+java -jar /path to target jar file
+
+
+Angular setup:
+-------------
+https://angular.io/cli
+Angular/cli - latest
+npm install -g @angular/cli
+ng build
+ng serve
+Node / npm  - v12+
+https://nodejs.org/en/download/
+npm install
+npm start
+
+
+MYSQL setup:
+------------
+https://dev.mysql.com/downloads/
+community server
+community workbench(optional)
+
+
+Redis setup:(enable redis in app property)
+------------
+https://redis.io/docs/getting-started/installation/install-redis-on-mac-os/
+brew install redis
+to start sever cmd -> redis-server
+(or) use embedded redis for easy usage
+
+Redis-cli ping
+redis-cli KEYS '*' 
+
+Redis-cli -> login to redis terminal
+redis-cli config set requirepass devpassword (for default user)
+acl setuser devuser on >devpassword ~* &* +@all
+ACL list
+ACL save
+
+bind 127.0.0.1 ::1 (accessible only on local machine)
+
+https://redis.io/docs/management/config/
+
+Jenkins setup:
+-------------
+<TBD>
+
+Docker setup:
+-------------
+https://www.docker.com/
+docker ps
+
+docker build --tag=name:latest .
+docker run -p 8080:8080 -it --entrypoint /bin/bash name
+
+Inside cont.
+export SPRING_PROFILES_ACTIVE=local
+java ${JAVA_OPTS} -jar app.jar --install.root=/target/ --flyway.enabled=false
+
+
+Kubernetes setup : 
+-------------------
+kubectl get all
+
+kubectl run my-ngnix --image=nginx:alpine
+kubectl get pods
+kubectl describe pod my-ngnix
+kubectl get service
+kubectl get deployment (deployment enclosed replicaset automatically)
+kubectl port-forward my-ngnix 8080:80
+kubectl delete pod my-ngnix
+
+kubectl create -f yamlfile --dry-run --save-config
+kubectl apply
+kubectl edit
+kubectl patch
+
+kubectl exec my-ngnix -t sh
+
+make sure to create liveness probe and rediness probe for checking status respectively
+
+kubectl scale deployment name --replicas=5 (replicas can be put inside yaml)
+
+services -> map ports/ manage networking to auto detect IP based on labels as DNS
+
+
+
+Hashi vault setup:(optional)
+------------------
+https://www.vaultproject.io/downloads
+brew install vault
+start vault server -> vault server --dev --dev-root-token-id="00000000-0000-0000-0000-000000000000"
+vault server -dev -config=<config.hcl>
+vault server -config=<path> ->after init
+open new terminal:
+export export VAULT_TOKEN="00000000-0000-0000-0000-000000000000"
+export VAULT_ADDR="http://127.0.0.1:8200"
+export CONSUL_HTTP_TOKEN=983317ac-ac22-8be2-b554-668a786cf25c (if consul if secured)
+vault kv put secret/TENANTMANAGER db.password=demouser
+vault kv get secret/TENANTMANAGER
+
+Remove Vault token from application.properties (to be taken care during deployment)
+Simply remove spring.cloud.vault.token from application.properties and 
+instead provide it via system property -Dspring.cloud.vault.token=00000000-0000-0000-0000-000000000000 (when starting the application) 
+or environment variable SPRING_CLOUD_VAULT_TOKEN. Environment variable is especially convenient if you use containers (Docker or Kubernetes).
+
+sample token:
+Unseal Key: 8ylxQhz+jzfAkcXXhviUodu136WH1W24ZGC0izHenSI=
+Root Token: hvs.opIDWgqDc1vSogkHcmpNOEYH
+{
+  "keys": [
+    "dd54dfdf4f5ec8f2a38fb849ba7f97cb1f44de240f9ac9d9c00fa10220a6a49185",
+    "4aaa063fe9869afbe85c74afaa1dca0ea7d5f063d166044643b2074cf9b7fe924b",
+    "e9a0a0ec26c3b419cb19c43f5b03717e9ef9a0bf63b2c8c3db2e698f72ed8d82d9"
+  ],
+  "keys_base64": [
+    "3VTf309eyPKjj7hJun+Xyx9E3iQPmsnZwA+hAiCmpJGF",
+    "SqoGP+mGmvvoXHSvqh3KDqfV8GPRZgRGQ7IHTPm3/pJL",
+    "6aCg7CbDtBnLGcQ/WwNxfp75oL9jssjD2y5pj3LtjYLZ"
+  ],
+  "root_token": "hvs.rLEqgp7HstGWkAgus1dF0PgJ"
+}
+---------------------------------
+config.hcl:(file)
+storage "consul" {
+  address = "127.0.0.1:8500"
+  path    = "vault/"
+  token = <consul-token>
+}
+
+listener "tcp" {
+  address     = "127.0.0.1:8203"
+  tls_disable = 1
+}
+
+disable_mlock = true
+
+api_addr = "http://127.0.0.1:8203"
+cluster_addr = "https://127.0.0.1:8201"
+ui = true
+-----------------------------------
+
+
+hashi consul setup:(optional)
+-------------------
+https://www.consul.io/downloads
+for mac:
+brew tap hashicorp/tap
+brew install hashicorp/tap/consul
+sart consul:
+consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=<Local_IP_addr>
+http://localhost:8500/ui
+
+setup consul auth:
+create temp dir for consul config files
+mkdir consul.d
+vi agent.hcl
+acl = {
+  enabled = true
+  default_policy = "deny"
+  enable_token_persistence = true
+}
+
+consul acl bootstrap
+consul agent -server -bootstrap-expect=1 -data-dir=consul-data -config-dir=consul.d -ui -bind=127.0.0.1
+moreinfo below:
+https://developer.hashicorp.com/consul/tutorials/security/access-control-setup-production#consul-ui-token
+
+sample token:
+AccessorID:       080d483b-5909-3ac5-04a2-5db99102d9bd
+SecretID:         793cbb1f-dd76-2681-bcf8-4677c4c1f476
+Description:      Bootstrap Token (Global Management)
+Local:            false
+Create Time:      2023-02-22 21:21:04.784094 +0530 IST
+Policies:
+   00000000-0000-0000-0000-000000000001 - global-management
+   
+Update token:
+consul acl token update -id 986193 -description "WonderToken" -merge-policies
+
+splunk setup:(optional)
+-------------
+
+
+Sonar Qube server:(to check code quality in local)
+------------------
+sonar docker image https://hub.docker.com/_/sonarqube/
+docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
+localhost:9000 -> uname:admin,pwd:admin
+Run maven build on local project:
+build jacoco -> mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install
+publish report to sonar -> mvn sonar:sonar
+(NOTE: incase of auth issue -> go to administration -> security and disable "Force User Authentication")
+
+
+fail2ban setup:(optional) (prevent DOS attack incase of local server)
+--------------
+
+
+-------------
+Firebase Setup : 
+----------------
+- npm install firebase
+
+Then, initialize Firebase and begin using the SDKs for the products you'd like to use.
+
+- npm install -g firebase-tools
+
+- firebase login
+
+Run this command from your app’s root directory:
+
+- firebase init
+Specify your site in firebase.json
+Add your site ID to the firebase.json configuration file. After you get set up, see the best practices for multi-site deployment.
+
+{
+  "hosting": {
+    "site": "mken-tm-test",
+
+    "public": "public",
+    ...
+  }
+}
+When you’re ready, deploy your web app
+Put your static files (e.g., HTML, CSS, JS) in your app’s deploy directory (the default is “public”). Then, run this command from your app’s root directory:
+
+- firebase deploy --only hosting:mken-tm-test
+
+Mac steps:
+npm install -g firebase-tools
+alias firebase="`npm config get prefix`/bin/firebase"
+sh-3.2$ firebase login
+
+-------------
+
+
+

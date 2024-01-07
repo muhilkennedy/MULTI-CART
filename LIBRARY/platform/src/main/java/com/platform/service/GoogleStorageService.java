@@ -56,16 +56,16 @@ public class GoogleStorageService implements AbstractStorage {
 	}
 
 	public static void init(File gcpConfigFile, String bucketName) throws IOException {
-		if (instance == null) {
-			synchronized (GoogleStorageService.class) {
+		synchronized (GoogleStorageService.class) {
+			if (instance == null) {
 				instance = new GoogleStorageService(gcpConfigFile, bucketName);
 			}
 		}
 	}
 
 	public static void initForTenants(Map<Long, String> gcpConfig, Map<Long, String> gcpBucket) throws IOException {
-		if (instance == null) {
-			synchronized (GoogleStorageService.class) {
+		synchronized (GoogleStorageService.class) {
+			if (instance == null) {
 				Map<Long, StorageConfig> gcpStores = new HashMap<Long, StorageConfig>();
 				for (Map.Entry<Long, String> entry : gcpConfig.entrySet()) {
 					gcpStores.put(entry.getKey(),
@@ -128,6 +128,20 @@ public class GoogleStorageService implements AbstractStorage {
 		}
 		return null;
 	}
+	
+	@Override
+	public String getFileUrl(Optional<?> blobId) {
+		if (blobId.isPresent()) {
+			if (blobId.get() instanceof BlobId) {
+				BlobId bId = (BlobId) blobId.get();
+				Blob blob = storage().get(bId);
+				if(blob != null) {
+					return blob.getMediaLink();
+				}
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public String saveFile(File file) throws IOException {
@@ -158,7 +172,7 @@ public class GoogleStorageService implements AbstractStorage {
 		}
 		BlobId blobId = BlobId.of(bucket(),
 				PlatformBaseSession.getTenantUniqueName().concat(FileUtil.sanitizeDirPath(dir)).concat(file.getName()));
-		uploadFile(blobId, file, false);
+		uploadFile(blobId, file, isInternalOnly);
 		return blobId;
 	}
 

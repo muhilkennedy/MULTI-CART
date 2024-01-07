@@ -1,0 +1,134 @@
+<div class="mat-elevation-z8" style="overflow: auto;">
+    <table mat-table [dataSource]="tasks">
+
+        <!-- type Column -->
+        <ng-container matColumnDef="TaskType">
+            <th mat-header-cell *matHeaderCellDef> {{"Type" | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                <!-- TODO: on click open dialoag with detailed summary -->
+                <img *ngIf="element.tasktype == 'TODO'" src="../../../assets/img/todo.png" style="height: 1rem;"
+                    class="zoom" matTooltip="{{'TODO' |translate}}" />
+                <img *ngIf="element.tasktype == 'APPROVAL'" src="../../../assets/img/approval.png" style="height: 1rem;"
+                    class="zoom" matTooltip="{{'APPROVAL' |translate}}" />
+            </td>
+        </ng-container>
+
+        <!-- title Column -->
+        <ng-container matColumnDef="Title">
+            <th mat-header-cell *matHeaderCellDef> {{"Title" | translate}} </th>
+            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+        </ng-container>
+
+        <!-- desc Column -->
+        <ng-container matColumnDef="Description">
+            <th mat-header-cell *matHeaderCellDef> {{"Description" | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.description}}
+            </td>
+        </ng-container>
+
+        <!-- status Column -->
+        <!-- <ng-container matColumnDef="Status">
+            <th mat-header-cell *matHeaderCellDef> {{"Status" | translate}} </th>
+            <td mat-cell *matCellDef="let element"> 
+              <mat-chip [ngClass]="element.status"> <small>{{element.status}}</small> </mat-chip>
+            </td>
+        </ng-container> -->
+
+        <!-- startdate Column -->
+        <ng-container matColumnDef="StartDate">
+            <th mat-header-cell *matHeaderCellDef> {{"Start Date" | translate}} </th>
+            <td mat-cell *matCellDef="let element"> {{element.startdate | date:'dd/MM/yyyy'}}</td>
+        </ng-container>
+
+        <!-- enddate Column -->
+        <ng-container matColumnDef="DueDate">
+            <th mat-header-cell *matHeaderCellDef> {{"Due Date" | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                <c-badge matTooltip="Task End Date"
+                    [color]="getDueDateColor(element.enddate)">{{getDueDate(element.enddate)}}</c-badge>
+            </td>
+        </ng-container>
+
+        <!-- createdby Column -->
+        <ng-container matColumnDef="CreatedBy">
+            <th mat-header-cell *matHeaderCellDef> {{"Created By" | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.owner.fname}}
+                <!-- <button mat-icon-button color="primary" matTooltip= "View Owner">
+                    <mat-icon>supervised_user_circle</mat-icon>
+                </button> -->
+            </td>
+        </ng-container>
+
+        <!-- assignees Column -->
+        <ng-container matColumnDef="Assignees">
+            <th mat-header-cell *matHeaderCellDef> {{"Assignees" | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                <!-- <mat-icon color="primary" class="maticon" matTooltip= "View Assignees">supervised_user_circle</mat-icon> -->
+                <!-- cPopoverPlacement="right" -->
+                <button [cPopover]="popoverHtml" [cPopoverTrigger]="'click'" color="info" cButton class="me-1"
+                    variant="outline">
+                    <svg cIcon name="cil-people"></svg>
+                    <ng-template #popoverHtml>
+                        <h3 class="popover-header">
+                            {{"Assignees" | translate}}
+                        </h3>
+                        <div class="popover-body">
+                            <table>
+                                <tr>
+                                    <th>
+                                        {{"Name" | translate}}
+                                    </th>
+                                    <th>
+                                        {{"Status" | translate}}
+                                    </th>
+                                    <th>
+                                        {{"Completed On" | translate}}
+                                    </th>
+                                </tr>
+                                <tr cTextColor="info" *ngFor="let asg of element.assignees">
+                                    <td>
+                                        {{asg.assignee.fname}} {{asg.assignee.lname}}
+                                    </td>
+                                    <td [cTextColor]="asg.status == 'PENDING'? 'danger' : 'success'">
+                                        {{asg.status}}
+                                    </td>
+                                    <td>
+                                        {{asg.completedon | date}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </ng-template>
+                </button>
+            </td>
+        </ng-container>
+
+        <!-- actions -->
+        <ng-container matColumnDef="Actions">
+            <th mat-header-cell *matHeaderCellDef> {{"Actions" | translate}} </th>
+            <td mat-cell *matCellDef="let element">
+                <div *ngIf="element.status == 'PENDING'">
+                    <mat-icon *ngIf="element.tasktype == 'TODO' && element.status != 'COMPLETE'" style="color: #429900"
+                        class="maticon" matTooltip="Complete">task_alt</mat-icon>
+                    <span *ngIf="element.tasktype == 'TODO'"> &nbsp; </span>
+                    <mat-icon *ngIf="element.tasktype == 'TODO' && element.status == 'COMPLETE'" style="color: #429900"
+                        class="maticon" matTooltip="Undo Task">remove_done</mat-icon>
+
+                    <mat-icon *ngIf="element.tasktype == 'APPROVAL'" style="color: #429900" class="maticon"
+                        matTooltip="Approve">fact_check</mat-icon>
+                    <span *ngIf="element.tasktype == 'APPROVAL'"> &nbsp; </span>
+                    <mat-icon *ngIf="element.tasktype == 'APPROVAL'" color="warn" class="maticon"
+                        matTooltip="Decline">highlight_off</mat-icon>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="taskColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: taskColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[25, 50, 100]" (page)="handlePageEvent($event)" [length]="totalPages"
+        [pageSize]="pageSize" showFirstLastButtons aria-label="Select employees">
+    </mat-paginator>
+</div>

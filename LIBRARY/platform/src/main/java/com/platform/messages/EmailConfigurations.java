@@ -17,7 +17,8 @@ public enum EmailConfigurations {
 	MAIL_SMTP_START_TLS("mail.smtp.starttls.enable"),
 	MAIL_SMTP_SSL("mail.smtp.ssl.enable"),
 	MAIL_USER_ID("app.email.id"),
-	MAIL_USER_PASSWORD("app.email.password");
+	MAIL_USER_PASSWORD("app.email.password"),
+	MAIL_INBOX_URL("app.mail.inbox.url");
 	
 	private String property;
 	

@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NotificationComponent } from './notification/notification.component';
 import { ToastnotificationComponent } from './notification/toastnotification/toastnotification.component';
 import { AlertnotificationComponent } from './notification/alertnotification/alertnotification.component';
+import { RecaptchaComponent } from './recaptcha/recaptcha.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { AlertnotificationComponent } from './notification/alertnotification/ale
     SpinnerComponent,
     NotificationComponent,
     ToastnotificationComponent,
-    AlertnotificationComponent
+    AlertnotificationComponent,
+    RecaptchaComponent
   ],
   exports: [
     ErrorComponent,
@@ -28,7 +30,8 @@ import { AlertnotificationComponent } from './notification/alertnotification/ale
     SpinnerComponent,
     NotificationComponent,
     ToastnotificationComponent,
-    AlertnotificationComponent
+    AlertnotificationComponent,
+    RecaptchaComponent
   ],
   imports: [
     CommonModule,
@@ -55,7 +58,9 @@ import { AlertnotificationComponent } from './notification/alertnotification/ale
     ModalModule,
     SharedModule,
     TooltipModule,
-    PopoverModule
+    PopoverModule,
+    CalloutModule,
+    ModalModule
   ]
 })
 export class ComponentsModule {

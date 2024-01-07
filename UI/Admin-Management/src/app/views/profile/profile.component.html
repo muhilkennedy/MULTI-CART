@@ -1,0 +1,106 @@
+<c-row>
+    <c-col md="6">
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>{{user.fname}} {{user.lname}}</mat-card-title>
+                <mat-card-subtitle>{{user.uniquename}}</mat-card-subtitle>
+            </mat-card-header>
+            <img mat-card-image [src]="getProfilePicture()" alt="Profile Pic">
+            <mat-card-content>
+                <table>
+                    <tr>
+                        <td>
+                            <label>{{"Designation" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{user.designation}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Mobile Number" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{user.mobile}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Email Id" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{user.emailid}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Locale" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{user.locale}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Reports To" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{user.reportsto}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Permissions" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <ul cListGroup>
+                                <li style="padding: 1px;" cListGroupItem
+                                    *ngFor="let permissions of user.userPermissions">{{permissions}}</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </mat-card-content>
+            <!-- <mat-card-actions></mat-card-actions> -->
+        </mat-card>
+    </c-col>
+
+    <c-col md="6">
+        <c-card class="mb-4">
+            <c-card-header>
+              <strong>{{"Edit Profile" | translate}}</strong>
+              <select style="float: right;" #langSelect (change)="changeLanguage(langSelect.value)">
+                <option
+                  *ngFor="let lang of languages"
+                  [value]="lang.code"
+                  [attr.selected]="lang.code === translate.currentLang ? '' : null">{{lang.name}}</option>
+              </select>
+            </c-card-header>
+            <c-card-body style="overflow: auto;">
+                <c-row>
+                    <label cLabel for="formFile">{{"Upload New Profile Picture" | translate}}</label>
+                    <input #file cFormControl id="formFile" name="chooser" accept="image/*" type="file" (change)="onPictureSeclected($event)"/>
+                </c-row>
+                <br/>
+                <c-row>
+                    <mat-form-field>
+                        <mat-label>{{"Secondary Email" | translate}}</mat-label>
+                        <input matInput type="text" [(ngModel)]="secondaryemail">
+                        <button matSuffix *ngIf="isMailValid()"
+                            mat-icon-button (click)="onSecondartMailUpdate()">
+                            <mat-icon color="warn">save</mat-icon>
+                        </button>
+                        <mat-hint>({{"Adviced to update with google mailId for social login" | translate}}!)</mat-hint>
+                    </mat-form-field>
+                </c-row>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>

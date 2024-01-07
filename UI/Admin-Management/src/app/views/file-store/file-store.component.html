@@ -1,0 +1,120 @@
+<app-spinner></app-spinner>
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>{{"File Manager" | translate}}</strong>
+                <button style="float: right;" cButton class="me-1" color="primary" variant="outline" size="sm"
+                    (click)="toggleFileModal()"> {{"Upload File" | translate}}</button>
+                <ng-container *ngTemplateOutlet="fileModal"></ng-container>
+            </c-card-header>
+            <c-card-body style="overflow: auto;">
+                <c-row>
+                    <c-col sm="6">
+                        <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3">
+                            <div class="text-medium-emphasis small">{{"Total Files" | translate}}</div>
+                            <div class="fs-5 fw-semibold">{{totalFiles}}</div>
+                        </div>
+                    </c-col>
+                    <c-col sm="6">
+                        <div class="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
+                            <div class="text-medium-emphasis small">
+                                {{"Utilized Limit" | translate}}
+                            </div>
+                            <div class="fs-5 fw-semibold">{{convertSize(totalFileSize)}}</div>
+                        </div>
+                    </c-col>
+                </c-row>
+                <hr class="mt-0" />
+                <c-row>
+                    <table mat-table [dataSource]="files">
+            
+                        <!-- FileName Column -->
+                        <ng-container matColumnDef="FileName">
+                            <th mat-header-cell *matHeaderCellDef> {{"File Name" | translate}} </th>
+                            <td mat-cell *matCellDef="let element"> {{element.fileName}} </td>
+                        </ng-container>
+                
+                        <!-- FileExtension Column -->
+                        <ng-container matColumnDef="FileExtension">
+                            <th mat-header-cell *matHeaderCellDef> {{"File Extension" | translate}} </th>
+                            <td mat-cell *matCellDef="let element"> {{element.fileExtention}} <span></span> </td>
+                        </ng-container>
+                
+                        <!-- FileSize Column -->
+                        <ng-container matColumnDef="FileSize">
+                            <th mat-header-cell *matHeaderCellDef> {{"File Size" | translate}} </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ convertSize(element.size) }}
+                            </td>
+                        </ng-container>
+                
+                        <!-- IsInternal Column -->
+                        <ng-container matColumnDef="IsInternal">
+                            <th mat-header-cell *matHeaderCellDef> {{"Access Control" | translate}} </th>
+                            <td mat-cell *matCellDef="let element"> 
+                                <c-badge matTooltip="Restricted Access" *ngIf="element.acl" color="warning">{{"INTERNAL" | translate}}</c-badge>
+                                <c-badge matTooltip="Public Access" *ngIf="!element.acl" color="success">{{"PUBLIC" | translate}}</c-badge>
+                            </td>
+                        </ng-container>
+                
+                        <!-- CreatedOn Column -->
+                        <ng-container matColumnDef="CreatedOn">
+                            <th mat-header-cell *matHeaderCellDef> {{"Created On" | translate}} </th>
+                            <td mat-cell *matCellDef="let element"> {{element.timecreated | date:'dd/MM/yyyy'}} </td>
+                        </ng-container>
+                
+                        <!-- FileUrl Column -->
+                        <ng-container matColumnDef="FileUrl">
+                            <th mat-header-cell *matHeaderCellDef> {{"File Url" | translate}} </th>
+                            <td mat-cell *matCellDef="let element"> 
+                                <mat-icon color="accent" class="maticon" (click)="openLink(element)">open_in_new</mat-icon>
+                                <mat-icon color="primary" class="maticon" [cdkCopyToClipboard]="element.mediaurl">file_copy</mat-icon>
+                            </td>
+                        </ng-container>
+                
+                        <!-- Actions -->
+                        <ng-container matColumnDef="Actions">
+                            <th mat-header-cell *matHeaderCellDef> {{"Actions" | translate}} </th>
+                            <td mat-cell *matCellDef="let element">
+                                <mat-icon color="warn" class="maticon" (click)="deleteFile(element.rootid)">delete_outline</mat-icon>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedFilesColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedFilesColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[25, 50, 100]" (page)="handlePageEvent($event)" [length]="totalPages"
+                        [pageSize]="pageSize" showFirstLastButtons aria-label="Select Files">
+                    </mat-paginator>
+                </c-row>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>
+
+<ng-template #fileModal>
+    <c-modal id="fileModal" [visible]="showFileModal" (visibleChange)="handleFileModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>{{ "Upload File" | translate | uppercase}}</h5>
+            <button (click)="toggleFileModal()" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            <label cLabel for="formFile">{{"Select a file to upload" | translate}}</label>
+            <input #file cFormControl id="formFile" name="chooser" type="file" (change)="onFileSelected($event)"/>
+            <br/>
+            <mat-slide-toggle id="acl"
+                [checked]="internalAccess"
+                (change)="toggleAccessControl()">
+            </mat-slide-toggle>
+            <label cLabel for="acl">{{"Internal Access Only" | translate}}</label>
+        </c-modal-body>
+        <c-modal-footer>
+            <button cButton color="secondary" (click)="toggleFileModal()">
+                {{"CLOSE" | translate}}
+            </button>
+            <button cButton color="success" (click)="uploadFile()">
+                {{"UPLOAD" | translate}}
+            </button>
+        </c-modal-footer>
+    </c-modal>
+</ng-template>

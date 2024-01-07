@@ -10,7 +10,7 @@
                 <div class=" form-group">
                   <mat-label>Select Realm</mat-label>
                   <mat-select style="border-style: dashed;" [(ngModel)]="selectedRealm" name="realm" (selectionChange)="getCSAUsers($event.value)">
-                    <mat-option *ngFor="let realm of realms" [value]="realm.rootId">
+                    <mat-option *ngFor="let realm of realms" [value]="realm.rootid">
                       {{realm.tenantUniqueName}}
                     </mat-option>
                   </mat-select>
@@ -144,8 +144,8 @@
                         <mat-slide-toggle
                           [color]="accent"
                           [checked]="user.active"
-                          (change)="toggleActive($event, user.rootId)"
-                          [disabled]="shouldDisable(user.rootId)">
+                          (change)="toggleActive($event, user.rootid)"
+                          [disabled]="shouldDisable(user.rootid)">
                         </mat-slide-toggle>
                       </td>
                     </tr>

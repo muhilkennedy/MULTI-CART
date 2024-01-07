@@ -5,7 +5,9 @@ import java.util.Locale;
 import org.apache.commons.lang3.LocaleUtils;
 
 import com.base.entity.BaseEntity;
+import com.platform.entity.UserBaseObject;
 import com.platform.session.PlatformBaseSession;
+import com.platform.util.PlatformUtil;
 
 /**
  * @author Muhil
@@ -28,6 +30,7 @@ public class BaseSession {
 	}
 	
 	public static void setCurrentTenant(BaseEntity tnt) {
+		setTenant(tnt);
 		currentTenant.set(tnt);
 	}
 
@@ -36,18 +39,18 @@ public class BaseSession {
 	}
 	
 	public static Long getTenantId() {
-		return tenant.get().getObjectId();
+		return tenant.get().getRootid();
 	}
 	
 	public static String getTenantUniqueName() {
-		return tenant.get().getUniqueId();
+		return tenant.get() != null ? tenant.get().getUniqueId() : PlatformUtil.EMPTY_STRING;
 	}
 
 	public static void setUser(BaseEntity usr) {
-		PlatformBaseSession.setUser(usr);
+		PlatformBaseSession.setUser((UserBaseObject)usr);
 		user.set(usr);
 	}
-
+	
 	public static BaseEntity getUser() {
 		return user.get();
 	}
@@ -65,10 +68,11 @@ public class BaseSession {
 	}
 	
 	public static void clear() {
+		PlatformBaseSession.clear();
 		tenant.remove();
 		user.remove();
 		locale.remove();
-		PlatformBaseSession.clear();
+		currentTenant.remove();
 	}
 
 }

@@ -22,6 +22,34 @@ $enable-rtl: true;
 // If you want to add something do it here
 @import "custom";
 
+@import "../../node_modules/angular-calendar/css/angular-calendar.css";
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.fullWidth{
+    width: 100%;
+}
+
+.position-absolute {
+    position: fixed !important;
+}
+
+.zoom:hover {
+    transform: scale(1.5);
+}
+
+.maticon{
+    cursor: pointer;
+}
+
+.maticon:hover {
+    cursor: pointer;
+    transform: scale(1.5);
+}
+
+.dark-overlay
+{
+    position: fixed !important;
+}
 

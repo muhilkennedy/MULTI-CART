@@ -17,11 +17,13 @@ import org.springframework.stereotype.Component;
 
 import com.base.server.BaseSession;
 import com.base.util.Log;
+import com.i18n.util.LocaleUtil;
 import com.platform.annotations.UserPermission;
 import com.platform.user.Permissions;
 import com.user.entity.Employee;
 import com.user.entity.RolePermission;
 import com.user.exception.InvalidUserPermission;
+import com.user.messages.UserMessages;
 /**
  * @author Muhil
  */
@@ -44,22 +46,26 @@ public class PermissionsAspect {
 		// validate for permissions only if present in annotation.
 		if (permissions.length > 0) {
 			Employee employee = (Employee) BaseSession.getUser();
-			List<RolePermission> rolePermissions = CollectionUtils.emptyIfNull(employee.getEmployeeeRoles()).stream()
-					.map(empRole -> empRole.getRole().getPermissions()).collect(Collectors.toList()).parallelStream()
-					.flatMap(List::stream).collect(Collectors.toList());
-			List<String> empPermissions = rolePermissions.parallelStream()
-					.map(rolePermission -> rolePermission.getPermission().getPermission()).collect(Collectors.toList());
-			if (permissions.length > 0 && empPermissions.isEmpty()) {
-				Log.user.error("User doesnt seem to have required permission to access this endpoint");
-				Log.user.debug("Required permission(s) to access this endpoint {}", permissions);
-				throw new InvalidUserPermission(
-						"User doesnt seem to have required permission to access this endpoint");
-			}
-			if (!Stream.of(permissions).filter(prem -> empPermissions.contains(prem.getPermissionUniqueName()))
-					.findFirst().isPresent()) {
-				Log.user.error("Authorization denied for user to acces this endpoint");
-				Log.user.debug("Required permission(s) to access this endpoint {}", permissions);
-				throw new InvalidUserPermission("Authorization denied for user to acces this endpoint");
+			if (!employee.isSystemUser()) {
+				List<RolePermission> rolePermissions = CollectionUtils.emptyIfNull(employee.getEmployeeeRoles())
+						.stream().map(empRole -> empRole.getRole().getPermissions()).collect(Collectors.toList())
+						.parallelStream().flatMap(List::stream).collect(Collectors.toList());
+				List<String> empPermissions = rolePermissions.parallelStream()
+						.map(rolePermission -> rolePermission.getPermission().getPermission())
+						.collect(Collectors.toList());
+				if (permissions.length > 0 && empPermissions.isEmpty()) {
+					Log.user.error("User doesnt seem to have required permission to access this endpoint");
+					Log.user.debug("Required permission(s) to access this endpoint {}", permissions);
+					throw new InvalidUserPermission(LocaleUtil.getLocalisedString(UserMessages.PERMISSION_DENIED.name(),
+							null, BaseSession.getLocale()));
+				}
+				if (!Stream.of(permissions).filter(prem -> empPermissions.contains(prem.getPermissionUniqueName()))
+						.findFirst().isPresent()) {
+					Log.user.error("Authorization denied for user to acces this endpoint");
+					Log.user.debug("Required permission(s) to access this endpoint {}", permissions);
+					throw new InvalidUserPermission(LocaleUtil.getLocalisedString(UserMessages.PERMISSION_DENIED.name(),
+							null, BaseSession.getLocale()));
+				}
 			}
 		}
 		Log.user.debug(String.format("User Permissions are valid for method : %s required permissions %s", method.getName(),

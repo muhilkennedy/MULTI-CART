@@ -10,7 +10,7 @@ public enum SMSConfigurations {
 	
 	SMS_HOST("sms.host"),
 	SMS_OTP_TEMPLATE("sms.otp.template"),
-	SMS_TXN_TEMPLATE("sms.otp.template");
+	SMS_TXN_TEMPLATE("sms.txn.template");
 	
 	private String property;
 	

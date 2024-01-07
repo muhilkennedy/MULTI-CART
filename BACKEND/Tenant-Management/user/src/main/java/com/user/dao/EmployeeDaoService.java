@@ -1,6 +1,5 @@
 package com.user.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.base.entity.BaseEntity;
 import com.base.server.BaseSession;
 import com.base.util.CacheUtil;
-import com.base.util.DatabaseUtil;
 import com.platform.user.Permissions;
 import com.user.entity.Employee;
 import com.user.entity.User;
@@ -42,6 +40,10 @@ public class EmployeeDaoService implements UserDaoService {
 	public Flux<?> findAllReactive() {
 		return empReactiveRepo.findAll(BaseSession.getTenantId());
 	}
+	
+	public Flux<Long> findAllUserIdsReactive() {
+		return empReactiveRepo.findUserIdsByTenant(BaseSession.getTenantId());
+	}
 
 	@Override
 	public Flux<?> saveAll(List<?> entities) {
@@ -51,17 +53,17 @@ public class EmployeeDaoService implements UserDaoService {
 
 	@Override
 	public void deleteAll(List<?> entities) {
-		employeeRepository.deleteAll((Iterable<Employee>) entities);
+		employeeRepository.deleteAll((List<Employee>)entities);
 	}
 
 	@Override
-	@CachePut(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootId")
+	@CachePut(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootid")
 	public BaseEntity save(BaseEntity obj) {
 		return employeeRepository.save((Employee) obj);
 	}
 
 	@Override
-	@CachePut(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootId")
+	@CachePut(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootid")
 	public BaseEntity saveAndFlush(BaseEntity obj) {
 		return employeeRepository.saveAndFlush((Employee) obj);
 	}
@@ -73,7 +75,7 @@ public class EmployeeDaoService implements UserDaoService {
 	}
 
 	@Override
-	@CacheEvict(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootId")
+	@CacheEvict(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootid")
 	public void delete(BaseEntity obj) {
 		employeeRepository.delete((Employee)obj);
 	}
@@ -89,7 +91,7 @@ public class EmployeeDaoService implements UserDaoService {
 	}
 	
 	@Override
-	@CacheEvict(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootId")
+	@CacheEvict(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootid")
 	public void deleteById(Long rootId) {
 		employeeRepository.deleteById(rootId);
 	}
@@ -97,6 +99,11 @@ public class EmployeeDaoService implements UserDaoService {
 	@Override
 	public User findByEmailId(String emailId) {
 		return employeeRepository.findByEmailId(emailId);
+	}
+	
+	@Override
+	public User findBySecondaryEmailId(String emailId) {
+		return employeeRepository.findBySecondaryEmail(emailId);
 	}
 
 	@Override
@@ -115,6 +122,14 @@ public class EmployeeDaoService implements UserDaoService {
 	
 	public Employee findEmployeeWithPermission(Permissions perm, Long employeeId){
 		return employeeRepository.findEmployeeWithPermission(perm.getPermissionUniqueName(), employeeId);
+	}
+	
+	public List<Employee> getTypeAheadEmployees(String name) {
+		return employeeRepository.findLikeEmployeeName(name);
+	}
+	
+	public List<Employee> findEmployeesByDob(String dob) {
+		return employeeRepository.findEmployeesByDob(dob, BaseSession.getTenantId());
 	}
 
 }
