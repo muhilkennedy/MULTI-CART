@@ -48,6 +48,11 @@ const routes: Routes = [
           import('./views/siteSetting/site-settings.module').then((m) => m.SiteSettingsModule)
       },
       {
+        path: 'pos',
+        loadChildren: () =>
+          import('./views/pos/pos.module').then((m) => m.PosModule)
+      },
+      {
         path: 'profile',
         loadChildren: () =>
           import('./views/profile/profile.module').then((m) => m.ProfileModule)
@@ -71,7 +76,7 @@ const routes: Routes = [
         path: 'notifications',
         loadChildren: () =>
           import('./views/user-notification/user-notification.module').then((m) => m.UserNotificationModule)
-      },
+      }
     ]
   },
   {
@@ -85,7 +90,7 @@ const routes: Routes = [
     pathMatch: "full"
   },
   {
-    path: '**', 
+    path: '**',
     redirectTo: 'login'
   }
 ];
