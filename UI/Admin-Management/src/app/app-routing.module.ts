@@ -38,6 +38,11 @@ const routes: Routes = [
         path: 'sitesettings',
         loadChildren: () =>
           import('./views/siteSetting/site-settings.module').then((m) => m.SiteSettingsModule)
+      },
+      {
+        path: 'pos',
+        loadChildren: () =>
+          import('./views/pos/pos.module').then((m) => m.PosModule)
       }
     ]
   },
@@ -52,7 +57,7 @@ const routes: Routes = [
     pathMatch: "full"
   },
   {
-    path: '**', 
+    path: '**',
     redirectTo: 'login'
   }
 ];
