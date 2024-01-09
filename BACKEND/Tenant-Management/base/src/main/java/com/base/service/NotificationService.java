@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.base.bgwork.BGWorkUtil;
-import com.base.bgwork.BroadCastNotificationJob;
 import com.base.entity.BaseEntity;
 import com.base.entity.Notification;
 import com.base.entity.Notificationtoken;
 import com.base.messages.NotificationRequest;
 import com.base.reactive.repository.NotificationRepository;
+import com.base.scheduledtask.BroadCastNotificationJob;
 import com.base.server.BaseSession;
 import com.base.util.BaseUtil;
 import com.platform.cloud.messaging.DirectNotification;

@@ -58,7 +58,7 @@ export class CalendarWidgetComponent {
 
   constructor() { }
 
-  actions: CalendarEventAction[] = [
+  /*actions: CalendarEventAction[] = [
     {
       label: '<i class="fas fa-fw fa-pencil-alt"></i>',
       a11yLabel: 'Edit',
@@ -74,29 +74,29 @@ export class CalendarWidgetComponent {
         this.handleEvent('Deleted', event);
       },
     },
-  ];
+  ];*/
 
   events: CalendarEvent[] = [
-    // {
-    //   start: subDays(startOfDay(new Date()), 1),
-    //   end: addDays(new Date(), 1),
-    //   title: 'A 3 day event',
-    //   color: { ...colors['red'] },
-    //   actions: this.actions,
-    //   allDay: true,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-    // {
-    //   start: startOfDay(new Date()),
-    //   end: new Date(),
-    //   title: 'An event with no end date',
-    //   color: { ...colors['yellow'] },
-    //   actions: this.actions,
-    // }
+    /*{
+      start: subDays(startOfDay(new Date()), 1),
+      end: addDays(new Date(), 1),
+      title: 'A 3 day event',
+      color: { ...colors['red'] },
+      //actions: this.actions,
+      allDay: true,
+      resizable: {
+        beforeStart: true,
+        afterEnd: true,
+      },
+      draggable: false,
+    },
+    {
+      start: startOfDay(new Date()),
+      end: new Date(),
+      title: 'An event with no end date',
+      color: { ...colors['yellow'] },
+      //actions: this.actions,
+    }*/
   ];
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {

@@ -19,12 +19,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import com.base.bgwork.BGWorkUtil;
-import com.base.bgwork.EmailJob;
 import com.base.entity.BaseEntity;
 import com.base.entity.ConfigType;
 import com.base.entity.EmailTemplate;
 import com.base.entity.FileStore;
 import com.base.jpa.repository.EmailTemplateRepository;
+import com.base.scheduledtask.EmailJob;
 import com.base.server.BaseSession;
 import com.base.util.EmailUtil;
 import com.base.util.Log;

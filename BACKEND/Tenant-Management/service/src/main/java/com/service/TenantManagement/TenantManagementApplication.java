@@ -30,9 +30,9 @@ public class TenantManagementApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TenantManagementApplication.class, args);
-		Log.logger.info("Heap Size = " + (Runtime.getRuntime().totalMemory() / 1000000000.0) + " GB");
-		Log.logger.info("Max Memory Size = " + (Runtime.getRuntime().maxMemory() / 1000000000.0) + " GB");
-		Log.logger.info("Total Memory Size = " + (Runtime.getRuntime().freeMemory() / 1000000000.0) + " GB");
+		Log.logger.info("Heap Size = {}", (Runtime.getRuntime().totalMemory() / 1000000000.0) + " GB");
+		Log.logger.info("Max Memory Size = {}", (Runtime.getRuntime().maxMemory() / 1000000000.0) + " GB");
+		Log.logger.info("Total Memory Size = {}", (Runtime.getRuntime().freeMemory() / 1000000000.0) + " GB");
 		Log.logger.info("##############################");
 		Log.logger.info("Application Startup Completed");
 		Log.logger.info("##############################");

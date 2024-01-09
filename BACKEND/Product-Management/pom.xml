@@ -132,6 +132,8 @@
 	<modules>
 		<module>base</module>
 		<module>i18n</module>
+		<module>supplier</module>
+		<module>product</module>
 		<module>service</module>
 	</modules>
 </project>

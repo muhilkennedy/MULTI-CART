@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.platform.annotations.ClassMetaProperty;
@@ -33,6 +34,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "EMPLOYEE")
 @ClassMetaProperty(code = "EMP")
+@Indexed(index = "employee_index")
 public class Employee extends User implements BasePermissions {
 
 	private static final long serialVersionUID = 2L;
@@ -53,6 +55,10 @@ public class Employee extends User implements BasePermissions {
 
 	@OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private EmployeeInfo employeeInfo;
+	
+	public Employee() {
+		super();
+	}
 
 	public String getDesignation() {
 		return designation;

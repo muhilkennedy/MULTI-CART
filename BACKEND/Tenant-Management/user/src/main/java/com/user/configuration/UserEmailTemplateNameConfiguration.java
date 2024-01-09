@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+//import javax.persistence.EntityManager;
+
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,9 +16,9 @@ import jakarta.annotation.PostConstruct;
 
 @Configuration
 public class UserEmailTemplateNameConfiguration {
-
+	
 	@PostConstruct
-	private void loadTemplateNameFile() {
+	private void loadTemplateNameFile() throws InterruptedException {
 		File tempFile = null;
 		try (InputStream is = getClass()
 				.getResourceAsStream("/userEmailTemplates/UserTemplatePlaceholdersConfig.json");) {
@@ -27,7 +29,7 @@ public class UserEmailTemplateNameConfiguration {
 			e.printStackTrace();
 		} finally {
 			FileUtil.deleteDirectoryOrFile(tempFile);
-		}
+		}	
 	}
 	
 }

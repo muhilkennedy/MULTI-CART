@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.search.mapper.orm.Search;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -33,6 +34,7 @@ import com.user.entity.UserInfo;
 import com.user.exception.UserException;
 import com.user.service.EmployeeService;
 
+import jakarta.persistence.EntityManager;
 import jakarta.ws.rs.NotFoundException;
 import reactor.core.publisher.Flux;
 
@@ -53,6 +55,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Autowired
 	private FileStoreService fileService;
+	
+	@Autowired
+	private EntityManager entityManager;
 
 	@Override
 	public BaseEntity findById(Long rootId) {
@@ -196,7 +201,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public User updateProfilePicture(File file) throws IOException {
 		Employee user = (Employee) BaseSession.getUser();
-		file = ImageUtil.getPNGThumbnailImage(file);
+		file = ImageUtil.getPNGThumbnailImage(file, true);
 		String fileUrl = StorageService.getStorage().saveFile(file, user.getUniquename());
 		Log.user.debug("Profile picture url : {}", fileUrl);
 		user.getEmployeeInfo().setProfilepic(fileUrl);
@@ -238,6 +243,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 				throw new UserException("Invalid OTP");
 			}
 		}
+	}
+
+	@Override
+	public List<Employee> searchEmployeesByName(String name, int limit) {
+		return Search.session(entityManager).search(Employee.class)
+				.where(field -> field.match().fields("fname", "lname").matching(name).fuzzy()).fetch(limit).hits();
 	}
 
 }
