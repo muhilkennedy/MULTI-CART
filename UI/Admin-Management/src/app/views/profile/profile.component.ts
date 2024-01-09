@@ -4,7 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { SupportedLanguages } from 'src/app/i18n/i18n.module';
 import { UserService } from 'src/app/service/user/user.service';
 import { CommonUtil } from 'src/app/service/util/common-util.service';
-import { NotificationService } from 'src/app/service/util/notification.service';
+import { NotificationService, NotificationType } from 'src/app/service/util/notification.service';
 import { SpinnerService } from 'src/app/service/util/sipnner.service';
 
 @Component({
@@ -85,6 +85,7 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: (resp: any) => {
           this.user = resp.data;
+          this.notification.fireAndForget({message : "Secondary mail updated"}, NotificationType.INFO);
         },
         error: (err: any) => {
           this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));

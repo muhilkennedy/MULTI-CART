@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 import com.base.entity.MultiTenantEntity;
 import com.base.util.Log;
@@ -34,12 +35,15 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 
 	private static final long serialVersionUID = 1L;
 
+	@FullTextField
 	@Column(name = "UNIQUENAME", updatable = false)
 	private String uniquename;
 
+	@FullTextField
 	@Column(name = "FNAME")
 	private String fname;
-
+	
+	@FullTextField
 	@Column(name = "LNAME")
 	private String lname;
 
@@ -66,6 +70,10 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 
 	@Column(name = "TIMEZONE")
 	private String timezone;
+	
+	public User() {
+		super();
+	}
 
 	public String getUniquename() {
 		return uniquename;
