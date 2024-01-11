@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 
 import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
@@ -15,6 +16,7 @@ import com.platform.exception.UserNotFoundException;
 import com.platform.messages.GenericResponse;
 import com.platform.session.PlatformBaseSession;
 import com.platform.util.HttpUtil;
+import com.platform.util.JWTUtil;
 import com.platform.util.Log;
 import com.platform.util.PlatformPropertiesUtil;
 
@@ -34,12 +36,12 @@ public class UserService {
 		PlatformUser user = (PlatformUser) UserCache.getInstance().userCache().get(String.valueOf(userId));
 		if (user == null) {
 			HttpClient<GenericResponse> client = new HttpClient<GenericResponse>(new GenericResponse());
-			Header header = new BasicHeader(HttpUtil.HEADER_TENANT, String.valueOf(userId));
+			Header authHeader = new BasicHeader(HttpHeaders.AUTHORIZATION, JWTUtil.generateSystemUserToken());
+			Header tenantTeader = new BasicHeader(HttpUtil.HEADER_TENANT, PlatformBaseSession.getTenantUniqueName());
 			try {
-				NameValuePair uniqueIdParam = new BasicNameValuePair("uniqueName", String.valueOf(userId));
-				NameValuePair tenantIdParam = new BasicNameValuePair("tenantId", String.valueOf(tenantId));
-				GenericResponse response = client.get(getUserUrl(findEmployeeUserUri), Arrays.asList(header),
-						Arrays.asList(uniqueIdParam, tenantIdParam));
+				NameValuePair uniqueIdParam = new BasicNameValuePair("userId", String.valueOf(userId));
+				GenericResponse response = client.get(getUserUrl(findEmployeeUserUri), Arrays.asList(tenantTeader, authHeader),
+						Arrays.asList(uniqueIdParam));
 				user = (PlatformUser) HttpUtil.getDataResponse(PlatformUser.class, response);
 				if (user == null) {
 					throw new UserNotFoundException();

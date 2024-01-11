@@ -32,32 +32,32 @@ public class CacheStore implements CacheService {
 
 	@Override
 	public BaseObject get(String key) {
-		Log.tenant.debug(String.format("Fetching key %s from cache", key));
+		Log.platform.debug(String.format("Fetching key %s from cache", key));
 		return cache.getIfPresent(key);
 	}
 
 	@Override
 	public void add(String key, BaseObject value) {
-		Log.tenant.debug(String.format("Cached key %s ", key));
+		Log.platform.debug(String.format("Cached key %s ", key));
 		cache.put(key, value);
 	}
 
 	@Override
 	public void evict(String key) {
-		Log.tenant.debug(String.format("Evicted key %s from cache", key));
+		Log.platform.debug(String.format("Evicted key %s from cache", key));
 		cache.invalidate(key);
 	}
 
 	@Override
 	public void evictAll() {
-		Log.tenant.debug("Clearing cache");
-		Log.tenant.debug("Cahce size : " + cache.size());
+		Log.platform.debug("Clearing cache");
+		Log.platform.debug("Cahce size : {}", cache.size());
 		cache.invalidateAll();
 	}
 
 	@Override
 	public void add(BaseObject value) {
-		Log.tenant.debug(String.format("Cached key %s ", value.getObjectId()));
+		Log.platform.debug(String.format("Cached key %s ", value.getObjectId()));
 		this.add(String.valueOf(value.getObjectId()), value);
 	}
 
