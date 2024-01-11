@@ -1,6 +1,4 @@
-package com.user.exception;
-
-import com.platform.exception.CustomWrapperException;
+package com.platform.exception;
 
 /**
  * @author muhil

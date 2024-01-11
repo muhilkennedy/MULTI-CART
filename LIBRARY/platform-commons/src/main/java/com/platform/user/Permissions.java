@@ -51,8 +51,8 @@ public enum Permissions {
 	}
 	
 	public static Permissions getPermissionIfValid(String permissionName) {
-		return stream().filter(permission -> permission.getPermissionUniqueName().equalsIgnoreCase(permissionName))
-				.findFirst().get();
+		return stream().filter(permission -> permission.getPermissionUniqueName().equalsIgnoreCase(permissionName)
+				|| permission.name().equalsIgnoreCase(permissionName)).findFirst().get();
 	}
 
 }

@@ -1,0 +1,7 @@
+{
+	"SUPPLIER_REGISTRATION": [
+		"tenantLogo",
+		"supplierName",
+		"supplierUniqueName"
+	]
+}

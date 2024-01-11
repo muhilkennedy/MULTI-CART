@@ -1,0 +1,38 @@
+
+logging:
+  level:
+    reactor:
+      netty: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: INFO
+    com:
+      mken: INFO
+#TRACE for detailed route logging and enable wiretap  
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: GATEWAY-SERVICE
+  cloud:
+    gateway:
+      httpclient:
+        wiretap: false
+      httpserver:
+        wiretap: false
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+          cors-configurations:
+            '[/**]':
+              allowed-origins: "*"
+              allowed-methods: "*"
+              allowed-headers: "*"
+              #allow-credentials: false
+#      routes:
+#        - id: TenantManagement
+#          uri: http://localhost:8081/
+#          Predicates:
+#            - Path=/tm/**

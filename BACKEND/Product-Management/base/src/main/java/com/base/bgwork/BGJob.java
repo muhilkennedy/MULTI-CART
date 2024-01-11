@@ -80,7 +80,7 @@ public abstract class BGJob implements Job {
 	public void runForAllTenants(JobExecutionContext context) throws BGWorkException {
 		try {
 			List<PlatformTenant> tenants = TenantService.getAllTenants();
-			tenants.stream().peek(tenant -> Log.tenant.info("Executing BGWork {} for tenant : {}",
+			tenants.stream().peek(tenant -> Log.base.info("Executing BGWork {} for tenant : {}",
 					this.getClass().getSimpleName(), tenant.getUniquename())).forEach(tenant -> {
 						try {
 							setupSession(tenant.getUniquename());

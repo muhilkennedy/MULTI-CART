@@ -1,0 +1,33 @@
+logging:
+  level:
+    reactor:
+      netty: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
+    com:
+      mken: INFO
+ 
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        wiretap: true
+      httpserver:
+        wiretap: true
+      globalcors:
+          cors-configurations:
+            '[/**]':
+              allowed-origins: "*"
+              allowed-methods: "*"
+              allowed-headers: "*"
+      routes:
+        - id: TenantManagement
+          uri: http://localhost:8081/
+          Predicates:
+            - Path=/tm/**
+        - id: ProductManagement
+          uri: http://localhost:8082/
+          Predicates:
+            - Path=/pm/**

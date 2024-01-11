@@ -88,7 +88,6 @@ public class EmployeeController {
 			@RequestParam(value = "emailId", required = false) String emailId,
 			@RequestParam(value = "tenantId", required = false) Long tenantId) {
 		GenericResponse<User> response = new GenericResponse<>();
-		empService.sendBirthdayWishesMail();
 		if (!StringUtils.isEmpty(uniqueName)) {
 			return response.setStatus(Response.Status.OK).setData(empService.findByUniqueName(uniqueName)).build();
 		} else if (rootId != null) {

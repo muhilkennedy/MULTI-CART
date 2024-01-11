@@ -111,4 +111,8 @@ public class PlatformUser extends PlatformBaseEntity implements UserBaseObject {
 		this.userPermissions = userPermissions;
 	}
 	
+	public boolean isSystemUser() {
+		return getRootid() == PlatformUtil.SYSTEM_USER_ROOTID;
+	}
+	
 }

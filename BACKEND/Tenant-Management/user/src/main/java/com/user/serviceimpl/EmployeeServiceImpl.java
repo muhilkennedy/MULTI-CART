@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.search.mapper.orm.Search;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -19,6 +18,7 @@ import com.base.entity.BaseEntity;
 import com.base.entity.FileStore;
 import com.base.server.BaseSession;
 import com.base.service.FileStoreService;
+import com.base.service.HibernateSearchService;
 import com.base.util.Log;
 import com.platform.cache.UserCache;
 import com.platform.service.StorageService;
@@ -34,7 +34,6 @@ import com.user.entity.UserInfo;
 import com.user.exception.UserException;
 import com.user.service.EmployeeService;
 
-import jakarta.persistence.EntityManager;
 import jakarta.ws.rs.NotFoundException;
 import reactor.core.publisher.Flux;
 
@@ -55,9 +54,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Autowired
 	private FileStoreService fileService;
-	
+
 	@Autowired
-	private EntityManager entityManager;
+	private HibernateSearchService searchService;
 
 	@Override
 	public BaseEntity findById(Long rootId) {
@@ -246,9 +245,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public List<Employee> searchEmployeesByName(String name, int limit) {
-		return Search.session(entityManager).search(Employee.class)
-				.where(field -> field.match().fields("fname", "lname").matching(name).fuzzy()).fetch(limit).hits();
+	public List searchEmployeesByName(String name, int limit) {
+		return searchService.fuzzySearch(Employee.class, name, limit, "fname", "lname");
 	}
 
 }
