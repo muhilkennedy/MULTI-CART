@@ -10,6 +10,7 @@ public class UserLoginRequest {
 	private String password;
 	private String mobile;
 	private String uniqueName;
+	private boolean rememberMe;
 
 	public String getEmailId() {
 		return emailId;
@@ -41,6 +42,14 @@ public class UserLoginRequest {
 
 	public void setUniqueName(String uniqueName) {
 		this.uniqueName = uniqueName;
+	}
+
+	public boolean isRememberMe() {
+		return rememberMe;
+	}
+
+	public void setRememberMe(boolean rememberMe) {
+		this.rememberMe = rememberMe;
 	}
 
 }

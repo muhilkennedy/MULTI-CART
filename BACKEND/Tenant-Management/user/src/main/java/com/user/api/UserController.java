@@ -43,8 +43,7 @@ public class UserController {
 	
 	@PostMapping(value = "/employee/login", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GenericResponse<User> getUserDetails(@RequestBody UserLoginRequest requestbody,
-			HttpServletRequest httpRequest, HttpServletResponse httpResponse,
-			@RequestParam(value = "rememberMe", required = false) boolean rememberMe) throws UserException {
+			HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws UserException {
 		GenericResponse<User> response = new GenericResponse<>();
 		User employee = new User();
 		employee.setEmailid(requestbody.getEmailId());
@@ -54,7 +53,7 @@ public class UserController {
 		employee = (Employee) empService.login(employee);
 		httpResponse.addHeader(PlatformUtil.TOKEN_HEADER,
 				JWTUtil.generateToken(employee.getUniquename(), String.valueOf(employee.getObjectId()),
-						JWTUtil.USER_TYPE_EMPLOYEE, httpRequest.getRemoteAddr(), rememberMe));
+						JWTUtil.USER_TYPE_EMPLOYEE, httpRequest.getRemoteAddr(), requestbody.isRememberMe()));
 		return response.setStatus(Response.Status.OK).setData(employee).build();
 	}
 

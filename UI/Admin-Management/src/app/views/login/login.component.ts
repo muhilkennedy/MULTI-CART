@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
 
   username?: string;
   password?: string;
+  rememberMe?: boolean;
 
   showFPModal = false;
 
@@ -97,7 +98,8 @@ export class LoginComponent implements OnInit {
     let body = {
       emailId: this.username,
       uniqueName: this.username,
-      password: this.password
+      password: this.password,
+      rememberMe: this.rememberMe
     }
     this.spinner.show();
     this.userService.login(body)
