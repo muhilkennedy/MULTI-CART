@@ -28,16 +28,25 @@
                       [(ngModel)]="password"/>
                   </c-input-group>
                   <c-row>
+                    <c-col xs="6"></c-col>
                     <c-col xs="6">
-                      <button cButton class="px-4" color="primary" (click)="loginAction()">
-                        {{"LOGIN" | translate}}
-                      </button>
+                      <c-form-check style="float: right;">
+                        <input cFormCheckInput id="rememberme" name="rememberme" type="checkbox" [(ngModel)]="rememberMe" />
+                        <label cFormCheckLabel for="rememberme">{{"Remember Me" | translate}}</label>
+                      </c-form-check>
                     </c-col>
-                    <c-col class="text-right" xs="6">
+                  </c-row>
+                  <c-row>
+                    <c-col class="text-left" xs="6">
                       <button cButton class="px-0" color="link" (click)="toggleFPModal()">
-                       {{"Forgot password" | translate}}?
+                        {{"Forgot password" | translate}}?
                       </button>
                     <ng-container *ngTemplateOutlet="forgotPassword"></ng-container>
+                    </c-col>
+                    <c-col xs="6">
+                      <button style="float: right;" cButton class="px-4" variant="outline" color="primary" (click)="loginAction()">
+                        <svg  cIcon name="cilDoor" size="xs" title="GenderIcon" ></svg> {{"LOGIN" | translate}}
+                      </button>
                     </c-col>
                   </c-row>
                   <br/>

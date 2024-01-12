@@ -101,7 +101,8 @@ import {
   cilAccountLogout,
   cilLockUnlocked,
   cilHandshake,
-  cilCart
+  cilCart,
+  cilDoor
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -207,7 +208,8 @@ export const iconSubset = {
   cilAccountLogout,
   cilLockUnlocked,
   cilHandshake,
-  cilCart
+  cilCart,
+  cilDoor
 };
 
 export enum IconSubset {

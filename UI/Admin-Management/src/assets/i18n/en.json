@@ -161,5 +161,6 @@
   "INTERNAL" : "INTERNAL",
   "PUBLIC" : "PUBLIC",
   "Calendar" : "Calendar",
-  "TODAY" : "TODAY"
+  "TODAY" : "TODAY",
+  "Remember Me" : "Remember Me"
 }
