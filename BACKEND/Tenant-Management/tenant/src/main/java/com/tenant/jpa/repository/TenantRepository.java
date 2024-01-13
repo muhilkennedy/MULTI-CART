@@ -18,4 +18,5 @@ public interface TenantRepository extends JpaRepository<Tenant, Long> {
 
 	@Query(value = getTenantByUniqueNameQuery, nativeQuery = true)
 	Tenant findTenantByUniqueName(@Param("uniqueName") String uniqueName);
+
 }

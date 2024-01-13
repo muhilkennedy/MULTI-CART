@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class TenantController {
 	
 	@RequestMapping(value = "/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<Tenant> pingTenant(HttpServletRequest request) {
+	public GenericResponse<Tenant> pingTenant(HttpServletRequest request) throws Exception {
 		GenericResponse<Tenant> response = new GenericResponse<>();
 		response.setStatus(Response.Status.OK).setData((Tenant)BaseSession.getTenant());
 		return response;

@@ -88,7 +88,6 @@ public class EmployeeController {
 			@RequestParam(value = "emailId", required = false) String emailId,
 			@RequestParam(value = "tenantId", required = false) Long tenantId) {
 		GenericResponse<User> response = new GenericResponse<>();
-		empService.sendBirthdayWishesMail();
 		if (!StringUtils.isEmpty(uniqueName)) {
 			return response.setStatus(Response.Status.OK).setData(empService.findByUniqueName(uniqueName)).build();
 		} else if (rootId != null) {
@@ -191,9 +190,10 @@ public class EmployeeController {
 	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_USERS })
 	@GetMapping(value = "/typeahead", produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<Employee> fetchUsers(@RequestParam(value = "name") String name) throws SQLException {
+	public GenericResponse<Employee> fetchUsers(@RequestParam(value = "name") String name,
+			@RequestParam(value = "limit", defaultValue = "50") int limit) throws SQLException {
 		GenericResponse<Employee> response = new GenericResponse<>();
-		return response.setStatus(Response.Status.OK).setDataList(empService.findMatchingTypeAheadEmployees(name))
+		return response.setStatus(Response.Status.OK).setDataList(empService.searchEmployeesByName(name, limit))
 				.build();
 	}
 

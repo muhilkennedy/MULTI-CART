@@ -25,4 +25,6 @@ public interface EmployeeService extends UserService {
 
 	List<Employee> findMatchingTypeAheadEmployees(String name);
 
+	List<Employee> searchEmployeesByName(String name, int limit);
+
 }

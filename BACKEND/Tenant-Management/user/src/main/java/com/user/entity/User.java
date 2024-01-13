@@ -6,10 +6,12 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 import com.base.entity.MultiTenantEntity;
 import com.base.util.Log;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.platform.annotations.ClassMetaProperty;
 import com.platform.annotations.PIIData;
 import com.platform.entity.UserBaseObject;
 import com.platform.security.AttributeEncryptor;
@@ -30,16 +32,20 @@ import jakarta.persistence.PrePersist;
  */
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@ClassMetaProperty(code = "USR")
 public class User extends MultiTenantEntity implements UserBaseObject {
 
 	private static final long serialVersionUID = 1L;
 
+	@FullTextField
 	@Column(name = "UNIQUENAME", updatable = false)
 	private String uniquename;
 
+	@FullTextField
 	@Column(name = "FNAME")
 	private String fname;
-
+	
+	@FullTextField
 	@Column(name = "LNAME")
 	private String lname;
 
@@ -52,6 +58,7 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 	@Column(name = "MOBILEHASH")
 	private String mobilehash;
 
+	@FullTextField
 	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
 	//TODO: impl has field and compare @Convert(converter = AttributeEncryptor.class)
 	@Column(name = "EMAILID")
@@ -66,6 +73,10 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 
 	@Column(name = "TIMEZONE")
 	private String timezone;
+	
+	public User() {
+		super();
+	}
 
 	public String getUniquename() {
 		return uniquename;

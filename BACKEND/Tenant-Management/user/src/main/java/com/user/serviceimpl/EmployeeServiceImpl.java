@@ -18,6 +18,7 @@ import com.base.entity.BaseEntity;
 import com.base.entity.FileStore;
 import com.base.server.BaseSession;
 import com.base.service.FileStoreService;
+import com.base.service.HibernateSearchService;
 import com.base.util.Log;
 import com.platform.cache.UserCache;
 import com.platform.service.StorageService;
@@ -53,6 +54,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Autowired
 	private FileStoreService fileService;
+
+	@Autowired
+	private HibernateSearchService searchService;
 
 	@Override
 	public BaseEntity findById(Long rootId) {
@@ -196,7 +200,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public User updateProfilePicture(File file) throws IOException {
 		Employee user = (Employee) BaseSession.getUser();
-		file = ImageUtil.getPNGThumbnailImage(file);
+		file = ImageUtil.getPNGThumbnailImage(file, true);
 		String fileUrl = StorageService.getStorage().saveFile(file, user.getUniquename());
 		Log.user.debug("Profile picture url : {}", fileUrl);
 		user.getEmployeeInfo().setProfilepic(fileUrl);
@@ -238,6 +242,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 				throw new UserException("Invalid OTP");
 			}
 		}
+	}
+
+	@Override
+	public List searchEmployeesByName(String name, int limit) {
+		return searchService.fuzzySearch(Employee.class, name, limit, "fname", "lname");
 	}
 
 }

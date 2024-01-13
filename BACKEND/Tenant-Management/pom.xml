@@ -21,6 +21,7 @@
 		<embedded.redis.version>0.7.3</embedded.redis.version>
 		<platform.version>1.0.0</platform.version>
 		<r2dbc.mysql.version>0.8.2.RELEASE</r2dbc.mysql.version>
+		<hibernate.search.version>6.2.3.Final</hibernate.search.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -109,17 +110,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>it.ozimov</groupId>
 			<artifactId>embedded-redis</artifactId>
 			<version>${embedded.redis.version}</version>
-			<!--<exclusions>
+			<exclusions>
 		  	<exclusion>
 		  		<groupId>org.slf4j</groupId>
             	<artifactId>slf4j-simple</artifactId>
 		  	</exclusion>
-		  </exclusions>-->
-		</dependency>
+		  </exclusions>
+		</dependency>-->
 		<!-- jakarta dependencies -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>
@@ -139,6 +140,17 @@
 		   <groupId>org.springframework.boot</groupId>    
 		   <artifactId>spring-boot-starter-quartz</artifactId>
 		</dependency>
+		<!-- Hibernate search -->
+		<dependency>
+			<groupId>org.hibernate.search</groupId>
+			<artifactId>hibernate-search-mapper-orm-orm6</artifactId>
+			<version>${hibernate.search.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.search</groupId>
+			<artifactId>hibernate-search-backend-lucene</artifactId>
+			<version>${hibernate.search.version}</version>
+		</dependency>
 	</dependencies>
 
 	<modules>
@@ -148,4 +160,5 @@
 		<module>user</module>
 		<module>service</module>
 	</modules>
+	
 </project>

@@ -57,4 +57,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 	@Query(value = findEmployeesByDobQuery)
 	List<Employee> findEmployeesByDob(@Param("dob") String dob, @Param("tenantId") Long tenantId);
+	
 }
