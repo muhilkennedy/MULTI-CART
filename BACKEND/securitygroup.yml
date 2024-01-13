@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  VpcId:
+    Type: String
+    Description: VpcId
+    Default: vpc-028aa094833effbc8
+
+Resources:
+  InstanceSecurityGroup:
+       Type: AWS::EC2::SecurityGroup
+       Properties:
+          GroupDescription: Allow traffic from front end to backend
+          VpcId: !Ref VpcId
+  DBSecurityGroup:
+       Type: AWS::EC2::SecurityGroup
+       Properties:
+          GroupDescription: Allow traffic from backend to DB
+          VpcId: !Ref VpcId
+  InstanceSecurityGroupIngress:
+       Type: AWS::EC2::SecurityGroupIngress
+       Properties:
+          GroupId: !Ref InstanceSecurityGroup
+          IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+  InstanceSecurityGroupEgress:
+       Type: AWS::EC2::SecurityGroupEgress
+       Properties:  
+          GroupId: !Ref InstanceSecurityGroup 
+          IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          DestinationSecurityGroupId: !Ref DBSecurityGroup
+  DBSecurityGroupIngress:
+       Type: AWS::EC2::SecurityGroupIngress
+       Properties:  
+          GroupId: !Ref DBSecurityGroup
+          IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref InstanceSecurityGroup
+  # UISecurityGroup:
+  #      Type: AWS::EC2::SecurityGroup
+  #      Properties:
+  #         GroupDescription: Allow traffic from user to frontend
+  #         SecurityGroupIngress:
+  #          - IpProtocol: tcp
+  #            FromPort: 80
+  #            ToPort: 80
+  #            SourceSecurityGroupId: !GetAtt InstanceSecurityGroup.GroupId
