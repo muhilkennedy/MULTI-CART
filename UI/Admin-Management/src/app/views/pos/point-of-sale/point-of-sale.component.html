@@ -1,0 +1,139 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xl="4">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>{{"User Information" | translate}}</strong>
+            </c-card-header>
+            <c-card-body>
+                <form></form>
+                <c-row>
+                    <c-col xs="6">
+                        <input cFormControl id="usermobile" type="text" placeholder="Mobile Number" />
+                    </c-col>
+                    <c-col xs="6">
+                        <button style="width: 100%;" cButton class="me-1" variant="outline" size="sm" color="success">
+                            {{"FETCH" | translate}}
+                        </button>
+                    </c-col>
+                </c-row>
+                <c-row>
+                </c-row>
+            </c-card-body>
+        </c-card>
+    </c-col>
+    <c-col xl="8">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>{{"Billing" | translate}}</strong>
+                <button style="float: right;" cButton class="me-1" variant="outline" size="sm" color="success" (click)="payBill()">
+                    {{"PAID" | translate}}
+                </button>
+            </c-card-header>
+            <c-card-body>
+                <c-row>
+                    <c-col xs="3">
+                        <h4>{{"ACTUAL TOTAL" | translate}} : <strong>{{getActualTotalPrice()}} INR</strong></h4>
+                    </c-col>
+                    <c-col xs="3">
+                        <h4>{{"TOTAL DISCOUNT" | translate}} : <strong>{{getTotalDiscount()}} INR</strong></h4>
+                    </c-col>
+                    <c-col xs="3">
+                        <h4>{{"TOTAL" | translate}} : <strong>{{getTotalPrice()}} INR</strong></h4>
+                    </c-col>
+                    <c-col xs="3">
+                        <select cSelect sizing="sm">
+                            <option *ngFor="let mode of paymentModes">{{mode}}</option>
+                        </select>
+                    </c-col>
+                    <c-col xs="3">
+                        
+                    </c-col>
+                </c-row>
+                <c-row>
+
+                </c-row>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>
+
+<c-row ngPreserveWhitespaces>
+    <c-col xl="12">
+        <c-card class="mb-4">
+            <c-card-header>
+                <c-row>
+                    <c-col xs="1" style="width: 80px;">
+                        <label>Sl.No</label>
+                    </c-col>
+                    <c-col xs="3">
+                        <label>{{"Product Code"| translate}}</label>
+                    </c-col>
+                    <c-col xs="3">
+                        <label>{{"Product Name"| translate}}</label>
+                    </c-col>
+                    <c-col xs="1">
+                        <label>{{"MRP"| translate}}</label>
+                    </c-col>
+                    <c-col xs="1">
+                        <label>{{"Quantity"| translate}}</label>
+                    </c-col>
+                    <c-col xs="1">
+                        <label>{{"Discount"| translate}}</label>
+                    </c-col>
+                    <c-col xs="1">
+                        <label>{{"Final Price"| translate}}</label>
+                    </c-col>
+                    <c-col xs="1" style="text-align: center;">
+                        <label>{{"Actions"| translate}}</label>
+                    </c-col>
+                </c-row>
+            </c-card-header>
+            <c-card-body>
+                <c-row *ngFor="let product of productList;index as i">
+                    <c-col xs="1" style="width: 80px;">
+                        <input cFormControl id="sl" name="no" type="text" placeholder="sl.no" disabled [value]="i+1" />
+                    </c-col>
+                    <c-col xs="3">
+                        <input [disabled]="i != 0" cFormControl id="barcode" name="barcode1"
+                            type="text" placeholder="Product Code" [(ngModel)]="product.barCode"
+                            [value]="product.barCode" />
+                    </c-col>
+                    <c-col xs="3">
+                        <input [disabled]="i != 0" cFormControl id="product" name="product1"
+                            type="text" placeholder="Product Name" [(ngModel)]="product.productName"
+                            [value]="product.productName" />
+                    </c-col>
+                    <c-col xs="1">
+                        <input [disabled]="i != 0" cFormControl id="mrp" name="mrp1" type="number"
+                            placeholder="MRP" [(ngModel)]="product.mrp" />
+                    </c-col>
+                    <c-col xs="1">
+                        <input [disabled]="i != 0" cFormControl id="qty" name="qty1" type="number"
+                            placeholder="Quantity" [(ngModel)]="product.quantity" />
+                    </c-col>
+                    <c-col xs="1">
+                        <input [disabled]="i != 0" cFormControl id="discount" name="discount1"
+                            type="number" placeholder="Discount" [(ngModel)]="product.discount" />
+                    </c-col>
+                    <c-col xs="1">
+                        <input [disabled]="i != 0" cFormControl id="price" name="price1" type="number"
+                            placeholder="Final Price" [value]="getFinalPrice(product)" />
+                    </c-col>
+                    <c-col xs="1" style="width: auto;">
+                        <!-- <button *ngIf="productList.length != i+1" mat-icon-button color="primary"
+                            (click)="addNewProduct()">
+                            <mat-icon>edit</mat-icon>
+                        </button> -->
+                        <button *ngIf="i != 0" mat-icon-button color="warn" (click)="removeProduct(i)">
+                            <mat-icon>remove_circle_outline</mat-icon>
+                        </button>
+                        <button *ngIf="i == 0" mat-icon-button color="primary"
+                            (click)="addNewProduct()">
+                            <mat-icon>add_circle_outline</mat-icon>
+                        </button>
+                    </c-col>
+                </c-row>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>

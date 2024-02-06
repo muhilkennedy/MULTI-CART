@@ -247,5 +247,16 @@ ab -n1000 -c200 -p test.txt -T application/json -H "X-Tenant:devTenant" -v 2 htt
 
 Or use Jmeter to add events and listeners!
 
+NGROK: (tunneling)
+https://dashboard.ngrok.com/get-started/setup/macos
+
+or
+brew install ngrok/ngrok/ngrok
+ngrok config add-authtoken <token>
+ngrok http --domain=safe-heroic-hagfish.ngrok-free.app 8080
+
+ngrok http 8080 (dynamic domain name)
+
+
 
 
