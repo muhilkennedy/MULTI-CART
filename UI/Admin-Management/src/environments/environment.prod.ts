@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
-  backendProxy: "/tmproxy",
+  backendProxy: "/tm",
+  productProxy: "/pm",
   tenantId: "devTenant",
   tenant: "Dev Tenant",
   recaptcha_url: "https://www.google.com/recaptcha/api.js",

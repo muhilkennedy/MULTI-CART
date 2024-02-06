@@ -36,6 +36,10 @@ import jakarta.persistence.PrePersist;
 public class User extends MultiTenantEntity implements UserBaseObject {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static String KEY_FNAME="fname";
+	public static String KEY_LNAME="lname";
+	public static String KEY_EMAILID="emailid";
 
 	@FullTextField
 	@Column(name = "UNIQUENAME", updatable = false)
@@ -58,9 +62,9 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 	@Column(name = "MOBILEHASH")
 	private String mobilehash;
 
+	//TODO: impl has field and compare @Convert(converter = AttributeEncryptor.class)
 	@FullTextField
 	@PIIData(allowedRolePermissions = {Permissions.ADMIN, Permissions.MANAGE_USERS})
-	//TODO: impl has field and compare @Convert(converter = AttributeEncryptor.class)
 	@Column(name = "EMAILID")
 	private String emailid;
 
@@ -148,7 +152,7 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 			this.timezone = "IST";
 		}
 		if (StringUtils.isBlank(locale)) {
-			this.locale = "en_US";
+			this.locale = "en";
 		}
 		if (StringUtils.isEmpty(uniquename)) {
 			try {
@@ -165,7 +169,7 @@ public class User extends MultiTenantEntity implements UserBaseObject {
 
 	public void updateMobileHash() {
 		try {
-			this.mobilehash = EncryptionUtil.hash_SHA256(mobile);
+			this.mobilehash = EncryptionUtil.hash_SHA256(mobile.concat(String.valueOf(getTenantid())));
 		} catch (NoSuchAlgorithmException e) {
 			Log.user.error("Exception generating hash for user {}", e);
 			throw new RuntimeException(e);

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.user.entity.EmployeeRole;
 import com.user.entity.Permission;
@@ -65,6 +66,15 @@ public class RolePermissionDaoService implements RolePermissionService {
 	@Override
 	public Role findRoleById(Long rootId) {
 		return roleRepository.findById(rootId).get();
+	}
+	
+	public List<Role> getAllEmployeeRoles(Long rootId){
+		return roleRepository.findAllEmployeeRoles(rootId);
+	}
+	
+	@Transactional("transactionManager")
+	public void deleteEmployeeRoles(Long employeeId, List<Long> rootIds) {
+		erRepository.deleteEmployeeRoles(rootIds, employeeId);
 	}
 
 }

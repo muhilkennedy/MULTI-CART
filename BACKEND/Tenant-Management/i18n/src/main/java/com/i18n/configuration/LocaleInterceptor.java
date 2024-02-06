@@ -29,6 +29,7 @@ public class LocaleInterceptor implements WebRequestInterceptor {
 				BaseSession.setLocale(lang);
 			}
 			catch(RuntimeException ex) { // Not a good idea, deal later to resolve this
+				Log.i18n.error("Error setting up locale", ex);
 				BaseSession.setLocale(Locale.ENGLISH);
 			}
 		}

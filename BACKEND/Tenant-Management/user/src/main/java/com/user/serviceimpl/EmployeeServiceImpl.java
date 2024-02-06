@@ -69,6 +69,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 	
 	@Override
+	public User saveAndFlush(User user) {
+		return (User) empDaoService.saveAndFlush(user);
+	}
+	
+	@Override
+	public void refreshObjectInCache(BaseEntity entity) {
+		empDaoService.refreshObjectInCache((Employee) entity);
+	}
+	
+	@Override
 	public User register(User user) {
 		Employee employee = (Employee) user;
 		String generatedPassword = SecurityUtil.generateRandomPassword();
@@ -246,7 +256,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public List searchEmployeesByName(String name, int limit) {
-		return searchService.fuzzySearch(Employee.class, name, limit, "fname", "lname");
+		return searchService.fuzzySearch(Employee.class, name, limit, User.KEY_FNAME, User.KEY_LNAME);
+	}
+
+	@Override
+	public List searchEmployeesByNameOrEmail(String key, int limit) {
+		return searchService.fuzzySearch(Employee.class, key, limit, User.KEY_FNAME, User.KEY_LNAME, User.KEY_EMAILID);
+	}
+
+	@Override
+	public void updateLocale(String langCode) {
+		User user = (User) BaseSession.getUser();
+		user.setLocale(langCode);
+		empDaoService.save(user);
 	}
 
 }

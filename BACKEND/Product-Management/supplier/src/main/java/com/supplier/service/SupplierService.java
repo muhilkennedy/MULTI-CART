@@ -14,5 +14,7 @@ public interface SupplierService extends BaseService {
 	Supplier createSupplier(SupplierRequest request);
 
 	List<Supplier> getAllSuppliers();
+	
+	List<Supplier> getMatchingSuppliers(String name);
 
 }

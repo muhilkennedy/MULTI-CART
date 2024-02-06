@@ -1,10 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
-import { ClassToggleService, HeaderComponent } from '@coreui/angular';
-import { TranslateService } from '@ngx-translate/core';
-import { SupportedLanguages } from 'src/app/i18n/i18n.module';
-import { SubscriberService } from '../../../service/Subscriber/subscriber.service';
+import { HeaderComponent } from '@coreui/angular';
 import { CookieService } from 'ngx-cookie-service';
 import { CommonUtil } from 'src/app/service/util/common-util.service';
 import { Router } from '@angular/router';
@@ -13,6 +10,7 @@ import { TenantService } from 'src/app/service/Tenant/tenant.service';
 import { TasksService } from 'src/app/service/Task/tasks.service';
 import { WidgetService } from 'src/app/service/widget/widget.service';
 import { UserNotficationService } from 'src/app/service/user-notification/user-notfication.service';
+import { Permissions } from 'src/app/service/user/permission.service';
 
 @Component({
   selector: 'app-default-header',
@@ -32,7 +30,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
 
   constructor(private router: Router, private tenantService: TenantService, private taskService: TasksService,
     private cookieService: CookieService, private userService: UserService, private notificationService: UserNotficationService,
-      public widgetService: WidgetService) {
+    public widgetService: WidgetService) {
     super();
   }
 
@@ -82,6 +80,10 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
       return "./assets/img/avatars/profile.png";
     }
     return this.userService.getCurrentUserResponse().employeeInfo.profilepic;
+  }
+
+  canShowFileStore() {
+    return this.userService.doesUserHavePermission(Permissions.ADMIN) || this.userService.doesUserHavePermission(Permissions.MANAGE_USERS) || this.userService.doesUserHavePermission(Permissions.MANAGE_PROMOTIONS);
   }
 
 }

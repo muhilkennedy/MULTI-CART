@@ -27,4 +27,6 @@ public interface EmployeeService extends UserService {
 
 	List<Employee> searchEmployeesByName(String name, int limit);
 
+	List searchEmployeesByNameOrEmail(String key, int limit);
+
 }

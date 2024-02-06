@@ -1,5 +1,7 @@
 package com.tenant.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +21,9 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("tenant")
 public class TenantController {
+	
+	@Autowired
+	private MessageSource messageSource;
 	
 	@RequestMapping(value = "/ping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public GenericResponse<Tenant> pingTenant(HttpServletRequest request) throws Exception {

@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.quartz.Scheduler;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

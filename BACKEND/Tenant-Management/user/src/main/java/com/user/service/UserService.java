@@ -17,6 +17,8 @@ import reactor.core.publisher.Flux;
 public interface UserService extends BaseService {
 	
 	User save(User user);
+	
+	User saveAndFlush(User user);
 
 	User register(User user);
 
@@ -45,6 +47,8 @@ public interface UserService extends BaseService {
 	User updateProfilePicture(File file) throws IOException;
 	
 	void sendBirthdayWishesMail();
+	
+	void updateLocale(String langCode);
 	
 	default User updateSecondaryEmail(String email) {
 		return null;

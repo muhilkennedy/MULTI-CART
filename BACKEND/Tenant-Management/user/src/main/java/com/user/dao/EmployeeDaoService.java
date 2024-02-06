@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -35,6 +36,9 @@ public class EmployeeDaoService implements UserDaoService {
 	
 	@Autowired
 	private EmployeeReactiveRepository empReactiveRepo;
+	
+	@Autowired
+	private CacheManager cacheManager;
 
 	@Override
 	public Flux<?> findAllReactive() {
@@ -59,12 +63,14 @@ public class EmployeeDaoService implements UserDaoService {
 	@Override
 	@CachePut(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootid")
 	public BaseEntity save(BaseEntity obj) {
+		//refreshObjectInCache((Employee) obj);
 		return employeeRepository.save((Employee) obj);
 	}
 
 	@Override
 	@CachePut(value = CacheUtil.EMPLOYEE_CACHE_NAME, key = "#obj.rootid")
 	public BaseEntity saveAndFlush(BaseEntity obj) {
+		//refreshObjectInCache((Employee) obj);
 		return employeeRepository.saveAndFlush((Employee) obj);
 	}
 
@@ -114,6 +120,11 @@ public class EmployeeDaoService implements UserDaoService {
 	@Override
 	public User findByUniqueName(String uniqueName) {
 		return employeeRepository.findByUniqueName(uniqueName);
+	}
+	
+	public void refreshObjectInCache(Employee emp) {
+		cacheManager.getCache(CacheUtil.EMPLOYEE_CACHE_NAME).evictIfPresent(emp.getRootid());
+		cacheManager.getCache(CacheUtil.EMPLOYEE_CACHE_NAME).evictIfPresent(emp.getUniquename());
 	}
 	
 	public List<Employee> findEmployeesWithPermission(Permissions perm){

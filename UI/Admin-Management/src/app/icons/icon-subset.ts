@@ -62,6 +62,7 @@ import {
   cilMenu,
   cilMoon,
   cilNotes,
+  cilNoteAdd,
   cilOptions,
   cilPaperclip,
   cilPaperPlane,
@@ -102,7 +103,9 @@ import {
   cilLockUnlocked,
   cilHandshake,
   cilCart,
-  cilDoor
+  cilDoor,
+  cilObjectGroup,
+  cilAvTimer
 } from '@coreui/icons';
 
 export const iconSubset = {
@@ -209,7 +212,10 @@ export const iconSubset = {
   cilLockUnlocked,
   cilHandshake,
   cilCart,
-  cilDoor
+  cilDoor,
+  cilObjectGroup,
+  cilAvTimer,
+  cilNoteAdd
 };
 
 export enum IconSubset {

@@ -16,6 +16,7 @@ public class Response {
 	private int statusCode;
 
 	private List<String> errorMessages = new ArrayList<>();
+	private List<String> warningMessages = new ArrayList<>();
 
 	public Status getStatus() {
 		return status;
@@ -77,6 +78,14 @@ public class Response {
 
 	public void setErrorMessages(List<String> errorMessages) {
 		this.errorMessages = errorMessages;
+	}
+
+	public List<String> getWarningMessages() {
+		return warningMessages;
+	}
+
+	public void setWarningMessages(List<String> warningMessages) {
+		this.warningMessages = warningMessages;
 	}
 
 }

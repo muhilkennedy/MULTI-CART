@@ -25,6 +25,19 @@ export class CommonUtil {
         return { title: `${err.error.errorCode}(${err.error.status})`, message: err.error.message };
     }
 
+    static generateNotificationMessage(title: string, message: string) {
+        return {
+            title: title,
+            message: message
+        }
+    }
+
+    static generateSimpleNotificationMessage(message: string) {
+        return {
+            message: message
+        }
+    }
+
     static getFieldError(fieldGroup: any, fieldName: string, translate: TranslatePipe): Array<string> {
         let errorList = new Array();
         if (!this.isNullOrEmptyOrUndefined(fieldGroup.controls[fieldName]) && !this.isNullOrEmptyOrUndefined(fieldGroup.controls[fieldName].errors)) {

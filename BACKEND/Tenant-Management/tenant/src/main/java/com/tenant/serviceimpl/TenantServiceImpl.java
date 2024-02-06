@@ -169,8 +169,8 @@ public class TenantServiceImpl implements TenantService {
 	@Override
 	public void createStorageConfig(String config, String defaultBucket, String type) throws IOException {
 		if (StoreType.GCP.name().equalsIgnoreCase(type)) {
-			configService.createConfig(StoreType.GCP_CONSTANTS.GCPCONFIG.name(), config, ConfigurationType.STORAGE);
-			configService.createConfig(StoreType.GCP_CONSTANTS.GCPBUCKET.name(), defaultBucket, ConfigurationType.STORAGE);
+			configService.createOrUpdateConfig(StoreType.GCP_CONSTANTS.GCPCONFIG.name(), config, ConfigurationType.STORAGE);
+			configService.createOrUpdateConfig(StoreType.GCP_CONSTANTS.GCPBUCKET.name(), defaultBucket, ConfigurationType.STORAGE);
 			// Reload storage config
 			StorageService.getStorage(StoreType.GCP).updateTenantConfig(BaseSession.getTenantId(),
 					configService.getConfigValueIfPresent(StoreType.GCP_CONSTANTS.GCPCONFIG.name(), ConfigurationType.STORAGE),

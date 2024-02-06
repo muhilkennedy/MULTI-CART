@@ -1,0 +1,7 @@
+{
+	"PRODUCT_OUTOFSTOCK": [
+		"tenantLogo",
+		"productName",
+		"productId"
+	]
+}

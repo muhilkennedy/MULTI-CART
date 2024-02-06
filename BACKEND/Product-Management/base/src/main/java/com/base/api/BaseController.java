@@ -33,7 +33,7 @@ import jakarta.validation.Valid;
 @ValidateUserToken
 public class BaseController {
 
-	@Autowired
+	/*@Autowired
 	private ConfigurationService configService;
 
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
@@ -41,7 +41,7 @@ public class BaseController {
 	public GenericResponse<ConfigType> addConfig(@RequestParam(value = "tenantId", required = false) Long tenantId,
 			@RequestBody @Valid ConfigRequest config) {
 		GenericResponse<ConfigType> response = new GenericResponse<>();
-		configService.createConfig(config.getKey(), config.getValue(), config.getType());
+		configService.createOrUpdateConfig(config.getKey(), config.getValue(), config.getType());
 		return response.setStatus(Response.Status.OK).build();
 	}
 
@@ -51,7 +51,7 @@ public class BaseController {
 			@RequestBody @Valid List<ConfigRequest> configList) {
 		GenericResponse<ConfigType> response = new GenericResponse<>();
 		configList.stream().forEach(config -> {
-			configService.createConfig(config.getKey(), config.getValue(), config.getType());
+			configService.createOrUpdateConfig(config.getKey(), config.getValue(), config.getType());
 		});
 		return response.setStatus(Response.Status.OK).build();
 	}
@@ -75,6 +75,6 @@ public class BaseController {
 		GenericResponse<ConfigType> response = new GenericResponse<>();
 		return response.setStatus(Response.Status.OK).setDataList(configService.findAllConfigsFromTimeUpdated(fromTime))
 				.build();
-	}
+	}*/
 
 }

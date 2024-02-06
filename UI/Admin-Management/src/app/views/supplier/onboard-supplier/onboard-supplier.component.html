@@ -1,0 +1,106 @@
+<mat-stepper orientation="vertical" [linear]="true" #stepper>
+    <mat-step [stepControl]="basicFormGroup">
+        <app-spinner></app-spinner>
+        <form [formGroup]="basicFormGroup">
+            <ng-template matStepLabel>{{"Basic Supplier Details" | translate}}</ng-template>
+            <c-row>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Supplier Name" | translate}}</mat-label>
+                        <input matInput name="name" placeholder="Supplier name" formControlName="name" required>
+                        <mat-error *ngIf="hasError(basicFormGroup, 'name')">{{getError(basicFormGroup,
+                            'name')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Description" | translate}}</mat-label>
+                        <input matInput name="desc" placeholder="short supplier description" formControlName="description" required>
+                        <mat-error *ngIf="hasError(basicFormGroup, 'description')">{{getError(basicFormGroup,
+                            'description')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+            </c-row>
+            <c-row>
+                <c-col xs="12">
+                    <mat-form-field>
+                        <mat-label>{{"Address" | translate}}</mat-label>
+                        <input matInput name="address" placeholder="Supplier Address" formControlName="address" required>
+                        <mat-error *ngIf="hasError(basicFormGroup, 'address')">{{getError(basicFormGroup,
+                            'address')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+            </c-row>
+            <c-row>
+                <c-col xs="6"></c-col>
+                <c-col xs="6">
+                    <button cButton class="me-1 fullWidth" variant="outline" size="sm" matStepperNext> {{"NEXT" | translate}}</button>
+                </c-col>
+            </c-row>
+        </form>
+    </mat-step>
+
+    <mat-step [stepControl]="contactFormGroup">
+        <app-spinner></app-spinner>
+        <form [formGroup]="contactFormGroup">
+            <ng-template matStepLabel>{{"Supplier Contact Details" | translate}}</ng-template>
+            <c-row>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Email Id" | translate}}</mat-label>
+                        <input matInput name="emailId" placeholder="emailid@mken.com" formControlName="emailId"
+                            required>
+                        <mat-error *ngIf="hasError(contactFormGroup, 'emailId')">{{getError(contactFormGroup,
+                            'emailId')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Primary Contact" | translate}}</mat-label>
+                        <input matInput name="pcontact" placeholder="mobile" formControlName="contact"
+                            required>
+                        <mat-error *ngIf="hasError(contactFormGroup, 'contact')">{{getError(contactFormGroup,
+                            'contact')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+            </c-row>
+            <c-row>
+                <c-col xs="6">
+                    <mat-form-field>
+                        <mat-label>{{"Secondary Contact" | translate}}</mat-label>
+                        <input matInput name="scontact" placeholder="secondary mobile" formControlName="secondaryContact"
+                            required>
+                        <mat-error *ngIf="hasError(contactFormGroup, 'secondaryContact')">{{getError(contactFormGroup,
+                            'secondaryContact')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+                <c-col xs="3">
+                    <button cButton class="me-1 fullWidth" variant="outline" size="sm" matStepperPrevious> {{"PREVIOUS" |
+                        translate}}</button>
+                </c-col>
+                <c-col xs="3">
+                    <button cButton class="me-1 fullWidth" variant="outline" size="sm" matStepperNext> {{"NEXT" |
+                        translate}}</button>
+                </c-col>
+            </c-row>
+        </form>
+    </mat-step>
+
+    <mat-step>
+        <app-spinner></app-spinner>
+        <ng-template matStepLabel>{{"Summary" | translate}}</ng-template>
+        <c-row>
+            <c-col xs="6"></c-col>
+            <c-col xs="3">
+                <button cButton class="me-1 fullWidth" variant="outline" size="sm" matStepperPrevious> {{"PREVIOUS" |
+                    translate}}</button>
+            </c-col>
+            <c-col xs="3">
+                <button cButton class="me-1 fullWidth" variant="outline" size="sm" color="success" matStepperNext (click)="onBoardSupplier()"> {{"CREATE" |
+                    translate}}</button>
+            </c-col>
+        </c-row>
+    </mat-step>
+
+</mat-stepper>
+

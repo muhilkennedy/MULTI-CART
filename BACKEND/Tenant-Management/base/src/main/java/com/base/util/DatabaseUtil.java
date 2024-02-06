@@ -1,5 +1,6 @@
 package com.base.util;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -35,6 +36,15 @@ public class DatabaseUtil {
 	public static Connection getConnectionInstance() throws SQLException {
 		return DriverManager.getConnection(dbProperties.getUrl(), dbProperties.getUsername(),
 				dbProperties.getPassword());
+	}
+	
+	public static boolean backupMysql(String dbUsername, String dbPassword, String dbName, String outputFile)
+			throws IOException, InterruptedException {
+		String command = String.format("mysqldump -u%s -p%s --add-drop-table --databases %s -r %s", dbUsername,
+				dbPassword, dbName, outputFile);
+		Process process = Runtime.getRuntime().exec(command);
+		int processComplete = process.waitFor();
+		return processComplete == 0;
 	}
 
 	public static boolean executeDML(String sql) throws SQLException {

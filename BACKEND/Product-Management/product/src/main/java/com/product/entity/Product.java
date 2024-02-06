@@ -6,7 +6,6 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextFi
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.base.entity.MultiTenantEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.platform.annotations.ClassMetaProperty;
 
 import jakarta.persistence.CascadeType;
@@ -44,11 +43,8 @@ public class Product extends MultiTenantEntity {
 	
 	@Column(name = "MEASUREMENT")
 	private String measurement;
-	
-	@JsonIgnore
-	@Column(name = "SUPPLIERID")
-	private Long supplierid;
-	
+
+	//@JsonManagedReference
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<ProductInfo> infos;
 
@@ -84,14 +80,6 @@ public class Product extends MultiTenantEntity {
 		this.measurement = measurement;
 	}
 
-	public List<ProductInfo> getInfos() {
-		return infos;
-	}
-
-	public void setInfos(List<ProductInfo> infos) {
-		this.infos = infos;
-	}
-
 	public Long getCategoryid() {
 		return categoryid;
 	}
@@ -100,12 +88,12 @@ public class Product extends MultiTenantEntity {
 		this.categoryid = categoryid;
 	}
 
-	public Long getSupplierid() {
-		return supplierid;
+	public List<ProductInfo> getInfos() {
+		return infos;
 	}
 
-	public void setSupplierid(Long supplierid) {
-		this.supplierid = supplierid;
+	public void setInfos(List<ProductInfo> infos) {
+		this.infos = infos;
 	}
 
 }

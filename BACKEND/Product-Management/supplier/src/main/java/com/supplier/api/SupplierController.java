@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.platform.annotations.UserPermission;
@@ -38,9 +39,16 @@ public class SupplierController {
 	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<Supplier> getAllSuppliers() {
+	public GenericResponse<Supplier> getAllSuppliers() throws Exception {
 		GenericResponse<Supplier> response = new GenericResponse<>();
 		return response.setStatus(Response.Status.OK).setDataList(supplierService.getAllSuppliers()).build();
+	}
+
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Supplier> searchSupplier(@RequestParam("name") String name) {
+		GenericResponse<Supplier> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setDataList(supplierService.getMatchingSuppliers(name)).build();
 	}
 
 }

@@ -48,7 +48,7 @@ public class EmailTemplatePlaceholderConfiguration {
 		try {
 			jsonNode = mapper.readValue(new FileInputStream(jsonFile), JsonNode.class);
 			String jsonString = mapper.writeValueAsString(jsonNode);
-			System.out.println(jsonString);
+			Log.platform.debug(jsonString);
 			Map<String, List<String>> map = new Gson().fromJson(jsonString, new TypeToken<Map<String, List<String>>>() {
 			}.getType());
 			for (Map.Entry<String, List<String>> entry : map.entrySet()) {

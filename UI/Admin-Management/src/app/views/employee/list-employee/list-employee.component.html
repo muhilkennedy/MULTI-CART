@@ -6,7 +6,11 @@
         </c-card-header>
         <c-card-body style="overflow: auto;">
             <div class="mat-elevation-z8" style="overflow: auto;">
-                <table mat-table [dataSource]="employees">
+                <mat-form-field>
+                    <mat-label>{{"SEARCH" | translate}}</mat-label>
+                    <input matInput [(ngModel)]="searchText" (keyup)="applyFilter($event)" placeholder="name or email" #input>
+                </mat-form-field>
+                <table mat-table [dataSource]="employees" matSort>
             
                     <!-- Emp Id Column -->
                     <ng-container matColumnDef="EmployeeId">
@@ -22,8 +26,8 @@
                     </ng-container>
             
                     <!-- Name Column -->
-                    <ng-container matColumnDef="Name">
-                        <th mat-header-cell *matHeaderCellDef> {{"Name" | translate}} </th>
+                    <ng-container matColumnDef="fname">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{"Name" | translate}} </th>
                         <td mat-cell *matCellDef="let element"> {{element.fname}} <span></span> {{element.lname}} </td>
                     </ng-container>
             

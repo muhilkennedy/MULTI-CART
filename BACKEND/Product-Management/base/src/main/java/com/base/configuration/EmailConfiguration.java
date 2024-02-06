@@ -9,21 +9,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import com.base.entity.ConfigType;
+import com.base.server.BaseSession;
 import com.base.service.ConfigurationService;
 import com.base.util.EmailUtil;
 import com.base.util.Log;
 import com.platform.cache.EmailCache;
+import com.platform.configuration.ConfigurationFactory;
 import com.platform.messages.ConfigurationType;
+import com.platform.service.Configurable;
+
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author Muhil
  */
 @Configuration
-public class EmailConfiguration {
+public class EmailConfiguration implements Configurable {
 
 	@Autowired
 	private ConfigurationService configService;
 
+	@PostConstruct
 	public void loadTenantsEmailConfiguration() {
 		Log.base.debug("Starting to load email configurations into platform cache");
 		List<ConfigType> emailConfigs = configService.findAllConfig(ConfigurationType.EMAIL);
@@ -41,7 +47,34 @@ public class EmailConfiguration {
 			EmailCache.getInstance().add(entry.getKey(), entry.getValue());
 		});
 		Log.base.info("Loaded Email configurations into platform cache.");
-		//Log.base.debug("Email Template Names and Placeholders : {} ", EmailTemplateNames.getAvailableTemplateNames());
+		this.register();
 	}
 
+	public void loadEmailCacheForTenant() {
+		List<ConfigType> emailConfigs = configService.findAllConfig(ConfigurationType.EMAIL);
+		if(!emailConfigs.isEmpty()) {
+			Properties property = new Properties();
+			emailConfigs.stream().forEach(config -> {
+				property.put(EmailUtil.getPropertyKey(config.getName()), config.getVal());
+			});
+			if (EmailCache.getInstance().get(BaseSession.getTenantId()) != null) {
+				Log.base.warn("Evicted email config for tenant {}", BaseSession.getTenantId());
+				EmailCache.getInstance().evict(BaseSession.getTenantId());
+			}
+			EmailCache.getInstance().add(BaseSession.getTenantId(), property);
+		}
+		else {
+			Log.base.warn("No Email configs to load for tenant {}", BaseSession.getTenantId());
+		}
+	}
+
+	@Override
+	public void applyConfiguration() {
+		this.loadEmailCacheForTenant();
+	}
+
+	@Override
+	public void register() {
+		ConfigurationFactory.getInstance().register(ConfigurationType.EMAIL, this);
+	}
 }

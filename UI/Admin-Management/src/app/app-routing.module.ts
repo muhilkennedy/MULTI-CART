@@ -76,7 +76,17 @@ const routes: Routes = [
         path: 'notifications',
         loadChildren: () =>
           import('./views/user-notification/user-notification.module').then((m) => m.UserNotificationModule)
-      }
+      },
+      {
+        path: 'supplier',
+        loadChildren: () =>
+          import('./views/supplier/supplier.module').then((m) => m.SupplierModule)
+      },
+      {
+        path: 'product',
+        loadChildren: () =>
+          import('./views/product/product.module').then((m) => m.ProductModule)
+      },
     ]
   },
   {

@@ -108,7 +108,7 @@ export class PermissionsComponent implements OnInit {
   }
 
   canCreateRole() {
-    return (this.hasError(this.roleFormGroup, 'roleName') || this.hasError(this.roleFormGroup, 'rolePermission'))
+    return (this.hasError(this.roleFormGroup, 'roleName') || this.hasError(this.roleFormGroup, 'rolePermission'));
   }
 
   createRoleAction() {

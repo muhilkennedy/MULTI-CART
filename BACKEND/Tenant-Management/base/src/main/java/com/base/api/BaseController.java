@@ -3,6 +3,7 @@ package com.base.api;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import com.platform.messages.GenericResponse;
 import com.platform.messages.Response;
 import com.platform.user.Permissions;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 /**
@@ -41,7 +43,7 @@ public class BaseController {
 	public GenericResponse<ConfigType> addConfig(@RequestParam(value = "tenantId", required = false) Long tenantId,
 			@RequestBody @Valid ConfigRequest config) {
 		GenericResponse<ConfigType> response = new GenericResponse<>();
-		configService.createConfig(config.getKey(), config.getValue(), config.getType());
+		configService.createOrUpdateConfig(config.getKey(), config.getValue(), config.getType());
 		return response.setStatus(Response.Status.OK).build();
 	}
 
@@ -50,17 +52,14 @@ public class BaseController {
 	public GenericResponse<ConfigType> addConfigs(@RequestParam(value = "tenantId", required = false) Long tenantId,
 			@RequestBody @Valid List<ConfigRequest> configList) {
 		GenericResponse<ConfigType> response = new GenericResponse<>();
-		configList.stream().forEach(config -> {
-			configService.createConfig(config.getKey(), config.getValue(), config.getType());
-		});
+		configService.createOrUpdateConfigs(configList);
 		return response.setStatus(Response.Status.OK).build();
 	}
 	
 	@UserPermission(values = { Permissions.SUPER_USER })
 	@GetMapping(value = "/config", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GenericResponse<ConfigType> getConfigs(@RequestParam(value = "tenantId", required = false) Long tenantId,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "fromTime", required = false) Long fromTime) {
+			@RequestParam(value = "type", required = false) String type) {
 		GenericResponse<ConfigType> response = new GenericResponse<>();
 		return response.setStatus(Response.Status.OK)
 				.setDataList(StringUtils.isNotBlank(type) ? configService.findAllConfig(ConfigurationType.valueOf(type))
@@ -70,9 +69,10 @@ public class BaseController {
 
 	@UserPermission(values = { Permissions.SUPER_USER })
 	@GetMapping(value = "/config/pull", produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<ConfigType> getConfigs(@RequestParam(value = "tenantId", required = false) Long tenantId,
-			@RequestParam(value = "fromTime", required = false) Long fromTime) {
+	public GenericResponse<ConfigType> getConfigs(HttpServletRequest request,
+			@RequestParam(value = "tenantId", required = false) Long tenantId) {
 		GenericResponse<ConfigType> response = new GenericResponse<>();
+		Long fromTime = Long.parseLong(request.getHeader(HttpHeaders.IF_MODIFIED_SINCE));
 		return response.setStatus(Response.Status.OK).setDataList(configService.findAllConfigsFromTimeUpdated(fromTime))
 				.build();
 	}

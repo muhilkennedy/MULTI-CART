@@ -21,7 +21,9 @@
 		<platform.version>1.0.0</platform.version>
 		<r2dbc.mysql.version>0.8.2.RELEASE</r2dbc.mysql.version>
 		<hibernate.search.version>6.2.3.Final</hibernate.search.version>
+		<spring-cloud.version>2023.0.0</spring-cloud.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.platform</groupId>
@@ -139,8 +141,22 @@
 			<artifactId>hibernate-search-backend-lucene</artifactId>
 			<version>${hibernate.search.version}</version>
 		</dependency>
+		<!--<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>-->
 	</dependencies>
-
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<modules>
 		<module>base</module>
 		<module>i18n</module>

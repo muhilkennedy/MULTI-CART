@@ -241,6 +241,12 @@ sh-3.2$ firebase login
 
 -------------
 
+APACHE BenchMarking:
+
+ab -n1000 -c200 -p test.txt -T application/json -H "X-Tenant:devTenant" -v 2 http://localhost:8080/tm/user/employee/login
+
+Or use Jmeter to add events and listeners!
+
 NGROK: (tunneling)
 https://dashboard.ngrok.com/get-started/setup/macos
 
@@ -250,6 +256,7 @@ ngrok config add-authtoken <token>
 ngrok http --domain=safe-heroic-hagfish.ngrok-free.app 8080
 
 ngrok http 8080 (dynamic domain name)
+
 
 
 

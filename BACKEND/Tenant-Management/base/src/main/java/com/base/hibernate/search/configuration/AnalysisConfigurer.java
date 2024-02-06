@@ -1,7 +1,7 @@
 package com.base.hibernate.search.configuration;
 
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
-import org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory;
+import org.apache.lucene.analysis.ngram.NGramFilterFactory;
 import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.hibernate.search.backend.lucene.analysis.LuceneAnalysisConfigurationContext;
@@ -17,16 +17,15 @@ public class AnalysisConfigurer implements LuceneAnalysisConfigurer {
 
 	@Override
 	public void configure(LuceneAnalysisConfigurationContext context) {
-		// TODO Auto-generated method stub
 		context.analyzer("search").custom()
-			.tokenizer(StandardTokenizerFactory.class)
-			.tokenFilter(LowerCaseFilterFactory.class)
+			.tokenizer(StandardTokenizerFactory.class) // Splits words at punctuation characters, removing punctuations. 
+			.tokenFilter(LowerCaseFilterFactory.class) // converts keywords to lower case
 			.tokenFilter(SnowballPorterFilterFactory.class)
-			.param("language", "English")
-			.tokenFilter(EdgeNGramFilterFactory.class)
-			//.tokenFilter(NGramFilterFactory.class)
-			.param("minGramSize", "2")
-			.param("maxGramSize", "15");
+			.param("language", "English") // snowball is language analyser, matches english words
+			//.tokenFilter(EdgeNGramFilterFactory.class) // startswith based search
+			.tokenFilter(NGramFilterFactory.class) // contains based search
+			.param("minGramSize", "2") 
+			.param("maxGramSize", "15"); // muhil -> mu,um, il, mh, hu, muh, hil, etc
 	}
 
 }

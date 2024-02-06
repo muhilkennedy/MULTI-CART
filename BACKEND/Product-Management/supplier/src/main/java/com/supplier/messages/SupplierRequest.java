@@ -7,6 +7,7 @@ public class SupplierRequest {
 
 	private String name;
 	private String description;
+	private String address;
 	private String emailId;
 	private String contact;
 	private String secondarycontact;
@@ -49,6 +50,14 @@ public class SupplierRequest {
 
 	public void setSecondarycontact(String secondarycontact) {
 		this.secondarycontact = secondarycontact;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 }

@@ -9,11 +9,16 @@ import java.io.InputStream;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.annotation.Configuration;
 
+import com.base.util.Log;
 import com.platform.email.EmailTemplatePlaceholderConfiguration;
 import com.platform.util.FileUtil;
 
 import jakarta.annotation.PostConstruct;
 
+/**
+ * @author Muhil
+ * load user email template names into platform cache.
+ */
 @Configuration
 public class UserEmailTemplateNameConfiguration {
 	
@@ -26,7 +31,7 @@ public class UserEmailTemplateNameConfiguration {
 			FileUtils.copyInputStreamToFile(is, tempFile);
 			EmailTemplatePlaceholderConfiguration.getInstance().loadTemplateNameFile(tempFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.user.error("Error loading user email templates : " , e);
 		} finally {
 			FileUtil.deleteDirectoryOrFile(tempFile);
 		}	

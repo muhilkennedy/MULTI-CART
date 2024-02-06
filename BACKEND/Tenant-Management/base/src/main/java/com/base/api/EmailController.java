@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -110,13 +109,13 @@ public class EmailController {
 				.setDataList(EmailConfigurations.stream().toList()).build();
 	}
 	
-	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	/*@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
 	@PatchMapping(value = "/loadconfig", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GenericResponse<?> loadTenantEmailConfig() {
 		GenericResponse<?> response = new GenericResponse<>();
-		emailService.loadEmailCacheForTenant();
+		//emailService.loadEmailCacheForTenant();
 		return response.setStatus(Response.Status.OK).build();
-	}
+	}*/
 	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_PROMOTIONS })
 	@GetMapping(value = "/inbox", produces = MediaType.APPLICATION_JSON_VALUE)

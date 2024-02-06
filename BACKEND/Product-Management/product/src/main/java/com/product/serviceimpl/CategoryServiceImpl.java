@@ -10,6 +10,7 @@ import com.base.server.BaseSession;
 import com.product.dao.CategoryDao;
 import com.product.entity.Category;
 import com.product.messages.CategoryRequest;
+import com.product.messages.FlattenedCategory;
 import com.product.service.CategoryService;
 
 /**
@@ -42,6 +43,16 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public List<Category> getAllCategories(){
 		return categoryDao.findAll(BaseSession.getTenantUniqueName());
+	}
+
+	@Override
+	public List<FlattenedCategory> getFlattenedCategories() {
+		return categoryDao.getFlattenedCategories(BaseSession.getTenantUniqueName());
+	}
+
+	@Override
+	public void deleteCategory(Long rootId) {
+		categoryDao.deleteById(rootId);
 	}
 
 }
