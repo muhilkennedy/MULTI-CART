@@ -1,6 +1,7 @@
 package com.i18n.util;
 
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,8 @@ public class LocaleUtil {
 
 	@Autowired
 	private MessageSource msgSource;
+	
+	public static enum SupportedLanguageCodes { en, ta };
 
 	@PostConstruct
 	private void setMessageSouce() {
@@ -39,6 +42,10 @@ public class LocaleUtil {
 	public static String getLocalisedString(String key, String[] paramValues, String locale) {
 		return messageSource.getMessage(key, paramValues,
 				StringUtils.isAllBlank(locale) ? Locale.ENGLISH : LocaleUtils.toLocale(locale));
+	}
+	
+	public static boolean isSupportedLanguage(String code) {
+		return Stream.of(SupportedLanguageCodes.values()).filter(lang -> lang.name().equals(code)).findAny().isPresent();
 	}
 
 }

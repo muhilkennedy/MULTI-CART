@@ -241,5 +241,11 @@ sh-3.2$ firebase login
 
 -------------
 
+APACHE BenchMarking:
+
+ab -n1000 -c200 -p test.txt -T application/json -H "X-Tenant:devTenant" -v 2 http://localhost:8080/tm/user/employee/login
+
+Or use Jmeter to add events and listeners!
+
 
 

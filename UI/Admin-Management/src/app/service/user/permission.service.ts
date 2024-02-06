@@ -1,0 +1,31 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PermissionService {
+
+}
+
+export enum Permissions {
+  MANAGE_ORDERS = "MANAGE_ORDERS",
+  EDIT_COUPONS = "EDIT_COUPONS",
+  MANAGE_REPORTING = "MANAGE_REPORTING",
+  EDIT_USERS = "EDIT_USERS",
+  SUPER_USER = "SUPER_USER",
+  EDIT_PRODUCTS = "EDIT_PRODUCTS",
+  MANAGE_USERS = "MANAGE_USERS",
+  MANAGE_COUPONS = "MANAGE_COUPONS",
+  MANAGE_PROMOTIONS = "MANAGE_PROMOTIONS",
+  EDIT_CATEGORIES = "EDIT_CATEGORIES",
+  ADMIN = "ADMIN",
+  EDIT_PROMOTIONS = "EDIT_PROMOTIONS",
+  EDIT_ORDERS = "EDIT_ORDERS",
+  CUSTOMER_SUPPORT = "CUSTOMER_SUPPORT",
+  MANAGE_CATEGORIES = "MANAGE_CATEGORIES",
+  POINT_OF_SALE = "POINT_OF_SALE",
+  MANAGE_PRODUCTS = "MANAGE_PRODUCTS",
+  MANAGE_SUPPLIER = "MANAGE_SUPPLIER"
+}

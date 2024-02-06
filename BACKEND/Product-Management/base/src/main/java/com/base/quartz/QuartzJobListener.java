@@ -51,7 +51,7 @@ public class QuartzJobListener extends JobListenerSupport {
 		try {
 			//TODO: sanitize this query
 			DatabaseUtil.executeDML(String.format(
-					"update quartzjobinfo set jobstatus='%s', errorinfo='%s' where jobname='%s' and jobgroup='%s'",
+					"update quartzjobinfo set jobstatus='%s', errorinfo=\"%s\" where jobname='%s' and jobgroup='%s'",
 					status, errorMsg, jobName, jobGroup));
 		} catch (SQLException e) {
 			Log.base.error("Exception updating job status : {}", e);

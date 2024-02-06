@@ -1,13 +1,24 @@
 package com.product.messages;
 
+import java.io.Serializable;
+
+import com.product.validators.ValidMeasurement;
+
+import jakarta.validation.constraints.NotNull;
+
 /**
  * @author Muhil
  */
-public class ProductRequest {
+public class ProductRequest implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	private Long categoryId;
+	@NotNull
 	private String name;
+	@NotNull
 	private String description;
+	@ValidMeasurement()
 	private String measurement;
 	private Long supplierId;
 

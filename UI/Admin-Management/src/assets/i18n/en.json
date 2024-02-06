@@ -162,5 +162,12 @@
   "PUBLIC" : "PUBLIC",
   "Calendar" : "Calendar",
   "TODAY" : "TODAY",
-  "Remember Me" : "Remember Me"
+  "Remember Me" : "Remember Me",
+  "Category": "Category Manager",
+  "Category Manager": "Category Manager",
+  "Add Root Category": "Add Root Category",
+  "CREATE CATEGORY" : "CREATE CATEGORY",
+  "other": "other",
+  "others" : "others",
+  "SEARCH" : "SEARCH"
 }

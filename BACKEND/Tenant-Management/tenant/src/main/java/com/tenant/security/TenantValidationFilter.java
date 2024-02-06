@@ -1,12 +1,12 @@
 package com.tenant.security;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -45,8 +45,11 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 	@Autowired
 	private TenantService tenantService;
 	
-	//move to config file
-	private static List<String> Whitelisted_URI = Arrays.asList("/actuator/");
+	@Value("${service.whitelist.urls}")
+	private List<String> Whitelisted_URI;
+	
+	@Value("${service.trusted.subnets}")
+	private List<String> trustedSubnets;
 	
     @Override
     protected boolean shouldNotFilter (HttpServletRequest request)
@@ -71,7 +74,11 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 		}
 		Tenant tenant = null;
 		if (tenantUniqueName.equals(PlatformUtil.INTERNAL_SYSTEM)) {
-			// TODO and check for trusted subnet to make sure communication between services.
+			if (!isFromTrustedSubnet(request.getRemoteAddr(), response)) {
+				Log.tenant.error("Invalid Request from subnet IP : {}", request.getRemoteAddr());
+				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Request not trusted");
+				return;
+			}
 			PlatformTenant pTenant = PlatformTenant.getSystemTenant();
 			tenant = new Tenant();
 			tenant.setName(pTenant.getName());
@@ -82,7 +89,7 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 		else {
 			tenant = tenantService.findByUniqueName(tenantUniqueName);
 		}
-		if(!isValidTenant(tenant, response)) {
+		if (!isValidTenant(tenant, response)) {
 			return;
 		}
 		/*
@@ -92,7 +99,8 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 		 * as parameter will take precedence.(acts as on behalf of)
 		 */
 		BaseSession.setCurrentTenant(tenant);
-		Log.base.debug("Tenant Session For {} is setup for request {}", tenant.getUniquename(), requestUri);
+		Log.base.debug("Tenant Session For {} is setup for request {} from origin {}", tenant.getUniquename(),
+				requestUri, request.getHeader(HttpHeaders.ORIGIN));
 		TenantDetails td = tenant.getTenantDetail();
 		if(PropertiesUtil.isProdDeployment() && td.getDetails().isInitialSetUpDone()) {
 			String origin = request.getHeader(HttpHeaders.ORIGIN);
@@ -138,6 +146,18 @@ public class TenantValidationFilter extends OncePerRequestFilter{
 			return false;
 		}
 		return true;
+	}
+	
+	private boolean isFromTrustedSubnet(String ip, HttpServletResponse response) throws IOException {
+		if (StringUtils.isAllBlank(ip)) {
+			Log.tenant.error("Invalid Request");
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Tenant Not Found");
+			return false;
+		}
+		if (trustedSubnets.stream().filter(subnet -> ip.startsWith(subnet)).findAny().isPresent()) {
+			return true;
+		}
+		return false;
 	}
 
 }

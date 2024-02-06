@@ -36,6 +36,7 @@
 		<commons.text.version>1.10.0</commons.text.version>
 		<firebase.admin.version>9.2.0</firebase.admin.version>
 		<google.apis.version>v2-rev157-1.25.0</google.apis.version>
+		<google.zxing.version>3.5.3</google.zxing.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -183,6 +184,17 @@
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
 		    <version>${jackson.version}</version>
+		</dependency>
+		<!-- barcode generators -->
+		<dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>core</artifactId>
+		    <version>${google.zxing.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>javase</artifactId>
+		    <version>${google.zxing.version}</version>
 		</dependency>
 	</dependencies>
 </project>

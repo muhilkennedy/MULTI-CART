@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { UserService } from 'src/app/service/user/user.service';
 import { CommonUtil } from 'src/app/service/util/common-util.service';
 import { NotificationService } from 'src/app/service/util/notification.service';
@@ -11,10 +12,10 @@ import { SpinnerService } from 'src/app/service/util/sipnner.service';
   templateUrl: './list-employee.component.html',
   styleUrls: ['./list-employee.component.scss']
 })
-export class ListEmployeeComponent implements OnInit {
+export class ListEmployeeComponent implements OnInit, AfterViewInit {
 
   employees: any[] = new Array();
-  displayedEmployeesColumns: string[] = ['EmployeeId', 'Name', 'Status', 'Mobile', 'Email', 'Designation', 'Actions'];
+  displayedEmployeesColumns: string[] = ['EmployeeId', 'fname', 'Status', 'Mobile', 'Email', 'Designation', 'Actions'];
   employeePermissions: any[] = new Array();
   showPermissionsModal: boolean = false;
   showDeleteModal: boolean  = false;
@@ -24,6 +25,13 @@ export class ListEmployeeComponent implements OnInit {
   totalPages: number = 10;
   pageSize: number = 25;
   pageIndex: number = 0;
+  sortBy: string = '';
+  sortOrder: string = '';
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  searchText!: string;
 
   constructor(private userService: UserService, private notification: NotificationService, 
               private spinner: SpinnerService, private datePipe: DatePipe) {
@@ -34,9 +42,24 @@ export class ListEmployeeComponent implements OnInit {
     this.loadEmployees();
   }
 
+  ngAfterViewInit() {
+    this.sort.sortChange.subscribe(() => {
+      this.pageIndex = 0;
+      if(CommonUtil.isNullOrEmptyOrUndefined(this.sort.direction)){
+        this.sortBy = '';
+        this.sortOrder = this.sort.direction;
+      }
+      else{
+        this.sortBy = this.sort.active;
+        this.sortOrder = this.sort.direction;
+      }
+      this.loadEmployees();
+    });
+  }
+
   loadEmployees() {
     this.spinner.show();
-    this.userService.getAllEmployees(this.pageIndex, this.pageSize)
+    this.userService.getAllEmployees(this.pageIndex, this.pageSize, this.sortBy, this.sortOrder)
       .subscribe({
         next: (resp: any) => {
           this.employees = resp.data.content;
@@ -138,6 +161,26 @@ export class ListEmployeeComponent implements OnInit {
 
   toggleMoreModal(){
     this.showMoreModal = !this.showMoreModal;
+  }
+
+  applyFilter(event: any){
+    if(this.searchText.length > 3){
+      this.pageIndex = 0;
+      this.totalPages = 0;
+      this.spinner.show();
+      this.userService.searchEmployeesByNameOrEmail(this.searchText, this.pageSize)
+          .subscribe({
+            next: (resp: any) => {
+              this.employees = resp.dataList;
+            },
+            error: (err: any) => {
+              this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+            },
+            complete: () => {
+              this.spinner.hide();
+            }
+          })
+    }
   }
 
 }

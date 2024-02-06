@@ -1,14 +1,14 @@
 package com.user.entity;
 
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
+import com.base.util.Log;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.platform.annotations.ClassMetaProperty;
 import com.platform.annotations.PIIData;
@@ -118,12 +118,12 @@ public class Employee extends User implements BasePermissions {
 			if (getRootid() == PlatformUtil.SYSTEM_USER_ROOTID) {
 				return PlatformUser.getSystemUser().getUserPermissions();
 			}
-			Optional<Set<Permissions>> obj = employeeeRoles.stream()
-					.map(role -> role.getRole().getPermissions().stream()
-							.map(rp -> Permissions.getPermissionIfValid(rp.getPermission().getPermission()))
-							.collect(Collectors.toSet()))
-					.findFirst();
-			return obj.get();
+			Set<Permissions> permissions = new HashSet<Permissions>();
+			employeeeRoles.stream()
+					.forEach(role -> role.getRole().getPermissions().stream()
+							.peek(rp -> Log.user.debug(rp.getPermission().getPermission())).forEach(rp -> permissions
+									.add(Permissions.getPermissionIfValid(rp.getPermission().getPermission()))));
+			return permissions;
 		} catch (RuntimeException e) {
 			// Not a good idea, lets take a look to have a defensive fix here
 			return super.getUserPermissions();

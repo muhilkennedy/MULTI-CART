@@ -14,9 +14,18 @@
                           <c-badge color="success" shape="rounded-pill" *ngIf="isTemplatePresent(name)">{{"valid" | translate}}</c-badge>
                           <c-badge color="danger" shape="rounded-pill" *ngIf="!isTemplatePresent(name)">{{"N/A" | translate}}</c-badge>
                         </button>
-                      </div>
+                    </div>
+                    <div cListGroup style="overflow: auto;">
+                        <button (click)="selectProductTemplateName(name)" cListGroupItem class="d-flex justify-content-between align-items-center" *ngFor="let name of productTemplateNames">
+                          {{name}}
+                          <c-badge color="success" shape="rounded-pill" *ngIf="isTemplatePresent(name)">{{"valid" | translate}}</c-badge>
+                          <c-badge color="danger" shape="rounded-pill" *ngIf="!isTemplatePresent(name)" >{{"N/A" | translate}}</c-badge>
+                        </button>
+                    </div>
                 </c-col>
                 <c-col xs="6">
+                    <label>{{selectedTemplate}}</label>
+                    <hr/>
                     <label cLabel for="formFile">{{"Upload .ftl template" | translate}}</label>
                     <input #file cFormControl id="formFile" accept=".ftl" type="file" (change)="onTemplateSelected($event)"/>
                     <hr/>

@@ -1,0 +1,67 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>{{"Category Manager" | translate}}</strong>
+            </c-card-header>
+            <c-card-body style="overflow: auto;">
+                <ng-container *ngTemplateOutlet="addItemModal"></ng-container>
+                <button (click)="addItem(null)"
+                      color="primary"
+                      cButton
+                      class="me-1"
+                      variant="outline">
+                <svg cIcon class="me-2" name="cil-plus"></svg>
+                {{"Add Root Category" | translate}}
+              </button>
+                <!-- <button cButton color="primary" shape="rounded-pill">
+                    <mat-icon color="primary" class="maticon" matTooltip= "Add Root Category" >add_circle_outline</mat-icon>
+                </button> -->
+                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                    <!-- This is the tree node template for leaf nodes -->
+                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                        <!-- use a disabled button to provide padding for tree leaf -->
+                        <button mat-icon-button disabled></button>
+                        {{node.name}}
+                        <mat-icon color="primary" class="maticon" (click)="addItem(node.rootId)">add_circle_outline</mat-icon>
+                        <mat-icon color="warn" class="maticon" (click)="deleteItem(node.rootId)">remove_circle_outline</mat-icon>
+                    </mat-tree-node>
+                    <!-- This is the tree node template for expandable nodes -->
+                    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+                        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+                            <mat-icon class="mat-icon-rtl-mirror">
+                                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                            </mat-icon>
+                        </button>
+                        {{node.name}}
+                        <mat-icon color="primary" class="maticon" (click)="addItem(node.rootId)">add_circle_outline</mat-icon>
+                        <mat-icon color="warn" class="maticon" (click)="deleteItem(node.rootId)">remove_circle_outline</mat-icon>
+                    </mat-tree-node>
+                </mat-tree>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>
+
+<ng-template #addItemModal>
+    <c-modal id="roleModal" [visible]="showAddCategoryModal" (visibleChange)="handlecategoryModal($event)">
+      <c-modal-header>
+        <h5 cModalTitle>{{ "CREATE CATEGORY" | translate}}</h5>
+        <button (click)="toggleCategorysModal()" cButtonClose></button>
+      </c-modal-header>
+      <c-modal-body>
+        <mat-form-field [formGroup]="categoryFormGroup" style="width: 100%;">
+            <mat-label>{{"Category Name" | translate | uppercase}}</mat-label>
+            <input matInput name="catName" placeholder="Category Name" formControlName="categoryName" required>
+        </mat-form-field>
+      </c-modal-body>
+      <c-modal-footer>
+        <button (click)="toggleCategorysModal()" cButton color="secondary">
+          {{"CLOSE" | translate}}
+        </button>
+        <button [disabled]="canShowCreate()" (click)="addCategory()" cButton color="success">
+            {{"CREATE" | translate}}
+        </button>
+      </c-modal-footer>
+    </c-modal>
+</ng-template>

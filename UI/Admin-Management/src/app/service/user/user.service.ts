@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user.model';
 import { environment } from 'src/environments/environment';
+import { Permissions } from 'src/app/service/user/permission.service';
+import { CommonUtil } from '../util/common-util.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
   private user: User;
   private userResponse: any;
 
@@ -44,11 +45,22 @@ export class UserService {
     return this.http.post<any>(`${environment.backendProxy}/employee`, body)
   }
 
-  getAllEmployees(pageNumber: number, pageSize: number): Observable<any> {
+  getAllEmployees(pageNumber: number, pageSize: number, sortBy: string, sortOrder: string): Observable<any> {
     return this.http.get(`${environment.backendProxy}/employee`, {
       params: {
         pageNumber: pageNumber,
-        pageSize: pageSize
+        pageSize: pageSize,
+        sortBy: sortBy,
+        sortOrder: sortOrder
+      }
+    });
+  }
+
+  searchEmployeesByNameOrEmail(searchText: string, limit: number): Observable<any> {
+    return this.http.get(`${environment.backendProxy}/employee/search`, {
+      params: {
+        key: searchText,
+        limit: limit
       }
     });
   }
@@ -74,6 +86,19 @@ export class UserService {
 
   getAllRoles(): Observable<any> {
     return this.http.get(`${environment.backendProxy}/role/fetch`);
+  }
+
+  updateEmployeeRole(roleId: number, userId: number, status: boolean): Observable<any> {
+    return this.http.put(`${environment.backendProxy}/employee/role/${roleId}`, {}, {
+      params:{
+        userId: userId,
+        status: status
+      }
+    });
+  }
+
+  getAllEmployeeRoles(id: any): Observable<any> {
+    return this.http.get(`${environment.backendProxy}/employee/${id}/roles`);
   }
 
   createRole(body: any): Observable<any> {
@@ -120,5 +145,33 @@ export class UserService {
       emailId : email
     })
   }
+
+  updateUserLocale(locale: string): Observable<any> {
+    return this.http.put<any>(`${environment.backendProxy}/employee/locale/${locale}`, {});
+  }
+
+  getUserPermissions(): any[]{
+    if(CommonUtil.isNullOrEmptyOrUndefined(this.getCurrentUserResponse())){
+      return new Array();
+    }
+    return this.getCurrentUserResponse().userPermissions;
+  }
+
+  doesUserHavePermission(permission: Permissions): boolean{
+    if(CommonUtil.isNullOrEmptyOrUndefined(this.getUserPermissions())){
+      return false;
+    }
+    let userPerm = this.getUserPermissions().filter(perm => permission.toString() == perm);
+    return userPerm.length > 0 ;
+  }
+
+  findEmployeeByUniqueName(uniqueName: string): Observable<any> {
+    return this.http.get(`${environment.backendProxy}/employee/fetch`,{
+      params: {
+        uniqueName: uniqueName
+      }
+    });
+  }
+
 
 }

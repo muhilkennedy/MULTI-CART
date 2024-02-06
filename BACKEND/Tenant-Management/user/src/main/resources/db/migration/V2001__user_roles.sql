@@ -22,6 +22,7 @@ INSERT INTO permission (rootid, permission) values(148, "ManageReporting");
 INSERT INTO permission (rootid, permission) values(150, "ManagePromotions");
 INSERT INTO permission (rootid, permission) values(710, "ManageCoupons");
 INSERT INTO permission (rootid, permission) values(1765, "EditCoupons");
+INSERT INTO permission (rootid, permission) values(1965, "ManageSupplier");
 
 
 /*initial data load*/
@@ -29,4 +30,6 @@ INSERT INTO role (rootid, tenantid, rolename) values (-1, -1, "CustomerSupportAd
 INSERT INTO rolepermission (rootid, tenantid, roleid, permissionid) values (-1, -1, -1, 19011996);
 INSERT INTO rolepermission (rootid, tenantid, roleid, permissionid) values (-2, -1, -1, 28072023);
 INSERT INTO rolepermission (rootid, tenantid, roleid, permissionid) values (-3, -1, -1, 22101999);
+INSERT INTO rolepermission (rootid, tenantid, roleid, permissionid) values (-4, -1, -1, 789);
+INSERT INTO rolepermission (rootid, tenantid, roleid, permissionid) values (-5, -1, -1, 5099);
 INSERT INTO employeerole (rootid, tenantid, roleid, employeeid) values (-1, -1, -1, -1);

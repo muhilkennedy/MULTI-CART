@@ -14,7 +14,7 @@ public enum Permissions {
 	MANAGE_PROMOTIONS("ManagePromotions"), EDIT_PROMOTIONS("EditPromotions"), MANAGE_PRODUCTS("ManageProducts"),
 	EDIT_PRODUCTS("EditProducts"), POINT_OF_SALE("PointOfSale"), MANAGE_CATEGORIES("ManageCategories"),
 	EDIT_CATEGORIES("EditCategories"), MANAGE_REPORTING("ManageReporting"), MANAGE_COUPONS("ManageCoupons"),
-	EDIT_COUPONS("EditCoupons");
+	EDIT_COUPONS("EditCoupons"), MANAGE_SUPPLIER("ManageSupplier");
 
 	private String value;
 

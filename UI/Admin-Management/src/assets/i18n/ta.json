@@ -162,5 +162,12 @@
   "PUBLIC" : "பொது அணுகல்",
   "Calendar" : "நாட்காட்டி",
   "TODAY" : "இன்று",
-  "Remember Me" : "நினைவில் கொள்க"
+  "Remember Me" : "நினைவில் கொள்க",
+  "Category": "வகை",
+  "Category Manager": "வகை மேலாண்மை",
+  "Add Root Category": "வேர் வகையைச் சேர்க்கவும்",
+  "CREATE CATEGORY" : "வகையை உருவாக்கவும்",
+  "other" : "மற்றவை",
+  "others" : "மற்றவைகள்",
+  "SEARCH" : "தேடு"
 }

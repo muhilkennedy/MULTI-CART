@@ -1,1 +1,137 @@
-<p>edit-employee works!</p>
+<app-spinner></app-spinner>
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{"Search Employee"}}</strong>
+        </c-card-header>
+        <c-card-body style="overflow: auto;">
+            <form (submit)="searchEmployee()">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>{{"Employee Unique Id" | translate}}</mat-label>
+                    <input matInput name="searchtext" id="searchtext" type="text" [(ngModel)]="empUniqueName">
+                    <button matSuffix
+                        mat-icon-button >
+                        <mat-icon color="primary">search</mat-icon>
+                    </button>
+                </mat-form-field>
+            </form>
+        </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>
+
+<c-row *ngIf="employee != undefined">
+    <c-col md="6">
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>{{employee.fname}} {{employee.lname}}</mat-card-title>
+                <mat-card-subtitle>{{employee.uniquename}}</mat-card-subtitle>
+            </mat-card-header>
+            <img mat-card-image [src]="getProfilePicture()" alt="Profile Pic">
+            <mat-card-content>
+                <table>
+                    <tr>
+                        <td>
+                            <label>{{"Designation" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{employee.designation}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Mobile Number" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{employee.mobile}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Email Id" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{employee.emailid}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Secondary Email" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{employee.secondaryemail}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Locale" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{employee.locale}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Reports To" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <label>{{employee.reportsto}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{{"Permissions" | translate}}</label>
+                        </td>
+                        <td> : </td>
+                        <td>
+                            <ul cListGroup>
+                                <li style="padding: 1px;" cListGroupItem
+                                    *ngFor="let permissions of employee.userPermissions">{{permissions}}</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </mat-card-content>
+            
+        </mat-card>
+    </c-col>
+
+    <c-col md="6">
+        <c-card class="mb-4">
+            <c-card-header>
+              <strong>{{"Edit Employee Details"}}</strong>
+            </c-card-header>
+            <c-card-body style="overflow: auto;">
+                <mat-form-field>
+                    <mat-label>{{"Mobile" | translate}}</mat-label>
+                    <input matInput type="text" [(ngModel)]="contact">
+                    <button matSuffix *ngIf="this.contact != employee.mobile"
+                        mat-icon-button (click)="onContactUpdate()">
+                        <mat-icon color="warn">save</mat-icon>
+                    </button>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{"Employee Roles" | translate}}</mat-label>
+                    <mat-select name="roles" multiple [formControl]="roleFormControl">
+                        <mat-select-trigger style="color: blueviolet;">
+                             {{roleFormControl.value?.[0] || ''}}
+                            <span *ngIf="(roleFormControl.value?.length || 0) > 1">
+                                (+{{(roleFormControl.value?.length || 0) - 1}}
+                                {{ showOthersText(roleFormControl.value?.length) }})
+                            </span>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let rl of roles" [value]="rl.rolename" (onSelectionChange)="roleChanged($event)">{{rl.rolename}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>

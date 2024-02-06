@@ -16,6 +16,7 @@ public class CacheUtil {
 	public static final String CUSTOMER_CACHE_NAME = "customer";
 	public static final String EMPLOYEE_CACHE_NAME = "employee";
 	public static final String PRODUCT_CACHE_NAME = "product";
+	public static final String INVENTORY_CACHE_NAME = "inventory";
 	public static final String CATEGORY_CACHE_NAME = "category";
 	public static final String SUPPLIER_CACHE_NAME = "supplier";
 	public static final String DASHBOARD_CACHE_NAME = "dashboard";

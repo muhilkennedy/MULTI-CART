@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  backendProxy: "http://localhost:8081/tm",
-  jobrunrUI: "http://localhost:9091",
+  backendProxy: "http://localhost:8080/tm",
+  productProxy: "http://localhost:8080/pm",
   tenantId: "devTenant",
   tenant: "Dev Tenant",
   google_oauth_client: "18310117289-aq54dq89ad3kolmuam4qogj88vuep7lv.apps.googleusercontent.com",

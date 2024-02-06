@@ -9,7 +9,7 @@ import com.user.messages.RoleRequest;
 
 /**
  * @author Muhil
- * interface used for both service and dao.
+ * interface used for both service and dao.(Bad Idea)
  */
 public interface RolePermissionService {
 
@@ -31,6 +31,12 @@ public interface RolePermissionService {
 
 	default Role toggleRoleStatus(Role role) {
 		return null;
-	};
+	}
+
+	List<Role> getAllEmployeeRoles(Long employeeId);
+
+	default Employee removeRolesForEmployee(Employee employee, List<Long> roleIds) {
+		return null;
+	}
 
 }

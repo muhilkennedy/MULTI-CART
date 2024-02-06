@@ -3,6 +3,7 @@ package com.user.api;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.base.server.BaseSession;
 import com.base.util.BaseUtil;
 import com.base.util.Log;
+import com.i18n.util.LocaleUtil;
 import com.platform.annotations.UserPermission;
 import com.platform.annotations.ValidateUserToken;
 import com.platform.exception.UserNotFoundException;
@@ -125,7 +128,6 @@ public class EmployeeController {
 	 * @throws UserNotFoundException 
 	 * @throws ParseException 
 	 * */
-	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_USERS })
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public GenericResponse<User> createEmployee(@RequestBody EmployeeRequest empRequest) throws UserNotFoundException, ParseException {
@@ -165,9 +167,10 @@ public class EmployeeController {
 	public GenericResponse<Page<Employee>> getEmployees(
 			@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-			@RequestParam(value = "sortBy", defaultValue = "timecreated") String sortByColumn) throws IOException {
+			@RequestParam(value = "sortBy", defaultValue = "timecreated") String sortByColumn,
+			@RequestParam(value = "sortOrder", defaultValue = "DESC") String sortOrder) throws IOException {
 		GenericResponse<Page<Employee>> response = new GenericResponse<>();
-		Pageable pageable = BaseUtil.getPageable(sortByColumn, pageNumber, pageSize);
+		Pageable pageable = BaseUtil.getPageable(sortByColumn, sortOrder, pageNumber, pageSize);
 		Page<Employee> page = (Page<Employee>) empService.findAll(pageable);
 		if (page.getContent() != null && page.getContent().size() > 0) {
 			return response.setStatus(Response.Status.OK).setData(page).build();
@@ -196,6 +199,45 @@ public class EmployeeController {
 		return response.setStatus(Response.Status.OK).setDataList(empService.searchEmployeesByName(name, limit))
 				.build();
 	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_USERS })
+	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Employee> searchUserByNameOrEmail(@RequestParam(value = "key") String name,
+			@RequestParam(value = "limit", defaultValue = "50") int limit) throws SQLException {
+		GenericResponse<Employee> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setDataList(empService.searchEmployeesByNameOrEmail(name, limit))
+				.build();
+	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_USERS })
+	@GetMapping(value = "/{id}/roles", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<Employee> getEmployeeRoles(@PathVariable("id") Long employeeId) throws SQLException {
+		GenericResponse<Employee> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setDataList(rpService.getAllEmployeeRoles(employeeId))
+				.build();
+	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_USERS })
+	@PutMapping(value = "/role/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<User> updateEmplopyeeRole(@PathVariable("id") Long roleId,
+			@RequestParam("status") boolean status, @RequestParam("userId") Long userId)
+			throws IllegalStateException, IOException, UserNotFoundException {
+		GenericResponse<User> response = new GenericResponse<>();
+		Employee employee = (Employee) empService.findById(userId);
+		if (employee != null) {
+			if (roleId != null) {
+				if(status) {
+					rpService.addRolesToEmployee(employee, Arrays.asList(roleId));	
+				}
+				else {
+					rpService.removeRolesForEmployee(employee, Arrays.asList(roleId));
+				}
+			}
+		} else {
+			throw new UserNotFoundException();
+		}
+		return response.setStatus(Response.Status.OK).setData((User) empService.findById(userId)).build();
+	}
 
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_USERS })
 	@PostMapping(value = "/profilepic", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -212,6 +254,18 @@ public class EmployeeController {
 		GenericResponse<User> response = new GenericResponse<>();
 		return response.setStatus(Response.Status.OK)
 				.setData(empService.updateSecondaryEmail(request.getEmailId())).build();
+	}
+	
+	@PutMapping(value = "/locale/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<User> updateUserLocale(@PathVariable("code") String locale)
+			throws IllegalStateException, IOException {
+		GenericResponse<User> response = new GenericResponse<>();
+		if (StringUtils.isNotBlank(locale) && LocaleUtil.isSupportedLanguage(locale)) {
+			empService.updateLocale(locale);
+			return response.setStatus(Response.Status.OK).build();
+		} else {
+			return response.setStatus(Response.Status.ERROR).build();
+		}
 	}
 
 }

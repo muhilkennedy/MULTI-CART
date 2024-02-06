@@ -51,8 +51,8 @@ public class UserTokenSecurityFilter implements Filter {
 								PlatformUser user = UserService.findById(Long.parseLong(userRootId));
 								String tokenUserUniqueName = JWTUtil.getUserUniqueNameFromToken(jwtToken);
 								String tokenIpAddress = JWTUtil.getIpAddressFromToken(jwtToken);
-								if (user == null || !user.getUniquename().equals(tokenUserUniqueName)
-										|| !httpRequest.getRemoteAddr().equals(tokenIpAddress)) {
+								if (user == null || !user.getUniquename().equals(tokenUserUniqueName)) {
+										//|| !httpRequest.getRemoteAddr().equals(tokenIpAddress)) {
 									httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "UNAUTHORIZED");
 									return;
 								} else if (!user.isActive()) {

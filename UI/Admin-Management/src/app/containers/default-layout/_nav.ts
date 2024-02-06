@@ -1,29 +1,42 @@
 import { INavData } from '@coreui/angular';
+import { Permissions } from 'src/app/service/user/permission.service'
 
 export const navItems: INavData[] = [
   {
     name: 'Dashboard',
     url: '/dashboard',
-    iconComponent: { name: 'cil-speedometer' },
+    iconComponent: { name: 'cil-speedometer' }
   },
   {
     title: true,
-    name: 'USER MANAGEMENT'
+    name: 'USER MANAGEMENT',
+    attributes: {
+      "Permission" : Permissions.MANAGE_USERS
+    }
   },
   {
     name: 'Employee',
     url: '/employee',
     iconComponent: { name: 'cilWc' },
+    attributes: {
+      "Permission" : Permissions.MANAGE_USERS
+    },
     children: [
       {
         name: 'Onboard',
         url: '/employee/onboard',
         iconComponent: { name: 'cilPlus' },
+        attributes: {
+          "Permission" : Permissions.EDIT_USERS
+        }
       },
       {
         name: 'Edit',
         url: '/employee/edit',
         iconComponent: { name: 'cilPen' },
+        attributes: {
+          "Permission" : Permissions.EDIT_USERS
+        }
       },
       {
         name: 'View',
@@ -33,7 +46,10 @@ export const navItems: INavData[] = [
       {
         name: 'Permissions',
         url: '/employee/permissions',
-        iconComponent: { name: 'cilLockUnlocked' }
+        iconComponent: { name: 'cilLockUnlocked' },
+        attributes: {
+          "Permission" : Permissions.EDIT_USERS
+        }
       }
     ]
   },
@@ -41,6 +57,9 @@ export const navItems: INavData[] = [
     name: 'Customer',
     url: '/customer',
     iconComponent: { name: 'cilPeople' },
+    attributes: {
+      "Permission" : Permissions.MANAGE_USERS
+    },
     children: [
       {
         name: 'View',
@@ -51,39 +70,77 @@ export const navItems: INavData[] = [
   },
   {
     title: true,
-    name: 'INVENTORY MANAGEMENT'
-  },
-  {
-    name: 'Product',
-    url: '/product',
-    iconComponent: { name: 'cilCart' },
-    children: [
-      {
-        name: 'Add New',
-        url: '/product/add',
-        iconComponent: { name: 'cilPlus' },
-      },
-      {
-        name: 'Edit',
-        url: '/product/edit',
-        iconComponent: { name: 'cilPen' },
-      },
-      {
-        name: 'View',
-        url: '/product/view',
-        iconComponent: { name: 'cilList' },
-      }
-    ]
+    name: 'INVENTORY MANAGEMENT',
+    attributes: {
+      "Permission" : Permissions.MANAGE_PRODUCTS
+    }
   },
   {
     name: 'Supplier',
     url: '/supplier',
     iconComponent: { name: 'cilFactory' },
+    attributes: {
+      "Permission" : Permissions.MANAGE_SUPPLIER
+    },
+    children: [
+      {
+        name: 'Onboard',
+        url: '/supplier/onboard',
+        iconComponent: { name: 'cilPlus' },
+      },
+      {
+        name: 'View',
+        url: '/supplier/view',
+        iconComponent: { name: 'cilList' },
+      }
+    ]
+  },
+  {
+    name: 'Product',
+    url: '/product',
+    iconComponent: { name: 'cilCart' },
+    attributes: {
+      "Permission" : Permissions.MANAGE_PRODUCTS
+    },
+    children: [
+      {
+        name: 'Add New',
+        url: '/product/add',
+        iconComponent: { name: 'cilPlus' },
+        attributes: {
+          "Permission" : Permissions.EDIT_PRODUCTS
+        }
+      },
+      {
+        name: 'Edit',
+        url: '/product/edit',
+        iconComponent: { name: 'cilPen' },
+        attributes: {
+          "Permission" : Permissions.EDIT_PRODUCTS
+        }
+      },
+      {
+        name: 'View',
+        url: '/product/view',
+        iconComponent: { name: 'cilList' },
+      },
+      {
+        name: 'Category',
+        url: '/product/category',
+        iconComponent: { name: 'cilObjectGroup' },
+        attributes: {
+          "Permission" : Permissions.EDIT_PRODUCTS
+        }
+      }
+    ]
   },
   {
     name: 'Shipping',
     url: '/shipping',
     iconComponent: { name: 'cilFlightTakeoff' },
+    attributes: {
+      "Permission" : Permissions.MANAGE_ORDERS
+    },
     children: [
       {
         name: 'Tracker',
@@ -99,12 +156,18 @@ export const navItems: INavData[] = [
   },
   {
     title: true,
-    name: 'ORDER MANAGEMENT'
+    name: 'ORDER MANAGEMENT',
+    attributes: {
+      "Permission" : Permissions.MANAGE_ORDERS
+    },
   },
   {
     name: 'Orders',
     url: '/order',
     iconComponent: { name: 'cilListRich' },
+    attributes: {
+      "Permission" : Permissions.MANAGE_ORDERS
+    },
     children: [
       {
         name: 'View',
@@ -115,6 +178,9 @@ export const navItems: INavData[] = [
         name: 'Edit',
         url: '/order/edit',
         iconComponent: { name: 'cilPen' },
+        attributes: {
+          "Permission" : Permissions.EDIT_ORDERS
+        }
       }
     ]
   },
@@ -125,11 +191,17 @@ export const navItems: INavData[] = [
     badge: {
       color: 'danger',
       text: 'NA'
+    },
+    attributes: {
+      "Permission" : Permissions.MANAGE_REPORTING
     }
   },
   {
     title: true,
-    name: 'SALES'
+    name: 'SALES',
+    attributes: {
+      "Permission" : Permissions.MANAGE_ORDERS
+    },
   },
   {
     name: 'POS',
@@ -137,37 +209,58 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cilCash' },
     badge: {
       color: 'info',
-      text: 'NEW'
+      text: 'V1'
+    },
+    attributes: {
+      "Permission" : Permissions.POINT_OF_SALE
     }
   },
   {
     name: 'Online',
     url: '/online',
     iconComponent: { name: 'cilCreditCard' },
+    attributes: {
+      "Permission" : Permissions.EDIT_ORDERS
+    },
   },
   {
     title: true,
-    name: 'PROMOTIONAL MARKETING'
+    name: 'PROMOTIONAL MARKETING',
+    attributes: {
+      "Permission" : Permissions.MANAGE_PROMOTIONS
+    },
   },
   {
     name: 'Coupons',
     url: '/coupon',
     iconComponent: { name: 'cilGift' },
+    attributes: {
+      "Permission" : Permissions.MANAGE_COUPONS
+    },
   },
   {
     name: 'Offers',
     url: '/offer',
     iconComponent: { name: 'cilDollar' },
+    attributes: {
+      "Permission" : Permissions.EDIT_PROMOTIONS
+    },
   },
   {
     name: 'Templates',
     url: '/templates',
-    iconComponent: { name: 'cilNotes' },
+    iconComponent: { name: 'cilNoteAdd' },
+    attributes: {
+      "Permission" : Permissions.MANAGE_PROMOTIONS
+    },
     children: [
       {
         name: 'Email',
         url: '/templates/emailtemplate',
         iconComponent: { name: 'cilEnvelopeClosed' },
+        attributes: {
+          "Permission" : Permissions.EDIT_PROMOTIONS
+        },
       },
       {
         name: 'Invoice',
@@ -184,6 +277,29 @@ export const navItems: INavData[] = [
     name: 'Site Settings',
     url: '/sitesettings',
     iconComponent: { name: 'cilSettings'},
+    attributes: {
+      "Permission" : Permissions.ADMIN
+    }
+  },
+  {
+    name: 'Audit Logs',
+    url: '/auditlogs',
+    iconComponent: { name: 'cilNotes'},
+    attributes: {
+      "Permission" : Permissions.SUPER_USER
+    }
+  },
+  {
+    name: 'Scheduled Tasks',
+    url: '/scheduledtasks',
+    iconComponent: { name: 'cilAvTimer'},
+    attributes: {
+      "Permission" : Permissions.SUPER_USER
+    },
+    badge: {
+      color: 'info',
+      text: 'V1'
+    },
   },
   {
     name: 'Help',

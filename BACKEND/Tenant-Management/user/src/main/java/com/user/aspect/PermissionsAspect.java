@@ -57,14 +57,14 @@ public class PermissionsAspect {
 				if (permissions.length > 0 && empPermissions.isEmpty()) {
 					Log.user.error("User doesnt seem to have required permission to access this endpoint");
 					Log.user.debug("Required permission(s) to access this endpoint {}", permissions);
-					throw new InvalidUserPermission(LocaleUtil.getLocalisedString(UserMessages.PERMISSION_DENIED.name(),
+					throw new InvalidUserPermission(LocaleUtil.getLocalisedString(UserMessages.PERMISSION_DENIED.getKey(),
 							null, BaseSession.getLocale()));
 				}
 				if (!Stream.of(permissions).filter(prem -> empPermissions.contains(prem.getPermissionUniqueName()))
 						.findFirst().isPresent()) {
-					Log.user.error("Authorization denied for user to acces this endpoint");
+					Log.user.error("Authorization denied for user to access this endpoint");
 					Log.user.debug("Required permission(s) to access this endpoint {}", permissions);
-					throw new InvalidUserPermission(LocaleUtil.getLocalisedString(UserMessages.PERMISSION_DENIED.name(),
+					throw new InvalidUserPermission(LocaleUtil.getLocalisedString(UserMessages.PERMISSION_DENIED.getKey(),
 							null, BaseSession.getLocale()));
 				}
 			}

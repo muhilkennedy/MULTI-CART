@@ -45,6 +45,10 @@ export class OnboardEmployeeComponent implements OnInit {
     return CommonUtil.getFieldError(fieldGroup, fieldName, this.translate);
   }
 
+  showOthersText(length: any){
+    return length > 2 ? this.translate.transform("others") : this.translate.transform("other");
+  }
+
   advFormGroup = this._formBuilder.group({
     roles: ['', Validators.required],
     file: ['', Validators.required],

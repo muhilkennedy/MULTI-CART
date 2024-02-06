@@ -15,24 +15,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import com.base.entity.ConfigType;
+import com.base.server.BaseSession;
 import com.base.service.ConfigurationService;
 import com.base.util.Log;
 import com.base.util.PropertiesUtil;
+import com.platform.configuration.ConfigurationFactory;
 import com.platform.exception.CryptoException;
 import com.platform.messages.ConfigurationType;
 import com.platform.messages.StoreType;
+import com.platform.service.Configurable;
 import com.platform.service.GoogleStorageService;
 import com.platform.service.NFSStorageService;
 import com.platform.service.StorageService;
 import com.platform.util.FileCryptoUtil;
 import com.platform.util.FileUtil;
 
+import jakarta.annotation.PostConstruct;
+
 /**
  * @author Muhil
  * Initialize storage objects.
  */
 @Configuration
-public class StorageConfiguration {
+public class StorageConfiguration implements Configurable {
 
 	@Value("${spring.application.name}")
 	private String appName;
@@ -49,6 +54,7 @@ public class StorageConfiguration {
 	@Autowired
 	private ConfigurationService configService;
 
+	@PostConstruct
 	public void setUpStorageServices() throws IOException, CryptoException {
 		// ResourceUtils.getFile("classpath:gcs/config.json")
 		if (PropertiesUtil.isProdDeployment()) {
@@ -76,6 +82,7 @@ public class StorageConfiguration {
 		}
 		StorageService.getStorage().initDefaultStore(StoreType.GCP); // GCP will be default store.
 		Log.base.info("----- Default Storage type {} -----", StoreType.GCP.name());
+		this.register();
 	}
 
 	private void initGCPForTenants() throws IOException {
@@ -88,6 +95,25 @@ public class StorageConfiguration {
 		Map<Long, String> bucketMap = bucketConfigs.stream()
 				.collect(Collectors.toMap(ConfigType::getTenantid, ConfigType::getVal));
 		GoogleStorageService.initForTenants(storageMap, bucketMap);
+	}
+	
+	@Override
+	public void register() {
+		ConfigurationFactory.getInstance().register(ConfigurationType.STORAGE, this);
+	}
+
+	@Override
+	public void applyConfiguration() {
+		try {
+			ConfigType storageConfig = configService.getConfigIfPresent(StoreType.GCP_CONSTANTS.GCPCONFIG.name(),
+					ConfigurationType.STORAGE);
+			ConfigType bucketConfig = configService.getConfigIfPresent(StoreType.GCP_CONSTANTS.GCPBUCKET.name(),
+					ConfigurationType.STORAGE);
+			GoogleStorageService.getInstance().updateTenantConfig(BaseSession.getTenantId(), storageConfig.getVal(),
+					bucketConfig.getVal());
+		} catch (IOException e) {
+			Log.base.error("Failed to setup storage for tenant {} with error {}", BaseSession.getTenantUniqueName(), e);
+		}
 	}
 
 }

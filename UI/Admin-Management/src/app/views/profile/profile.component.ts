@@ -76,7 +76,20 @@ export class ProfileComponent implements OnInit {
   changeLanguage(langCode: string) {
     this.translate.use(langCode);
     this.cookieService.set("lang", langCode);
-    window.location.reload();
+    this.spinner.show();
+    this.userService.updateUserLocale(langCode)
+      .subscribe({
+        next: (resp: any) => {
+          this.notification.fireAndForget({message : "User Locale updated"}, NotificationType.INFO);
+        },
+        error: (err: any) => {
+          this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+          this.spinner.hide();
+        },
+        complete: () => {
+          window.location.reload();
+        }
+      });
   }
 
   onSecondartMailUpdate() {

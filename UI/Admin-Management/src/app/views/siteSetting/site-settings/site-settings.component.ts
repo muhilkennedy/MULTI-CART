@@ -133,10 +133,13 @@ export class SiteSettingsComponent implements OnInit {
       .subscribe(
         {
           next: (resp: any) => {
-            this.loadEmailConfig();
+            this.notification.fireAndForget(CommonUtil.generateSimpleNotificationMessage("Email Configurations Updated"), NotificationType.WARNING);
           },
           error: (err: any) => {
             this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+            this.spinner.hide();
+          },
+          complete: () => {
             this.spinner.hide();
           }
         }
@@ -176,27 +179,13 @@ export class SiteSettingsComponent implements OnInit {
       .subscribe(
         {
           next: (resp: any) => {
-            this.loadGCPConfig();
+            this.notification.fireAndForget(CommonUtil.generateSimpleNotificationMessage("Storage Configuration Updated"), NotificationType.WARNING);
           },
           error: (err: any) => {
             this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
             this.spinner.hide();
-          }
-        }
-      );
-  }
-
-  loadGCPConfig() {
-    this.siteService.loadNewStorageConfig()
-      .subscribe(
-        {
-          next: (resp: any) => {
-            this.notification.fireAndWaitWarn({ message: "Storage configurations has been updated!" });
           },
-          error: (err: any) => {
-            this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
-          },
-          complete: () => {
+          complete: () =>{
             this.spinner.hide();
           }
         }

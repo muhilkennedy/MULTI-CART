@@ -117,7 +117,7 @@
                                 {{advFormGroup.controls['roles'].value?.[0] || ''}}
                                 <span *ngIf="(advFormGroup.controls['roles'].value?.length || 0) > 1">
                                     (+{{(advFormGroup.controls['roles'].value?.length || 0) - 1}}
-                                    {{advFormGroup.controls['roles'].value?.length === 2 ? 'other' : 'others'}})
+                                    {{ showOthersText(advFormGroup.controls['roles'].value?.length) }})
                                 </span>
                             </mat-select-trigger>
                             <mat-option *ngFor="let rl of allRoles" [value]="rl.rolename">{{rl.rolename}}</mat-option>

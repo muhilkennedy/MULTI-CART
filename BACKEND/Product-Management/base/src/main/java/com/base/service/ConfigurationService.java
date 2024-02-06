@@ -1,6 +1,7 @@
 package com.base.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,10 @@ import org.springframework.stereotype.Service;
 import com.base.entity.BaseEntity;
 import com.base.entity.ConfigType;
 import com.base.jpa.repository.ConfigTypeRepository;
+import com.base.messages.ConfigRequest;
+import com.platform.configuration.ConfigurationFactory;
 import com.platform.messages.ConfigurationType;
+import com.platform.service.Configurable;
 
 /**
  * @author Muhil
@@ -44,26 +48,44 @@ public class ConfigurationService implements BaseService {
 		return configRepository.save(config);
 	}
 	
-	public ConfigType createConfig(String key, String value, ConfigurationType type) {
-		ConfigType config = getConfigIfPresent(key, type);
-		if(config == null) {
-			config = new ConfigType();
-			config.setName(key);
-			config.setConfigtype(type.name());
+	private void applyConfigForTenant(ConfigurationType type) {
+		Optional<Configurable> configurable = ConfigurationFactory.getInstance().getConfigurable(type);
+		if(configurable.isPresent()) {
+			configurable.get().applyConfiguration();
 		}
-		config.setVal(value);
-		return configRepository.saveAndFlush(config);
 	}
 	
-	public ConfigType createConfig(String key, String value, String type) {
+	public ConfigType createOrUpdateConfig(String key, String value, ConfigurationType type) {
+		return createOrUpdateConfig(key, value, type.name());
+	}
+
+	public ConfigType createOrUpdateConfig(String key, String value, String type) {
 		ConfigType config = getConfigIfPresent(key, type);
-		if(config == null) {
+		if (config == null) {
 			config = new ConfigType();
 			config.setName(key);
-			config.setConfigtype(type); //TODO: validate against enum to assert
+			config.setConfigtype(type);
 		}
 		config.setVal(value);
-		return configRepository.saveAndFlush(config);
+		configRepository.saveAndFlush(config);
+		applyConfigForTenant(ConfigurationType.valueOf(type));
+		return config;
+	}
+
+	public void createOrUpdateConfigs(List<ConfigRequest> requestList) {
+		requestList.stream().forEach(request -> {
+			ConfigType config = getConfigIfPresent(request.getKey(), request.getType());
+			if (config == null) {
+				config = new ConfigType();
+				config.setName(request.getKey());
+				config.setConfigtype(request.getType());
+			}
+			config.setVal(request.getValue());
+			configRepository.saveAndFlush(config);
+		});
+		requestList.stream().map(request -> ConfigurationType.valueOf(request.getType())).distinct().forEach(type -> {
+			applyConfigForTenant(type);
+		});
 	}
 
 	/**
@@ -80,11 +102,7 @@ public class ConfigurationService implements BaseService {
 	}
 	
 	public ConfigType getConfigIfPresent(String name, ConfigurationType type) {
-		List<ConfigType> config = configRepository.findByConfig(name, type.name());
-		if (config != null && !config.isEmpty()) {
-			return config.get(0);
-		}
-		return null;
+		return getConfigIfPresent(name, type.name());
 	}
 	
 	public ConfigType getConfigIfPresent(String name, String type) {

@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.base.entity.FileStore;
-import com.base.server.BaseSession;
-import com.base.service.ConfigurationService;
 import com.base.service.FileStoreService;
 import com.base.util.BaseUtil;
 import com.platform.annotations.UserPermission;
@@ -31,7 +28,6 @@ import com.platform.messages.ConfigurationType;
 import com.platform.messages.GenericResponse;
 import com.platform.messages.Response;
 import com.platform.messages.StoreType;
-import com.platform.service.StorageService;
 import com.platform.user.Permissions;
 import com.platform.util.FileUtil;
 
@@ -48,9 +44,6 @@ public class FileStoreController {
 
 	@Autowired
 	private FileStoreService fileService;
-	
-	@Autowired
-	private ConfigurationService configService;
 
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_PROMOTIONS })
 	@GetMapping(value = "/download/{fileId}")
@@ -121,7 +114,7 @@ public class FileStoreController {
 				.setDataList(StoreType.GCP_CONSTANTS.stream().toList()).build();
 	}
 	
-	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	/*@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
 	@PatchMapping(value = "/gcp/loadconfig", produces = MediaType.APPLICATION_JSON_VALUE)
 	public GenericResponse<?> loadTenantEmailConfig() throws IOException {
 		GenericResponse<?> response = new GenericResponse<>();
@@ -134,6 +127,6 @@ public class FileStoreController {
 		StorageService.getStorage(StoreType.GCP).updateTenantConfig(BaseSession.getTenantId(), storageConfig,
 				storageBucketConfig);
 		return response.setStatus(Response.Status.OK).build();
-	}
+	}*/
 
 }

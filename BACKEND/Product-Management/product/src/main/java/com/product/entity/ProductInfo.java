@@ -2,17 +2,17 @@ package com.product.entity;
 
 import java.math.BigDecimal;
 
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import com.base.entity.MultiTenantEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.platform.annotations.ClassMetaProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -27,10 +27,6 @@ public class ProductInfo extends MultiTenantEntity {
 
 	private static final long serialVersionUID = 1L;
 	
-	@FullTextField
-	@Column(name = "BARCODE")
-	private String barcode;
-	
 	@Column(name = "MRP")
 	private int mrp;
 	
@@ -40,24 +36,17 @@ public class ProductInfo extends MultiTenantEntity {
 	@Column(name = "PRICE")
 	private int price;
 	
-	@Column(name = "EXPIRY")
-	private String expiry;
-	
 	@Column(name = "IMAGE")
 	private String image;
 	
-	@JsonIgnore
-	@OneToOne
+	@Column(name = "SIZE")
+	private String size;
+
+	//@JsonBackReference
+	@JsonIgnoreProperties(value = {"infos"})
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "PRODUCTID", referencedColumnName = "ROOTID", nullable = false, updatable = false)
 	private Product product;
-
-	public String getBarcode() {
-		return barcode;
-	}
-
-	public void setBarcode(String barcode) {
-		this.barcode = barcode;
-	}
 
 	public int getMrp() {
 		return mrp;
@@ -83,14 +72,6 @@ public class ProductInfo extends MultiTenantEntity {
 		this.price = price;
 	}
 
-	public String getExpiry() {
-		return expiry;
-	}
-
-	public void setExpiry(String expiry) {
-		this.expiry = expiry;
-	}
-
 	public String getImage() {
 		return image;
 	}
@@ -105,6 +86,14 @@ public class ProductInfo extends MultiTenantEntity {
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
 	}
 	
 }

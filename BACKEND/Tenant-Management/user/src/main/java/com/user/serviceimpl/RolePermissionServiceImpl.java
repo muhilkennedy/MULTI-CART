@@ -74,8 +74,18 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 				.toList();
 		List<EmployeeRole> er = rolesList.stream()
 				.map(role -> rpDaoService.saveEmployeeRoleMap(new EmployeeRole(employee, role))).toList();
-		employee.setEmployeeeRoles(er);
-		return employee;
+		//employee.setEmployeeeRoles(er);
+		//empService.refreshObjectInCache(employee);
+		return (Employee) empService.saveAndFlush(employee);
+	}
+	
+	@Override
+	public Employee removeRolesForEmployee(Employee employee, List<Long> roleIds) {
+		List<EmployeeRole> erList = employee.getEmployeeeRoles();
+		rpDaoService.deleteEmployeeRoles(employee.getRootid(), roleIds);
+		employee.setEmployeeeRoles(erList.stream().filter(er -> !roleIds.contains(er.getRoleid())).toList());
+		//empService.refreshObjectInCache(employee);
+		return (Employee) empService.saveAndFlush(employee);
 	}
 
 	@Override
@@ -87,6 +97,11 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 	public Role toggleRoleStatus(Role role) {
 		role.setActive(!role.isActive());
 		return rpDaoService.saveRole(role);
+	}
+	
+	@Override
+	public List<Role> getAllEmployeeRoles(Long employeeId){
+		return rpDaoService.getAllEmployeeRoles(employeeId);
 	}
 
 }
