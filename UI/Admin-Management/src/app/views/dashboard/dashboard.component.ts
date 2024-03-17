@@ -57,4 +57,16 @@ export class DashboardComponent implements OnInit {
      });
   }
 
+  showTaskWidget(){
+    return this.userService.getCurrentUserResponse().employeeInfo.details.showTasks;
+  }
+
+  showNotificationWidget(){
+    return this.userService.getCurrentUserResponse().employeeInfo.details.showNotifications;
+  }
+
+  showCalendarWidget(){
+    return this.userService.getCurrentUserResponse().employeeInfo.details.showCalendar;
+  }
+
 }

@@ -37,7 +37,7 @@ public class SupplierController {
 		return response.setStatus(Response.Status.OK).setData(supplierService.createSupplier(request)).build();
 	}
 	
-	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN })
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN, Permissions.EDIT_PRODUCTS })
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public GenericResponse<Supplier> getAllSuppliers() throws Exception {
 		GenericResponse<Supplier> response = new GenericResponse<>();

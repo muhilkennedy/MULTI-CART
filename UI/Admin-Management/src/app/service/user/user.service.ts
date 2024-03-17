@@ -173,5 +173,12 @@ export class UserService {
     });
   }
 
+  updateWidgetPreference(widget: string, status: boolean): Observable<any> {
+    return this.http.put<any>(`${environment.backendProxy}/employee/preference/widget/${widget}`, null, {
+      params: {
+        status: status
+      }
+    })
+  }
 
 }

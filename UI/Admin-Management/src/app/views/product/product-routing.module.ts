@@ -4,6 +4,7 @@ import { AddProductComponent } from './add-product/add-product.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { ViewProductComponent } from './view-product/view-product.component';
 import { CategoryComponent } from './category/category.component';
+import { EditProductInfoComponent } from './edit-product-info/edit-product-info.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,13 @@ const routes: Routes = [
         component: ViewProductComponent,
         data: {
           title: 'View-Product',
+        },
+      },
+      {
+        path: 'productinfo',
+        component: EditProductInfoComponent,
+        data: {
+          title: 'Product Info',
         },
       },
       {

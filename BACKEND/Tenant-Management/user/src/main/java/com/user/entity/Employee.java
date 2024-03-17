@@ -119,10 +119,8 @@ public class Employee extends User implements BasePermissions {
 				return PlatformUser.getSystemUser().getUserPermissions();
 			}
 			Set<Permissions> permissions = new HashSet<Permissions>();
-			employeeeRoles.stream()
-					.forEach(role -> role.getRole().getPermissions().stream()
-							.peek(rp -> Log.user.debug(rp.getPermission().getPermission())).forEach(rp -> permissions
-									.add(Permissions.getPermissionIfValid(rp.getPermission().getPermission()))));
+			employeeeRoles.stream().forEach(role -> role.getRole().getPermissions().stream().forEach(
+					rp -> permissions.add(Permissions.getPermissionIfValid(rp.getPermission().getPermission()))));
 			return permissions;
 		} catch (RuntimeException e) {
 			// Not a good idea, lets take a look to have a defensive fix here

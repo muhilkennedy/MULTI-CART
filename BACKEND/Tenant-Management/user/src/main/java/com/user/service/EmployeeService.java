@@ -13,7 +13,7 @@ import com.user.entity.User;
  * @author Muhil
  *
  */
-public interface EmployeeService extends UserService {
+public interface EmployeeService extends UserService, EmployeePreferenceService {
 
 	List<Employee> findAllCSAUsers();
 

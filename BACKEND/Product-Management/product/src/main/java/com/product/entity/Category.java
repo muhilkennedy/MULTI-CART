@@ -23,6 +23,7 @@ import jakarta.persistence.Table;
 public class Category extends MultiTenantEntity {
 
 	private static final long serialVersionUID = 1L;
+	public static final String KEY_NAME = "name";
 
 	@FullTextField
 	@Column(name = "NAME")

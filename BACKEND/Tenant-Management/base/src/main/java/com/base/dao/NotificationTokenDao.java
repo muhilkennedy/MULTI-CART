@@ -7,9 +7,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.base.entity.BaseEntity;
-import com.base.entity.Notificationtoken;
-import com.base.reactive.repository.NotificationTokenRepository;
-import com.base.server.BaseSession;
+import com.base.entity.NotificationToken;
+import com.base.jpa.repository.NotificationTokenRepository;
 import com.base.service.BaseDaoService;
 import com.base.util.CacheUtil;
 
@@ -20,30 +19,26 @@ import com.base.util.CacheUtil;
 public class NotificationTokenDao implements BaseDaoService  {
 	
 	@Autowired
-	private NotificationTokenRepository tokenRepo;
+	private NotificationTokenRepository tknRepo;
 
 	@Override
 	public BaseEntity save(BaseEntity obj) {
-		// TODO Auto-generated method stub
-		return null;
+		return tknRepo.save((NotificationToken) obj);
 	}
 
 	@Override
 	public BaseEntity saveAndFlush(BaseEntity obj) {
-		// TODO Auto-generated method stub
-		return null;
+		return tknRepo.saveAndFlush((NotificationToken) obj);
 	}
 
 	@Override
 	public BaseEntity findById(Long rootId) {
-		// TODO Auto-generated method stub
-		return null;
+		return tknRepo.findById(rootId).get();
 	}
 
 	@Override
 	public void delete(BaseEntity obj) {
-		// TODO Auto-generated method stub
-		
+		tknRepo.deleteById(obj.getObjectId());
 	}
 
 	@Override
@@ -54,13 +49,20 @@ public class NotificationTokenDao implements BaseDaoService  {
 
 	@Override
 	public void deleteById(Long rootId) {
-		// TODO Auto-generated method stub
-		
+		tknRepo.deleteById(rootId);
 	}
 	
 	@Cacheable(value = CacheUtil.DEFAULT_CACHE_NAME, key = "#token")
-	public Notificationtoken findNotificationForToken(Long tenantId, String token) {
-		return tokenRepo.findNotificationForToken(BaseSession.getTenantId(), token).block();
+	public NotificationToken findNotificationByToken(String token) {
+		return tknRepo.findNotificationForToken(token);
+	}
+	
+	public List<NotificationToken> findAllUserTokens(Long userId){
+		return tknRepo.findAllUserTokens(userId);
+	}
+	
+	public void deleteAllTokensForUser(Long userId) {
+		tknRepo.deleteTokensForUser(userId);
 	}
 
 }

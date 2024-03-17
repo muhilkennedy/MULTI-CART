@@ -134,7 +134,8 @@ export class OnboardEmployeeComponent implements OnInit {
   }
 
   action() {
-    if (!CommonUtil.isNullOrEmptyOrUndefined(this.assigneeControl.value) && this.assigneeControl.value!.length > 3) {
+    if (!CommonUtil.isNullOrEmptyOrUndefined(this.assigneeControl.value) && this.assigneeControl.value!.length > 3
+        && (this.assigneeControl.value != this.selectedAssignee)) {
       this.loadEmployees();
     }
   }

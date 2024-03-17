@@ -68,7 +68,7 @@ public class FileStoreController {
 	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.ADMIN, Permissions.MANAGE_PROMOTIONS })
 	@PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<FileStore> updateEmployeeDocumentProof(@RequestParam("file") MultipartFile file,
+	public GenericResponse<FileStore> uploadDocument(@RequestParam("file") MultipartFile file,
 			@RequestParam("internalFile") boolean internalFile) throws IllegalStateException, IOException {
 		GenericResponse<FileStore> response = new GenericResponse<>();
 		return response

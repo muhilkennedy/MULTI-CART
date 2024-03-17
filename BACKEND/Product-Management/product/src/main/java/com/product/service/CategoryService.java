@@ -20,4 +20,6 @@ public interface CategoryService extends BaseService {
 	
 	List<FlattenedCategory> getFlattenedCategories();
 
+	List searchCategories(String text);
+
 }

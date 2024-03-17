@@ -1,11 +1,126 @@
 <c-row ngPreserveWhitespaces>
-    <c-col xs="12">
+    <c-col xs="6">
         <c-card class="mb-4">
             <c-card-header>
-                <strong>{{"Product Manager" | translate}}</strong>
+                <strong>{{"Create Product" | translate}}</strong>
             </c-card-header>
             <c-card-body style="overflow: auto;">
+                <form [formGroup]="basicFormGroup" (action)="createProduct()">
+                    <mat-form-field>
+                        <mat-label>{{"Product Supplier" | translate}}</mat-label>
+                        <mat-select name="suppliers" formControlName="supplier">
+                            <mat-select-trigger>
+                                {{ getSupplierName() }}
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let sup of allSuppliers" [value]="sup">{{sup.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <app-spinner [show]="loadCategory"></app-spinner>
+                        <mat-label>{{"Product Category" | translate}}</mat-label>
+                        <input type="text" placeholder="search category" aria-label="category" matInput
+                            (keyup)="searchCategory()" [matAutocomplete]="auto" formControlName="categorySearchName">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let option of allCategories" [value]="option.name" (onSelectionChange)="selectCategory(option)">  
+                                {{option.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>{{"Product Name" | translate}}</mat-label>
+                        <input matInput type="text" formControlName="name">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>{{"Product Description" | translate}}</mat-label>
+                        <input matInput type="text" formControlName="description">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>{{"Product Measurement" | translate}}</mat-label>
+                        <mat-select name="measurements" formControlName="measurement">
+                            <mat-select-trigger style="color: blueviolet;">
+                                {{basicFormGroup.controls['measurement'].value || ''}}
+                            </mat-select-trigger>
+                            <mat-option *ngFor="let measurement of allMeasurements" [value]="measurement">{{measurement}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button cButton class="me-1" variant="outline" size="sm" color="success" (click)="createProduct()">
+                        {{"CREATE" | translate}}
+                    </button>
+                </form>
+                
             </c-card-body>
         </c-card>
     </c-col>
+
+    <c-col xs="6">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>{{"New Product Details" | translate}}</strong>
+            </c-card-header>
+            <c-card-body style="overflow: auto;">
+                <table>
+                    <tr>
+                        <td>
+                            {{ "Supplier" | translate }}
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            {{ this.createdProduct.supplierid }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ "Category" | translate }}
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            {{ this.createdProduct.categoryid }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ "Name" | translate }}
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            {{ this.createdProduct.name }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ "Description" | translate }}
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            {{ this.createdProduct.description }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ "Measurement" | translate }}
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            {{ this.createdProduct.measurement }}
+                        </td>
+                    </tr>
+                </table>
+            </c-card-body>
+        </c-card>
+    </c-col>
+
+</c-row>
+
+<c-row ngPreserveWhitespaces>
+    <app-product-info [product]="createdProduct"></app-product-info>
 </c-row>

@@ -1,0 +1,179 @@
+<c-col xs="12">
+    <c-card class="mb-4">
+        <c-card-header>
+            <strong>{{"Product Info" | translate}}</strong>
+            <button *ngIf="edit" style="float: right;" cButton class="me-1" color="primary" variant="outline" size="sm"
+                    (click)="toggleInfoModal()"> {{"Add Product Info" | translate | uppercase}}</button>
+            <ng-container *ngTemplateOutlet="info"></ng-container>
+        </c-card-header>
+        <c-card-body class="mat-elevation-z8" style="overflow: auto;">
+            <table mat-table [dataSource]="productInfos" multiTemplateDataRows>
+            
+                <!-- Size Column -->
+                <ng-container matColumnDef="size">
+                    <th mat-header-cell *matHeaderCellDef> {{"Size" | translate}} ({{product.measurement}}) </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.size}}  
+                    </td>
+                </ng-container>
+        
+                <!-- MRP Column -->
+                <ng-container matColumnDef="mrp">
+                    <th mat-header-cell *matHeaderCellDef> {{"MRP" | translate}} </th>
+                    <td mat-cell *matCellDef="let element">{{element.mrp}} </td>
+                </ng-container>
+
+                <!-- Discount Column -->
+                <ng-container matColumnDef="discount">
+                    <th mat-header-cell *matHeaderCellDef> {{"Discount" | translate}} </th>
+                    <td mat-cell *matCellDef="let element">{{element.discount}} </td>
+                </ng-container>
+        
+                <!-- Price Column -->
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef> {{"Price" | translate}} </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.price}}
+                    </td>
+                </ng-container>
+        
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> {{"Actions" | translate}} </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-icon *ngIf="edit" color="primary" class="maticon" matTooltip= "update inventory" (click)="openInventoryModal(element.rootid)">store</mat-icon>
+                        <ng-container *ngTemplateOutlet="inventory"></ng-container>
+                        <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+                            <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                            <mat-icon  *ngIf="!(expandedElement === element)">keyboard_arrow_down</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+        
+                <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                <ng-container matColumnDef="expandedDetail">
+                    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                    <div class="example-element-detail"
+                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <table>
+                            <tr>
+                                <th>
+                                    {{'Barcode' | translate | uppercase}}
+                                </th>
+                                <th>
+                                    {{'Available Quantity' | translate | uppercase}}
+                                </th>
+                                <th>
+                                    {{'Expiry' | translate | uppercase}}
+                                </th>
+                            </tr>
+                            <tr *ngFor="let inv of element.inventory">
+                                <td>
+                                    <div *ngIf="(highlightBarcode == inv.barcode); else plain"><mark>{{inv.barcode}}</mark></div>
+                                    <ng-template #plain>{{inv.barcode}}</ng-template>
+                                </td>
+                                <td>
+                                    {{inv.availablequantity}}
+                                </td>
+                                <td>
+                                    {{inv.expiry}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+            </table>
+        </c-card-body>
+    </c-card>
+</c-col>
+
+
+<ng-template #info>
+    <c-modal id="infoModal" [visible]="showInfoModal" (visibleChange)="handleInfoModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>{{ "Add Product Info" | translate}}</h5>
+            <button (click)="toggleInfoModal()" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            <mat-form-field [formGroup]="infoFormGroup" style="width: 100%;">
+                <mat-label>{{"Product Size" | translate }} ({{product.measurement}})</mat-label>
+                <input matInput name="psize" placeholder="Product Size" formControlName="psize" required>
+                <mat-error *ngIf="hasError(infoFormGroup, 'psize')">{{getError(infoFormGroup,
+                    'psize')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field [formGroup]="infoFormGroup" style="width: 100%;">
+                <mat-label>{{"Product MRP" | translate }}</mat-label>
+                <input matInput name="mrp" placeholder="Maximum Retail Price" formControlName="mrp" required>
+                <mat-error *ngIf="hasError(infoFormGroup, 'mrp')">{{getError(infoFormGroup,
+                    'mrp')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field [formGroup]="infoFormGroup" style="width: 100%;">
+                <mat-label>{{"Product Price" | translate }}</mat-label>
+                <input matInput name="price" placeholder="Product Final Price" formControlName="price" required>
+                <mat-error *ngIf="hasError(infoFormGroup, 'price')">{{getError(infoFormGroup,
+                    'price')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field style="width: 100%;">
+                <mat-label>{{"Product Discount" | translate }} (auto calculated)</mat-label>
+                <input disabled="true" matInput name="discount" placeholder="Product Discount (auto calculated)" [value]="getDiscount()">
+                <mat-error *ngIf="hasError(infoFormGroup, 'discount')">{{getError(infoFormGroup,
+                    'discount')}}</mat-error>
+            </mat-form-field>
+            
+            <label cLabel for="formFile">{{"Upload Main Product Picture" | translate}}</label>
+            <input #file cFormControl id="formFile" name="chooser" accept="image/*" type="file" (change)="onPictureSeclected($event)"/>
+            
+        </c-modal-body>
+        <c-modal-footer>
+            <button (click)="toggleInfoModal()" cButton color="secondary">
+                {{"CLOSE" | translate}}
+            </button>
+            <button (click)="addProductInfo()" cButton color="success">
+                {{"Add New" | translate | uppercase}}
+            </button>
+        </c-modal-footer>
+    </c-modal>
+</ng-template>
+
+<ng-template #inventory>
+    <c-modal id="inventoryModal" [visible]="showInventoryModal" (visibleChange)="handleInventoryModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>{{ "Update Inventory" | translate}}</h5>
+            <button (click)="toggleInventoryModal()" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            <mat-form-field [formGroup]="invFormGroup" style="width: 100%;">
+                <mat-label>{{"Barcode" | translate }}</mat-label>
+                <input matInput name="barcode" placeholder="Barcode/Unique Key" formControlName="barcode" required>
+                <mat-error *ngIf="hasError(invFormGroup, 'barcode')">{{getError(invFormGroup,
+                    'barcode')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field [formGroup]="invFormGroup" style="width: 100%;">
+                <mat-label>{{"Quantity" | translate }}</mat-label>
+                <input matInput name="quantity" placeholder="Product Quantity" formControlName="quantity" required>
+                <mat-error *ngIf="hasError(invFormGroup, 'quantity')">{{getError(invFormGroup,
+                    'quantity')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field [formGroup]="invFormGroup" style="width: 100%;">
+                <mat-label>{{"Expiry" | translate }}</mat-label>
+                <input matInput name="expiry" placeholder="Expiry" formControlName="expiry" required>
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-error *ngIf="hasError(invFormGroup, 'expiry')">{{getError(invFormGroup,
+                    'expiry')}}</mat-error>
+            </mat-form-field>
+        </c-modal-body>
+        <c-modal-footer>
+            <button (click)="toggleInventoryModal()" cButton color="secondary">
+                {{"CLOSE" | translate}}
+            </button>
+            <button (click)="updateProductInventory()" cButton color="info">
+                {{"UPDATE" | translate}}
+            </button>
+        </c-modal-footer>
+    </c-modal>
+</ng-template>

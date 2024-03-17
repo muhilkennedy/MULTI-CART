@@ -31,6 +31,7 @@ import com.user.entity.Employee;
 import com.user.entity.EmployeeInfo;
 import com.user.entity.User;
 import com.user.entity.UserInfo;
+import com.user.exception.EmployeeWidgetPreferences;
 import com.user.exception.UserException;
 import com.user.service.EmployeeService;
 
@@ -269,6 +270,25 @@ public class EmployeeServiceImpl implements EmployeeService {
 		User user = (User) BaseSession.getUser();
 		user.setLocale(langCode);
 		empDaoService.save(user);
+	}
+	
+	@Override
+	public User updateWidgetVisiblityPreference(EmployeeWidgetPreferences widget, boolean status) {
+		Employee employee = (Employee) BaseSession.getUser();
+		switch (widget) {
+		case NOTIFICATIONS:
+			employee.getEmployeeInfo().getDetails().setShowNotifications(status);
+			break;
+		case TASKS:
+			employee.getEmployeeInfo().getDetails().setShowTasks(status);
+			break;
+		case CALENDAR:
+			employee.getEmployeeInfo().getDetails().setShowCalendar(status);
+			break;
+		default:
+			throw new UnsupportedOperationException();
+		}
+		return (User) empDaoService.save(employee);
 	}
 
 }

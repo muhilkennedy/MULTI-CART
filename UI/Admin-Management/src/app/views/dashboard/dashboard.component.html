@@ -2,14 +2,14 @@
 <app-spinner></app-spinner>
 <c-row xs="auto">
     <c-col xs="6">
-        <app-pendingtasks-widget></app-pendingtasks-widget>
+        <app-pendingtasks-widget *ngIf="showTaskWidget()"></app-pendingtasks-widget>
     </c-col>
     <c-col xs="6">
-        <app-notifications-widget></app-notifications-widget>
+        <app-notifications-widget *ngIf="showNotificationWidget()"></app-notifications-widget>
     </c-col>
 </c-row>
 <c-row>
     <c-col xs=12>
-        <app-calendar-widget></app-calendar-widget>
+        <app-calendar-widget *ngIf="showCalendarWidget()"></app-calendar-widget>
     </c-col>
 </c-row>

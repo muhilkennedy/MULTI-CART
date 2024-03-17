@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 import com.base.bgwork.BGWorkUtil;
 import com.base.entity.BaseEntity;
 import com.base.entity.Notification;
-import com.base.entity.Notificationtoken;
+import com.base.entity.NotificationToken;
 import com.base.messages.NotificationRequest;
 import com.base.reactive.repository.NotificationRepository;
 import com.base.scheduledtask.BroadCastNotificationJob;
@@ -70,8 +70,8 @@ public class NotificationService implements BaseService {
 	
 	private void sendOutPushNotification(NotificationRequest notificationRequest) {
 		if (notificationRequest.isPushNotification()) {
-			Flux<Notificationtoken> tokens = tokenService.findAllUserTokens(notificationRequest.getUserId());
-			tokens.toStream().forEach(token -> {
+			List<NotificationToken> tokens = tokenService.findAllUserTokens(notificationRequest.getUserId());
+			tokens.stream().forEach(token -> {
 				DirectNotification directNotification = new DirectNotification();
 				directNotification.setMessage(notificationRequest.getContent());
 				directNotification.setTitle(notificationRequest.getTitle());
