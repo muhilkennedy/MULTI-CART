@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.base.entity.BaseEntity;
 import com.base.server.BaseSession;
+import com.base.service.HibernateSearchService;
 import com.product.dao.CategoryDao;
 import com.product.entity.Category;
 import com.product.messages.CategoryRequest;
@@ -21,6 +22,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private CategoryDao categoryDao;
+	
+	@Autowired
+	private HibernateSearchService searchService;
 
 	@Override
 	public BaseEntity findById(Long rootId) {
@@ -54,5 +58,9 @@ public class CategoryServiceImpl implements CategoryService {
 	public void deleteCategory(Long rootId) {
 		categoryDao.deleteById(rootId);
 	}
-
+	
+	@Override
+	public List searchCategories(String text) {
+		return searchService.fuzzySearch(Category.class, text, Integer.MAX_VALUE, Category.KEY_NAME);
+	}
 }

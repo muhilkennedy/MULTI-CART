@@ -46,6 +46,10 @@ public class ProductDao implements BaseDaoService {
 		return productRepository.findAll(pageable);
 	}
 
+	public Page<Product> findAllActive(Pageable pageable) {
+		return productRepository.findAllActiveProducts(pageable);
+	}
+	
 	@Override
 	public void delete(BaseEntity obj) {
 		productRepository.delete((Product) obj);
@@ -67,6 +71,18 @@ public class ProductDao implements BaseDaoService {
 
 	public ProductInfo findProductInfoById(Long productInfoId) {
 		return productInfoRepository.findById(productInfoId).get();
+	}
+	
+	public Page<Product> findAll(Pageable pageable, boolean includeInactive, Long categoryId, Long supplierId) {
+		if (includeInactive) {
+			return productRepository.findAllProductsIncludeInactive(supplierId, categoryId, pageable);
+		} else {
+			return productRepository.findAllProducts(supplierId, categoryId, pageable);
+		}
+	}
+	
+	public Product findProductByBarcode(String barcode) {
+		return productRepository.findProductByBarcode(barcode);
 	}
 
 }

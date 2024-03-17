@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.base.entity.Notification;
-import com.base.entity.Notificationtoken;
 import com.base.messages.NotificationRequest;
 import com.base.service.NotificationService;
 import com.base.service.NotificationTokenService;
@@ -83,8 +82,7 @@ public class NotificationController {
 			PushMessageService.getInstance().sendNotificationToTarget(request);
 		}
 		request.getUserIds().stream().forEach(userId -> {
-			Flux<Notificationtoken> userTokens = tokenService.findAllUserTokens(userId);
-			userTokens.toStream().forEach(token -> {
+			tokenService.findAllUserTokens(userId).stream().forEach(token -> {
 				request.setTarget(token.getToken());
 				PushMessageService.getInstance().sendNotificationToTarget(request);
 			});

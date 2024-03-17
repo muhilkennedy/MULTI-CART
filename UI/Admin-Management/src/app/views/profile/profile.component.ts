@@ -20,6 +20,10 @@ export class ProfileComponent implements OnInit {
   selectedLanguage: any;
   secondaryemail!: string;
 
+  showCalendar: boolean = false;
+  showNotification: boolean = false;
+  showTasks: boolean = false;
+
   constructor(private userService: UserService, private spinner: SpinnerService,
     private notification: NotificationService, public translate: TranslateService,
     private cookieService: CookieService) {
@@ -29,6 +33,9 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     // this.spinner.show();
     this.user = this.userService.getCurrentUserResponse();
+    this.showCalendar = this.user.employeeInfo.details.showCalendar;
+    this.showTasks = this.user.employeeInfo.details.showTasks;
+    this.showNotification = this.user.employeeInfo.details.showNotifications;
     if (CommonUtil.isNullOrEmptyOrUndefined(this.user)) {
       // for testing only, will not be invoked in prod unless hard refresh happens
       this.userService.pingUser()
@@ -115,6 +122,33 @@ export class ProfileComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  getStatusForWidget(widget: string): boolean{
+    switch(widget){
+      case 'notification' : return this.showNotification;
+      case 'tasks' : return this.showTasks;
+      case 'calendar' : return this.showCalendar;
+    }
+    return false;
+  }
+
+  updateWidgetPreference(widgetName: string){
+    this.spinner.show();
+    this.userService.updateWidgetPreference(widgetName, this.getStatusForWidget(widgetName))
+        .subscribe({
+          next: (resp: any) => {
+            this.userService.setCurrentUserResponse(resp.data);
+            this.notification.fireAndForget({message : "User Preference Updated"}, NotificationType.INFO);
+          },
+          error: (err: any) => {
+            this.notification.fireAndWaitError(CommonUtil.generateErrorNotificationFromResponse(err));
+            this.spinner.hide();
+          },
+          complete: () => {
+            this.spinner.hide();
+          }
+        })
   }
 
 }

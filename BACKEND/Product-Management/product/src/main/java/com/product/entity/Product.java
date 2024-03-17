@@ -27,6 +27,9 @@ public class Product extends MultiTenantEntity {
 
 	private static final long serialVersionUID = 1L;
 	
+	public static final String KEY_NAME = "name";
+	public static final String KEY_DESC = "description";
+	
 	@FullTextField
 	@Column(name = "NAME")
 	private String name;
@@ -43,6 +46,9 @@ public class Product extends MultiTenantEntity {
 	
 	@Column(name = "MEASUREMENT")
 	private String measurement;
+	
+	@Column(name = "SUPPLIERID")
+	private Long supplierid;
 
 	//@JsonManagedReference
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -94,6 +100,14 @@ public class Product extends MultiTenantEntity {
 
 	public void setInfos(List<ProductInfo> infos) {
 		this.infos = infos;
+	}
+
+	public Long getSupplierid() {
+		return supplierid;
+	}
+
+	public void setSupplierid(Long supplierid) {
+		this.supplierid = supplierid;
 	}
 
 }

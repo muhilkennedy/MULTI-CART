@@ -87,6 +87,16 @@ const routes: Routes = [
         loadChildren: () =>
           import('./views/product/product.module').then((m) => m.ProductModule)
       },
+      {
+        path: 'auditlogs',
+        loadChildren: () =>
+          import('./views/auditLog/audit-log.module').then((m) => m.AuditLogsModule)
+      },
+      {
+        path: 'scheduledtasks',
+        loadChildren: () =>
+          import('./views/scheduledTasks/scheduled-tasks.module').then((m) => m.ScheduledTasksModule)
+      },
     ]
   },
   {

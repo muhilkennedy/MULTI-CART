@@ -76,5 +76,13 @@ public class ProductInventoryDao implements BaseDaoService {
 	public ProductInventory findByBarCode(String barcode) {
 		return inventoryRepo.findByBarCode(barcode);
 	}
+	
+	public List<ProductInventory> getAllProductInventory(long infoId) {
+		return inventoryRepo.findAllProductInventory(infoId);
+	}
+
+	public List<ProductInventory> getActiveProductInventory(long infoId) {
+		return inventoryRepo.findActiveProductInventory(infoId);
+	}
 
 }

@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "NOTIFICATIONTOKEN")
 @ClassMetaProperty(code = "NTK")
-public class Notificationtoken extends MultiTenantEntity {
+public class NotificationToken extends MultiTenantEntity {
 
 	private static final long serialVersionUID = 1L;
 

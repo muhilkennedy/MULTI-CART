@@ -85,12 +85,12 @@
         <c-card class="mb-4">
             <c-card-header>
               <strong>{{"Edit Profile" | translate}}</strong>
-              <select style="float: right;" #langSelect (change)="changeLanguage(langSelect.value)">
+              <!-- <select style="float: right;" #langSelect (change)="changeLanguage(langSelect.value)">
                 <option
                   *ngFor="let lang of languages"
                   [value]="lang.code"
                   [attr.selected]="lang.code === translate.currentLang ? '' : null">{{lang.name}}</option>
-              </select>
+              </select> -->
             </c-card-header>
             <c-card-body style="overflow: auto;">
                 <c-row>
@@ -109,6 +109,30 @@
                         <mat-hint>({{"Adviced to update with google mailId for social login" | translate}}!)</mat-hint>
                     </mat-form-field>
                 </c-row>
+            </c-card-body>
+        </c-card>
+
+        <c-card class="mb-4">
+            <c-card-header>
+              <strong>{{"Preferences" | translate}}</strong>
+              <select style="float: right;" #langSelect (change)="changeLanguage(langSelect.value)">
+                <option
+                  *ngFor="let lang of languages"
+                  [value]="lang.code"
+                  [attr.selected]="lang.code === translate.currentLang ? '' : null">{{lang.name}}</option>
+              </select>
+            </c-card-header>
+            <c-card-body style="overflow: auto;">
+                <mat-label>{{"Dashboard Widgets"}}</mat-label>
+                <section class="example-section">
+                    <p><mat-checkbox [(ngModel)]="showCalendar" (click)="updateWidgetPreference('calendar')">{{"Show Calendar" | translate}}</mat-checkbox></p>
+                </section>
+                <section class="example-section">
+                    <p><mat-checkbox [(ngModel)]="showTasks" (click)="updateWidgetPreference('tasks')">{{"Show Tasks" | translate}}</mat-checkbox></p>
+                </section>
+                <section class="example-section">
+                    <p><mat-checkbox [(ngModel)]="showNotification" (click)="updateWidgetPreference('notification')">{{"Show Notification" | translate}}</mat-checkbox></p>
+                </section>
             </c-card-body>
         </c-card>
     </c-col>

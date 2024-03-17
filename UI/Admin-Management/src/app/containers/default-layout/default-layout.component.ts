@@ -82,7 +82,7 @@ export class DefaultLayoutComponent implements OnInit {
             //this.navItems = navItems;
             this.updateLocale();
             //dashbord redirect
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/product/view']);
           },
           error: (error: any) => {
             this.router.navigate(['/login']);

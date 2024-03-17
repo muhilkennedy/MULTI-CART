@@ -1,0 +1,83 @@
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{"TM ScheduledTasks"}}</strong>
+        </c-card-header>
+        <c-card-body style="overflow: auto;">
+            <!-- <div class="mat-elevation-z8" style="overflow: auto;"> -->
+                <table mat-table [dataSource]="tasks" multiTemplateDataRows>
+            
+                    <!-- Job Name Column -->
+                    <ng-container matColumnDef="jobname">
+                        <th mat-header-cell *matHeaderCellDef> {{"Job Name" | translate}} </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.jobname}}
+                        </td>
+                    </ng-container>
+            
+                    <!-- Job Group Column -->
+                    <ng-container matColumnDef="jobgroup">
+                        <th mat-header-cell *matHeaderCellDef> {{"job Group" | translate}} </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.jobgroup}}
+                        </td>
+                    </ng-container>
+            
+                    <!-- Job Status Column -->
+                    <ng-container matColumnDef="jobstatus">
+                        <th mat-header-cell *matHeaderCellDef> {{"Last Status" | translate}} </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.jobstatus}}
+                        </td>
+                    </ng-container>
+            
+                    <!-- TimeUpdated Column -->
+                    <ng-container matColumnDef="timeupdated">
+                        <th mat-header-cell *matHeaderCellDef> {{"Time Updated" | translate}} </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.timeupdated}}
+                        </td>
+                    </ng-container>
+
+                     <!-- Error Info Column -->
+                     <ng-container matColumnDef="errorinfo">
+                        <th mat-header-cell *matHeaderCellDef> {{"Error Info" | translate}} </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.errorinfo}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="expand">
+                        <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+                        <td mat-cell *matCellDef="let element">
+                          <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+                              <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                              <mat-icon  *ngIf="!(expandedElement === element)">keyboard_arrow_down</mat-icon>
+                          </button>
+                        </td>
+                    </ng-container>
+                      <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                    <ng-container matColumnDef="expandedDetail">
+                        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                            <div class="example-element-detail"
+                            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                            {{element.errorinfo}}
+                        </div>
+                        </td>
+                    </ng-container>
+                    
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[25, 50, 100]" (page)="handlePageEvent($event)" [length]="totalPages"
+                    [pageSize]="pageSize" showFirstLastButtons aria-label="Select tasks">
+                </mat-paginator>
+            <!-- </div> -->
+            
+        </c-card-body>
+      </c-card>
+    </c-col>
+</c-row>

@@ -1,6 +1,8 @@
 package com.base.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.base.entity.Audit;
@@ -27,6 +29,10 @@ public class AuditService {
 		audit.setMessage(message);
 		audit.setOperation(operation.name());
 		return auditRepository.saveAndFlush(audit);
+	}
+
+	public Page<Audit> getAuditLogs(Pageable pageable) {
+		return auditRepository.findAll(pageable);
 	}
 
 }

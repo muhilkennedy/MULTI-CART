@@ -5,4 +5,6 @@ package com.product.util;
  */
 public class ProductUtil {
 
+	public static final String PRODUCT_IMAGE_DIR = "PRODUCTS";
+	
 }

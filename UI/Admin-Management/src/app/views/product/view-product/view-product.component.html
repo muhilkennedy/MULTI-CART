@@ -1,1 +1,147 @@
-<p>view-product works!</p>
+<app-spinner></app-spinner>
+<c-row>
+    <c-col xs="3">
+        <c-card class="mb-4">
+            <c-card-header>
+                <strong>{{"Product Filters" | translate}}</strong>
+            </c-card-header>
+            <c-card-body style="overflow: auto;">
+                <mat-form-field [formGroup]="filterFormGroup" style="width: 100%;">
+                    <mat-label>{{"Product Name" | translate }}</mat-label>
+                    <input matInput name="name" placeholder="Search By Name" formControlName="name" (keyup)="searchByName()">
+                </mat-form-field>
+                
+                <mat-label>{{"Search Limit" | translate }}</mat-label>
+                <mat-slider style="width: 90%;" min="0" max="100" step="1" showTickMarks discrete [displayWith]="formatLabel" [formGroup]="filterFormGroup">
+                    <input style="width: 100%;" matSliderThumb formControlName="slider">
+                </mat-slider>
+
+                <hr/>
+
+                <mat-form-field [formGroup]="filterFormGroup" style="width: 100%;">
+                    <mat-label>{{"Supplier" | translate}}</mat-label>
+                    <mat-select name="suppliers" formControlName="supplier">
+                        <mat-select-trigger>
+                            {{ getSupplierName() }}
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let sup of allSuppliers" [value]="sup">{{sup.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field [formGroup]="filterFormGroup" style="width: 100%;">
+                    <app-spinner [show]="loadCategory"></app-spinner>
+                    <mat-label>{{"Category" | translate}}</mat-label>
+                    <input type="text" placeholder="search category" aria-label="category" matInput
+                        (keyup)="searchCategory()" [matAutocomplete]="auto" formControlName="categorySearchName">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of allCategories" [value]="option.name" (onSelectionChange)="selectCategory(option)">  
+                            {{option.name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <section class="example-section" [formGroup]="filterFormGroup">
+                    <p><mat-checkbox formControlName="includeInactive">{{"Include Inactive" | translate}}</mat-checkbox></p>
+                </section>
+
+                <section class="example-section" [formGroup]="filterFormGroup">
+                    <p><mat-checkbox formControlName="outOfStock">{{"Out Of Stock" | translate}}</mat-checkbox></p>
+                </section>
+
+                <section class="example-section" [formGroup]="filterFormGroup">
+                    <p><mat-checkbox formControlName="expired">{{"Expired" | translate}}</mat-checkbox></p>
+                </section>
+                
+                <button  (click)="clearFilter()" cButton color="primary" variant="outline">
+                    {{"Clear Filters" | translate}}
+                </button>
+                <button style="float: right;" (click)="applyFilter()" cButton color="primary" variant="outline">
+                    {{"Apply Filters" | translate}}
+                </button>
+            </c-card-body>
+        </c-card>
+    </c-col>
+    <c-col xs="9">
+        <form (submit)="searchByBarcode()">
+            <mat-form-field style="width: 100%;">
+                <mat-label>{{"Product Barcode" | translate}}</mat-label>
+                <input matInput name="searchtext" id="searchtext" type="text" [(ngModel)]="barcode">
+                <button matSuffix
+                    mat-icon-button >
+                    <mat-icon color="primary">search</mat-icon>
+                </button>
+            </mat-form-field>
+        </form>
+        <table mat-table [dataSource]="products" multiTemplateDataRows>
+            
+            <!-- Id Column -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> {{"ID" | translate}} </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.rootid}}  
+                </td>
+            </ng-container>
+    
+            <!-- NAME Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> {{"Name" | translate}} </th>
+                <td mat-cell *matCellDef="let element">{{element.name}} </td>
+            </ng-container>
+
+            <!-- Rating Column -->
+            <ng-container matColumnDef="rating">
+                <th mat-header-cell *matHeaderCellDef> {{"Rating" | translate}} </th>
+                <td mat-cell *matCellDef="let element">{{element.rating}} </td>
+            </ng-container>
+    
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> {{"Status" | translate}} </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-slide-toggle *ngIf="canEdit; else badge" [checked]="element.active" (change)="toggleProductStatus(element)">
+                    </mat-slide-toggle>
+                    <ng-template #badge>
+                        <c-badge matTooltip="product status"
+                        [color]="element.active? 'success': 'danger'">{{getStatusBadge(element) | translate}}</c-badge>
+                    </ng-template>
+                </td>
+            </ng-container>
+    
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef aria-label="row actions">
+                    <button mat-icon-button aria-label="expand all" (click)="expandAllAction()" [matTooltip]="expandAll? 'Collapse All' : 'Expand All'">
+                        <mat-icon *ngIf="expandAll">keyboard_arrow_up</mat-icon>
+                        <mat-icon *ngIf="!(expandAll)">keyboard_arrow_down</mat-icon>
+                    </button>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button aria-label="expand row" (click)="expandAction($event, element)">
+                      <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                      <mat-icon  *ngIf="!(expandedElement === element)">keyboard_arrow_down</mat-icon>
+                  </button>
+                </td>
+            </ng-container>
+
+             <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+             <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                    <div class="example-element-detail"
+                    [@detailExpand]="element == expandedElement || expandAll ? 'expanded' : 'collapsed'">
+                   <app-product-info style="width: 100%;" [markBarcode]="barcode" [edit]="canEdit" [product]="element" [productInfos]="element.infos"></app-product-info>
+                </div>
+                </td>
+            </ng-container>
+            
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[25, 50, 100]" (page)="handlePageEvent($event)" [length]="totalPages"
+                       [pageSize]="pageSize" showFirstLastButtons aria-label="Select employees">
+        </mat-paginator>
+    </c-col>
+</c-row>
+
+
+  

@@ -38,7 +38,9 @@ import { ProductRoutingModule } from './product-routing.module';
 import { AddProductComponent } from './add-product/add-product.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { ViewProductComponent } from './view-product/view-product.component';
-import { CategoryComponent } from './category/category.component'
+import { CategoryComponent } from './category/category.component';
+import { ProductInfoComponent } from './product-info/product-info.component';
+import { EditProductInfoComponent } from './edit-product-info/edit-product-info.component'
 
 @NgModule({
   imports: [
@@ -80,7 +82,9 @@ import { CategoryComponent } from './category/category.component'
     AddProductComponent,
     EditProductComponent,
     ViewProductComponent,
-    CategoryComponent
+    CategoryComponent,
+    ProductInfoComponent,
+    EditProductInfoComponent
   ],
 })
 export class ProductModule { }
