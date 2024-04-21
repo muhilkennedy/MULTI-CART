@@ -23,14 +23,16 @@ public class ProductResponse {
 	private List<ProductInfoResponse> infos;
 	
 	public ProductResponse(Product product) {
-		this.rootid = product.getRootid();
-		this.name = product.getName();
-		this.description = product.getDescription();
-		this.rating = product.getRating();
-		this.measurement = product.getMeasurement();
-		this.active = product.isActive();
-		if (product.getInfos() != null) {
-			this.infos = product.getInfos().stream().map(info -> new ProductInfoResponse(info)).toList();
+		if(product != null) {
+			this.rootid = product.getRootid();
+			this.name = product.getName();
+			this.description = product.getDescription();
+			this.rating = product.getRating();
+			this.measurement = product.getMeasurement();
+			this.active = product.isActive();
+			if (product.getInfos() != null) {
+				this.infos = product.getInfos().stream().map(info -> new ProductInfoResponse(info)).toList();
+			}
 		}
 	}
 

@@ -48,8 +48,8 @@ export class ProductLogComponent implements OnInit {
     this.auditService.getPMLogs(this.pageIndex, this.pageSize)
         .subscribe({
           next: (resp: any) => {
-              this.logs = resp.data.content;
-              this.totalPages = resp.data.totalElements;
+            this.logs = resp.data.content;
+            this.totalPages = resp.data.totalElements;
           },
           error: (err: any) => {
 

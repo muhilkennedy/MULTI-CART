@@ -1,0 +1,57 @@
+<c-card class="mb-4">
+    <c-card-header>
+        <strong>{{"Product Specifications" | translate}}</strong>
+        <button style="float: right;" cButton class="me-1" variant="outline" size="sm" (click)="backAction()"> {{"Back" |
+            translate}}</button>
+        <button style="float: right;" cButton class="me-1" variant="outline" size="sm" color="success" (click)="updateProductSepcs()"> {{"Update Specifications" |
+            translate}}</button>
+    </c-card-header>
+    <c-card-body class="mat-elevation-z8" style="overflow: auto;">
+        <mat-form-field style="width: 100%;">
+            <mat-label>{{"Product Model" | translate }}</mat-label>
+            <input matInput name="model" placeholder="Model" [(ngModel)]="model">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+            <mat-label>{{"Product Weight" | translate }}</mat-label>
+            <input matInput name="weight" placeholder="ex: 67Kg" [(ngModel)]="weight">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+            <mat-label>{{"Product Color" | translate }}</mat-label>
+            <input matInput name="color" placeholder="ex: RED" [(ngModel)]="colour">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+            <mat-label>{{"Product Origin" | translate }}</mat-label>
+            <input matInput name="origin" placeholder="ex: India" [(ngModel)]="origin">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+            <mat-label>{{"Product Dimensions" | translate }}</mat-label>
+            <input matInput name="dimensions" placeholder="ex: 22L * 12W * 88H CM" [(ngModel)]="dimensions">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+            <mat-label>{{"Product Manufacturer" | translate }}</mat-label>
+            <input matInput name="Manufacturer" placeholder="ex: mken pvt ltd" [(ngModel)]="manufacturer">
+        </mat-form-field>
+        <mat-label>{{"Custom Product Specifications"}}</mat-label>
+        <c-row *ngFor="let productDetail of details;index as i">
+            <c-col>
+                <input cFormControl 
+                    type="text" placeholder="Product Spec field" [(ngModel)]="productDetail.key"
+                    [value]="productDetail.key" />
+            </c-col>
+            <c-col>
+                <input cFormControl
+                    type="text" placeholder="Product Spec value" [(ngModel)]="productDetail.value"
+                    [value]="productDetail.value" />
+            </c-col>
+            <c-col>
+                <button *ngIf="!(details.length == 1)" mat-icon-button color="warn" (click)="removeField(i)">
+                    <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+                <button *ngIf="i == details.length-1" mat-icon-button color="primary"
+                    (click)="addNewField()">
+                    <mat-icon>add_circle_outline</mat-icon>
+                </button>
+            </c-col>
+        </c-row>
+    </c-card-body>
+</c-card>

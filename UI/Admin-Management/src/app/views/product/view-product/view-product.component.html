@@ -110,10 +110,7 @@
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef aria-label="row actions">
-                    <button mat-icon-button aria-label="expand all" (click)="expandAllAction()" [matTooltip]="expandAll? 'Collapse All' : 'Expand All'">
-                        <mat-icon *ngIf="expandAll">keyboard_arrow_up</mat-icon>
-                        <mat-icon *ngIf="!(expandAll)">keyboard_arrow_down</mat-icon>
-                    </button>
+                    {{"Actions" | translate}}
                 </th>
                 <td mat-cell *matCellDef="let element">
                   <button mat-icon-button aria-label="expand row" (click)="expandAction($event, element)">

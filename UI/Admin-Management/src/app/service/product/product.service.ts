@@ -58,6 +58,10 @@ export class ProductService {
     return this.http.get(`${environment.productProxy}/admin/product/search/${barcode}`);
   }
 
+  getPOSProductByBarcode(barcode: any): Observable<any> {
+    return this.http.get(`${environment.productProxy}/admin/product/pos/${barcode}`);
+  }
+
   getCompleteProductDetails(id: any): Observable<any> {
     return this.http.get(`${environment.productProxy}/admin/product/${id}`);
   }
@@ -80,6 +84,22 @@ export class ProductService {
     }
     return this.http.get(`${environment.productProxy}/admin/product`, {
       params: queryParams
+    });
+  }
+
+  updateProductSpecs(id: any, body: any): Observable<any> {
+    return this.http.put(`${environment.productProxy}/admin/product/specs`, body, {
+      params: {
+        productInfoId: id
+      }
+    });
+  }
+
+  getProductSpecs(id: any): Observable<any> {
+    return this.http.get(`${environment.productProxy}/product/specs`, {
+      params: {
+        productInfoId: id
+      }
     });
   }
 

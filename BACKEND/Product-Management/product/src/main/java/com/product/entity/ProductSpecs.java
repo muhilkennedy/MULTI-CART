@@ -8,18 +8,17 @@ import java.io.Serializable;
 public class ProductSpecs implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private String size;
+	private String model;
+	private String weight;
 	private String dimensions;
 	private String colour;
 	private String description;
-
-	public String getSize() {
-		return size;
-	}
-
-	public void setSize(String size) {
-		this.size = size;
-	}
+	private String origin;
+	private String manufacturer;
+	/*attributes selected based on product type
+	 * ex.Cloths -> Material,Pattern,Fit Type, Collar Style, Sleeve Type
+	 * */
+	private String details;
 
 	public String getDimensions() {
 		return dimensions;
@@ -43,6 +42,46 @@ public class ProductSpecs implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getWeight() {
+		return weight;
+	}
+
+	public void setWeight(String weight) {
+		this.weight = weight;
+	}
+
+	public String getManufacturer() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
+	}
+
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
 	}
 
 }

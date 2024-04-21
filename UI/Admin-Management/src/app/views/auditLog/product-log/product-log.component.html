@@ -29,7 +29,7 @@
                     <ng-container matColumnDef="timeupdated">
                         <th mat-header-cell *matHeaderCellDef> {{"Time Updated" | translate}} </th>
                         <td mat-cell *matCellDef="let element">
-                            {{element.timeupdated}}
+                            {{element.timeupdated | date:"dd:MM:yyyy h:mm:ss a"}}
                         </td>
                     </ng-container>
 

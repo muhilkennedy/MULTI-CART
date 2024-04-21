@@ -1,5 +1,7 @@
 package com.product.entity;
 
+import java.sql.Date;
+
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
@@ -11,6 +13,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.persistence.UniqueConstraint;
 
 /**
@@ -33,6 +37,7 @@ public class ProductInventory extends MultiTenantEntity {
 	@Column(name = "BARCODE")
 	private String barcode;
 	
+	//available stock
 	@Column(name = "AVAILABLEQUANTITY")
 	private int availablequantity;
 	
@@ -41,9 +46,10 @@ public class ProductInventory extends MultiTenantEntity {
 	
 	@Column(name = "AUTOPURCHASE")
 	private boolean autoPurchase;
-	
+
+    @Temporal(TemporalType.DATE)
 	@Column(name = "EXPIRY")
-	private String expiry;
+	private Date expiry;
 
 	public ProductInfo getProductinfo() {
 		return productinfo;
@@ -85,12 +91,12 @@ public class ProductInventory extends MultiTenantEntity {
 		this.barcode = barcode;
 	}
 
-	public String getExpiry() {
+	public Date getExpiry() {
 		return expiry;
 	}
 
-	public void setExpiry(String expiry) {
+	public void setExpiry(Date expiry) {
 		this.expiry = expiry;
 	}
-	
+
 }

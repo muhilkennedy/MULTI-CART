@@ -2,6 +2,7 @@ package com.product.entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.Where;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
@@ -51,6 +52,7 @@ public class Product extends MultiTenantEntity {
 	private Long supplierid;
 
 	//@JsonManagedReference
+	//@Where(clause = "active=true")
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<ProductInfo> infos;
 

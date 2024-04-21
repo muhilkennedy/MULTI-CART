@@ -11,8 +11,10 @@ import com.base.entity.BaseEntity;
 import com.base.service.BaseDaoService;
 import com.product.entity.Product;
 import com.product.entity.ProductInfo;
+import com.product.entity.ProductSpecifications;
 import com.product.jpa.respository.ProductInfoRepository;
 import com.product.jpa.respository.ProductRepository;
+import com.product.jpa.respository.ProductSpecificationsRepository;
 
 /**
  * @author muhil
@@ -25,6 +27,9 @@ public class ProductDao implements BaseDaoService {
 
 	@Autowired
 	private ProductInfoRepository productInfoRepository;
+	
+	@Autowired
+	private ProductSpecificationsRepository specsRepository;
 
 	@Override
 	public BaseEntity save(BaseEntity obj) {
@@ -83,6 +88,14 @@ public class ProductDao implements BaseDaoService {
 	
 	public Product findProductByBarcode(String barcode) {
 		return productRepository.findProductByBarcode(barcode);
+	}
+	
+	public ProductSpecifications saveProductSpecs(ProductSpecifications specs) {
+		return specsRepository.save(specs);
+	}
+
+	public ProductSpecifications getProductSpecifications(Long infoId) {
+		return specsRepository.findByProductInfo(infoId);
 	}
 
 }

@@ -15,10 +15,10 @@ import jakarta.persistence.Converter;
  *
  */
 @Converter(autoApply = true)
-public class ProductSpecsConvertor implements AttributeConverter<ProductSpecifications, String> {
+public class ProductSpecsConvertor implements AttributeConverter<ProductSpecs, String> {
 
 	@Override
-	public String convertToDatabaseColumn(ProductSpecifications attribute) {
+	public String convertToDatabaseColumn(ProductSpecs attribute) {
 		try {
 			if (attribute == null) {
 				return PlatformUtil.EMPTY_STRING;
@@ -32,13 +32,13 @@ public class ProductSpecsConvertor implements AttributeConverter<ProductSpecific
 	}
 
 	@Override
-	public ProductSpecifications convertToEntityAttribute(String dbData) {
+	public ProductSpecs convertToEntityAttribute(String dbData) {
 		try {
 			if (StringUtils.isAllBlank(dbData)) {
-				return new ProductSpecifications();
+				return new ProductSpecs();
 			}
 			ObjectMapper objectMapper = new ObjectMapper();
-			return objectMapper.readValue(dbData, ProductSpecifications.class);
+			return objectMapper.readValue(dbData, ProductSpecs.class);
 		} catch (JsonProcessingException ex) {
 			Log.product.error("Error converting to entity attribute - {}", ex);
 			throw new IllegalArgumentException(ex.getMessage());

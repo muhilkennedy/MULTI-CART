@@ -2,6 +2,8 @@ package com.product.serviceimpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +17,16 @@ import com.base.service.HibernateSearchService;
 import com.base.util.Log;
 import com.platform.service.StorageService;
 import com.platform.util.ImageUtil;
+import com.platform.util.PlatformUtil;
 import com.product.dao.ProductDao;
 import com.product.dao.ProductInventoryDao;
 import com.product.entity.Category;
 import com.product.entity.Product;
 import com.product.entity.ProductInfo;
 import com.product.entity.ProductInventory;
+import com.product.entity.ProductSpecifications;
+import com.product.entity.ProductSpecs;
+import com.product.exception.ProductException;
 import com.product.messages.ProductInfoRequest;
 import com.product.messages.ProductInventoryRequest;
 import com.product.messages.ProductPageResponse;
@@ -86,12 +92,15 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	private ProductResponse generateProductResponse(Product product) {
-		ProductResponse prodResponse = new ProductResponse(product);
-		prodResponse.setCategory((Category) categoryService.findById(product.getCategoryid()));
-		prodResponse.setSupplierid((Supplier) supplierService.findById(product.getSupplierid()));
-		prodResponse.getInfos().stream().forEach(info -> {
-			info.setInventory(getAllProductInventory(info.getRootid()));
-		});
+		ProductResponse prodResponse = null;
+		if(product != null) {
+			prodResponse = new ProductResponse(product);
+			prodResponse.setCategory((Category) categoryService.findById(product.getCategoryid()));
+			prodResponse.setSupplierid((Supplier) supplierService.findById(product.getSupplierid()));
+			prodResponse.getInfos().stream().forEach(info -> {
+				info.setInventory(getAllProductInventory(info.getRootid()));
+			});
+		}
 		return prodResponse;
 	}
 
@@ -129,7 +138,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductInventory addOrUpdateProductInventory(ProductInventoryRequest request) {
+	public ProductInventory addOrUpdateProductInventory(ProductInventoryRequest request) throws ProductException {
 		ProductInfo prodInfo = productDao.findProductInfoById(request.getProductInfoId());
 		if (prodInfo == null) {
 			throw new NotFoundException("Product information Not Found");
@@ -139,8 +148,15 @@ public class ProductServiceImpl implements ProductService {
 			inventory = new ProductInventory();
 		}
 		inventory.setBarcode(request.getBarcode());
-		inventory.setExpiry(request.getExpiry());
-		inventory.setAvailablequantity(request.getAvailableQuantity());
+		try {
+			inventory.setExpiry(new Date(PlatformUtil.SIMPLE_UI_DATE_ONLY_FORMAT.parse(request.getExpiry()).getTime()));
+		} catch (ParseException e) {
+			Log.product.error("Exception parsing expiry date : {}", e);
+			throw new ProductException(e.getMessage());
+		}
+		inventory.setAvailablequantity(
+				request.isAddOnExistingStock() ? inventory.getAvailablequantity() + request.getAvailableQuantity()
+						: request.getAvailableQuantity());
 		inventory.setMinimumstocklevel(request.getMinimumQuantity());
 		inventory.setAutoPurchase(request.isAutoPurchase());
 		inventory.setProductinfo(prodInfo);
@@ -182,10 +198,49 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
+	public ProductInventory findPOSProductByBarcode(String barcode) {
+		return inventoryDao.findByBarCode(barcode);
+	}
+	
+	@Override
 	public Product toggleProductState(Long productId) {
 		Product product = (Product) findById(productId);
 		product.setActive(!product.isActive());
 		return (Product) productDao.save(product);
+	}
+	
+	@Override
+	public ProductSpecifications updateProductInfoSpecifications(Long rootId, ProductSpecs productSpecs) {
+		ProductInfo info = productDao.findProductInfoById(rootId);
+		if (info == null) {
+			throw new NotFoundException("Product Not Found");
+		}
+		ProductSpecifications specs = getSpecificationsForProductInfo(rootId);
+		if (specs == null) {
+			specs = new ProductSpecifications();
+			specs.setProductInfoId(rootId);
+		}
+		specs.setSpecifications(productSpecs);
+		return productDao.saveProductSpecs(specs);
+	}
+	
+	@Override
+	public ProductSpecifications getSpecificationsForProductInfo(Long rootId) {
+		return productDao.getProductSpecifications(rootId);
+	}
+	
+	@Override
+	public ProductSpecifications updateProductImages(Long rootId, List<File> images) {
+		ProductInfo info = productDao.findProductInfoById(rootId);
+		if (info == null) {
+			throw new NotFoundException("Product Not Found");
+		}
+		ProductSpecifications specs = getSpecificationsForProductInfo(rootId);
+		if (specs == null) {
+			specs = new ProductSpecifications();
+			specs.setImages(null);
+		}
+		return productDao.saveProductSpecs(specs);
 	}
 
 }
