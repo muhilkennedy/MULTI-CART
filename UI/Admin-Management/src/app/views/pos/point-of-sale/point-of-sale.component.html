@@ -7,14 +7,14 @@
             <c-card-body>
                 <form></form>
                 <c-row>
-                    <c-col xs="6">
+                    <c-col xs="12">
                         <input cFormControl id="usermobile" type="text" placeholder="Mobile Number" />
                     </c-col>
-                    <c-col xs="6">
+                    <!-- <c-col xs="6">
                         <button style="width: 100%;" cButton class="me-1" variant="outline" size="sm" color="success">
                             {{"FETCH" | translate}}
                         </button>
-                    </c-col>
+                    </c-col> -->
                 </c-row>
                 <c-row>
                 </c-row>
@@ -38,11 +38,11 @@
                         <h4>{{"TOTAL DISCOUNT" | translate}} : <strong>{{getTotalDiscount()}} INR</strong></h4>
                     </c-col>
                     <c-col xs="3">
-                        <h4>{{"TOTAL" | translate}} : <strong>{{getTotalPrice()}} INR</strong></h4>
+                        <h4 style="background-color: chartreuse">{{"TOTAL" | translate}} : <strong>{{getTotalPrice()}} INR</strong></h4>
                     </c-col>
                     <c-col xs="3">
-                        <select cSelect sizing="sm">
-                            <option *ngFor="let mode of paymentModes">{{mode}}</option>
+                        <select cSelect sizing="sm" #payMode (change)="changePaymentMode(payMode.value)">
+                            <option *ngFor="let mode of paymentModes" [value]="mode">{{mode}}</option>
                         </select>
                     </c-col>
                     <c-col xs="3">
@@ -65,7 +65,7 @@
                     <c-col xs="1" style="width: 80px;">
                         <label>Sl.No</label>
                     </c-col>
-                    <c-col xs="3">
+                    <c-col xs="2">
                         <label>{{"Product Code"| translate}}</label>
                     </c-col>
                     <c-col xs="3">
@@ -83,6 +83,9 @@
                     <c-col xs="1">
                         <label>{{"Final Price"| translate}}</label>
                     </c-col>
+                    <c-col xs="1">
+                        <label>{{"Total"| translate}}</label>
+                    </c-col>
                     <c-col xs="1" style="text-align: center;">
                         <label>{{"Actions"| translate}}</label>
                     </c-col>
@@ -93,31 +96,35 @@
                     <c-col xs="1" style="width: 80px;">
                         <input cFormControl id="sl" name="no" type="text" placeholder="sl.no" disabled [value]="i+1" />
                     </c-col>
-                    <c-col xs="3">
-                        <input [disabled]="i != 0" cFormControl id="barcode" name="barcode1"
+                    <c-col xs="2"> <!-- [disabled]="i != 0" -->
+                        <input cFormControl id="barcode" name="barcode1" autofocus
                             type="text" placeholder="Product Code" [(ngModel)]="product.barCode"
-                            [value]="product.barCode" />
+                            [value]="product.barCode" (keyup)="getProductByBarCode(product.barCode)" />
                     </c-col>
                     <c-col xs="3">
-                        <input [disabled]="i != 0" cFormControl id="product" name="product1"
+                        <input cFormControl id="product" name="product1"
                             type="text" placeholder="Product Name" [(ngModel)]="product.productName"
                             [value]="product.productName" />
                     </c-col>
                     <c-col xs="1">
-                        <input [disabled]="i != 0" cFormControl id="mrp" name="mrp1" type="number"
+                        <input cFormControl id="mrp" name="mrp1" type="number"
                             placeholder="MRP" [(ngModel)]="product.mrp" />
                     </c-col>
                     <c-col xs="1">
-                        <input [disabled]="i != 0" cFormControl id="qty" name="qty1" type="number"
+                        <input cFormControl id="qty" name="qty1" type="number"
                             placeholder="Quantity" [(ngModel)]="product.quantity" />
                     </c-col>
                     <c-col xs="1">
-                        <input [disabled]="i != 0" cFormControl id="discount" name="discount1"
+                        <input cFormControl id="discount" name="discount1"
                             type="number" placeholder="Discount" [(ngModel)]="product.discount" />
                     </c-col>
                     <c-col xs="1">
-                        <input [disabled]="i != 0" cFormControl id="price" name="price1" type="number"
-                            placeholder="Final Price" [value]="getFinalPrice(product)" />
+                        <input cFormControl id="price" name="price1" type="number"
+                            placeholder="Final Price" [(ngModel)]="product.price" />
+                    </c-col>
+                    <c-col xs="1">
+                        <input disabled="" cFormControl id="total" name="total" type="number"
+                            placeholder="Total" [value]="product.price*product.quantity" />
                     </c-col>
                     <c-col xs="1" style="width: auto;">
                         <!-- <button *ngIf="productList.length != i+1" mat-icon-button color="primary"

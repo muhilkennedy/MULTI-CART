@@ -11,6 +11,9 @@ import com.base.service.BaseService;
 import com.product.entity.Product;
 import com.product.entity.ProductInfo;
 import com.product.entity.ProductInventory;
+import com.product.entity.ProductSpecifications;
+import com.product.entity.ProductSpecs;
+import com.product.exception.ProductException;
 import com.product.messages.ProductInfoRequest;
 import com.product.messages.ProductInventoryRequest;
 import com.product.messages.ProductPageResponse;
@@ -26,7 +29,7 @@ public interface ProductService extends BaseService {
 
 	ProductInfo createProductInfo(ProductInfoRequest request);
 
-	ProductInventory addOrUpdateProductInventory(ProductInventoryRequest request);
+	ProductInventory addOrUpdateProductInventory(ProductInventoryRequest request) throws ProductException;
 	
 	List<ProductInventory> getAllProductInventory(long infoId);
 	
@@ -43,5 +46,13 @@ public interface ProductService extends BaseService {
 	ProductResponse findProductByBarcode(String barcode);
 
 	Product toggleProductState(Long productId);
+
+	ProductInventory findPOSProductByBarcode(String barcode);
+
+	ProductSpecifications updateProductInfoSpecifications(Long rootId, ProductSpecs productSpecs);
+
+	ProductSpecifications getSpecificationsForProductInfo(Long rootId);
+
+	ProductSpecifications updateProductImages(Long rootId, List<File> images);
 
 }

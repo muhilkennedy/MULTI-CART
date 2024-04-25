@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.base.util.BaseUtil;
 import com.platform.messages.GenericResponse;
-import com.product.entity.Product;
-import com.product.service.ProductService;
 import com.platform.messages.Response;
+import com.product.entity.Product;
+import com.product.entity.ProductSpecifications;
+import com.product.service.ProductService;
 
 /**
  * @author Muhil
@@ -47,6 +48,14 @@ public class ProductController {
 	public GenericResponse<Product> getProductInfo(@PathVariable("id") Long productId) throws IOException {
 		GenericResponse<Product> response = new GenericResponse<>();
 		return response.setStatus(Response.Status.OK).setData((Product) productService.findById(productId)).build();
+	}
+	
+	@GetMapping(value = "/specs", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<ProductSpecifications> updateProductInfoSpecifications(@RequestParam Long productInfoId)
+			throws IllegalStateException, IOException {
+		GenericResponse<ProductSpecifications> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK)
+				.setData(productService.getSpecificationsForProductInfo(productInfoId)).build();
 	}
 
 }

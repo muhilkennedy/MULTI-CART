@@ -26,11 +26,15 @@ import com.product.entity.Category;
 import com.product.entity.Product;
 import com.product.entity.ProductInfo;
 import com.product.entity.ProductInventory;
+import com.product.entity.ProductSpecifications;
+import com.product.entity.ProductSpecs;
+import com.product.exception.ProductException;
 import com.product.messages.ProductInfoRequest;
 import com.product.messages.ProductInventoryRequest;
 import com.product.messages.ProductPageResponse;
 import com.product.messages.ProductRequest;
 import com.product.messages.ProductResponse;
+import com.product.messages.ProductSpecsRequest;
 import com.product.service.CategoryService;
 import com.product.service.ProductService;
 import com.product.util.ProductMeasurement;
@@ -92,9 +96,14 @@ public class ProductAdminController {
 	
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.MANAGE_PRODUCTS })
 	@GetMapping(value = "/search/{barcode}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<ProductResponse> getProductByBarcode(@PathVariable("barcode") String barCode) {
+	public GenericResponse<ProductResponse> getProductByBarcode(@PathVariable("barcode") String barCode)
+			throws ProductException {
 		GenericResponse<ProductResponse> response = new GenericResponse<>();
-		return response.setStatus(Response.Status.OK).setData(productService.findProductByBarcode(barCode)).build();
+		ProductResponse resp = productService.findProductByBarcode(barCode);
+		if (resp != null) {
+			return response.setStatus(Response.Status.OK).setData(resp).build();
+		}
+		throw new ProductException("Product Not Found");
 	}
 
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.EDIT_PRODUCTS })
@@ -121,7 +130,7 @@ public class ProductAdminController {
 
 	@UserPermission(values = { Permissions.SUPER_USER, Permissions.EDIT_PRODUCTS })
 	@PostMapping(value = "/inventory", produces = MediaType.APPLICATION_JSON_VALUE)
-	public GenericResponse<ProductInventory> addProductInventory(@Valid @RequestBody ProductInventoryRequest request) {
+	public GenericResponse<ProductInventory> addProductInventory(@Valid @RequestBody ProductInventoryRequest request) throws ProductException {
 		GenericResponse<ProductInventory> response = new GenericResponse<>();
 		return response.setStatus(Response.Status.OK).setData(productService.addOrUpdateProductInventory(request))
 				.build();
@@ -153,5 +162,29 @@ public class ProductAdminController {
 		return response.setStatus(Response.Status.OK).setDataList(Stream.of(ProductMeasurement.values()).toList())
 				.build();
 	}
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.POINT_OF_SALE })
+	@GetMapping(value = "/pos/{barcode}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<ProductInventory> getPOSProductByBarcode(@PathVariable("barcode") String barCode)
+			throws ProductException {
+		GenericResponse<ProductInventory> response = new GenericResponse<>();
+		ProductInventory resp = productService.findPOSProductByBarcode(barCode);
+		if (resp != null) {
+			return response.setStatus(Response.Status.OK).setData(resp).build();
+		}
+		throw new ProductException("Product Not Found");
+	}
+	
+	
+	@UserPermission(values = { Permissions.SUPER_USER, Permissions.EDIT_PRODUCTS })
+	@PutMapping(value = "/specs", produces = MediaType.APPLICATION_JSON_VALUE)
+	public GenericResponse<ProductSpecifications> updateProductInfoSpecifications(@RequestParam("productInfoId") Long productInfoId,
+			@RequestBody ProductSpecsRequest specs) throws IllegalStateException, IOException {
+		GenericResponse<ProductSpecifications> response = new GenericResponse<>();
+		return response.setStatus(Response.Status.OK).setData(
+				productService.updateProductInfoSpecifications(productInfoId, specs.getProductSpecificationEntity()))
+				.build();
+	}
+	
 
 }

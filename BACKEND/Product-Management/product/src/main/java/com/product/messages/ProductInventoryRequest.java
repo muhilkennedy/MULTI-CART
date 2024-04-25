@@ -8,6 +8,9 @@ import jakarta.validation.constraints.NotBlank;
  *  @author Muhil
  */
 public class ProductInventoryRequest {
+	
+	private static final String KEY_NOEXPIRY = "NO EXPIRY";
+	private static final String KEY_MAX_DATE = "19/01/9999";
 
 	@NotNull
 	private Long productInfoId;
@@ -15,6 +18,7 @@ public class ProductInventoryRequest {
 	private String barcode;
 	private String expiry;
 	private int availableQuantity;
+	private boolean addOnExistingStock;
 	private int minimumQuantity;
 	private boolean autoPurchase;
 
@@ -27,11 +31,15 @@ public class ProductInventoryRequest {
 	}
 
 	public String getExpiry() {
+		if (KEY_NOEXPIRY.equalsIgnoreCase(expiry)) {
+			return KEY_MAX_DATE;
+		}
 		return expiry;
 	}
 
 	public void setExpiry(String expiry) {
 		this.expiry = expiry;
+
 	}
 
 	public int getAvailableQuantity() {
@@ -64,6 +72,14 @@ public class ProductInventoryRequest {
 
 	public void setProductInfoId(Long productInfoId) {
 		this.productInfoId = productInfoId;
+	}
+
+	public boolean isAddOnExistingStock() {
+		return addOnExistingStock;
+	}
+
+	public void setAddOnExistingStock(boolean addOnExistingStock) {
+		this.addOnExistingStock = addOnExistingStock;
 	}
 
 }

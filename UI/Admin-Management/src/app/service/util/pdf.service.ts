@@ -28,7 +28,7 @@ export class PdfUtil {
           return;
         }
     
-         if(action==='download'){
+        if(action==='download'){
           pdfMake.createPdf(docDefinition).download();    
         }else if(action === 'print'){    
           pdfMake.createPdf(docDefinition).print();          
@@ -110,9 +110,9 @@ export class PdfUtil {
                 dontBreakRows: false,
                 widths: [60, 5, 65],
                 body: [
-                  ['Payment Mode', ':', 'paytm'],
-                  ['Contact', ':', 'xxxx'],
-                  ['Address', ':', 'xxxx xxxxx xxxxx xxxxxxxxx'],    
+                  ['Payment Mode', ':',  invoice.paymentMode],
+                  ['Contact', ':', invoice.tenantContact],
+                  ['Address', ':', invoice.tenantAddress],    
                 ]
               },
               layout: 'noBorders'
@@ -150,7 +150,7 @@ export class PdfUtil {
         };
       }
 
-      static get80mmDocDefinition(invoice: Invoice){
+     static get80mmDocDefinition(invoice: Invoice){
         return {
           pageSize: {
             width: 220,
@@ -211,9 +211,9 @@ export class PdfUtil {
                 dontBreakRows: false,
                 widths: [70, 5, 135],
                 body: [
-                  ['Payment Mode', ':', 'paytm'],
-                  ['Contact', ':', 'xxxx'],
-                  ['Address', ':', 'xxxx xxxxx xxxxx xxxxxxxxx'],    
+                  ['Payment Mode', ':',  invoice.paymentMode],
+                  ['Contact', ':', invoice.tenantContact],
+                  ['Address', ':', invoice.tenantAddress],   
                 ]
               },
               layout: 'noBorders'

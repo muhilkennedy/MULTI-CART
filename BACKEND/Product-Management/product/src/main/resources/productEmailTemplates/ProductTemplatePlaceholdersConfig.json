@@ -3,5 +3,10 @@
 		"tenantLogo",
 		"productName",
 		"productId"
-	]
+	],
+	"PRODUCT_SUPPLIER_STOCK_NOTIFICATION": [
+		"tenantLogo",
+		"productName",
+		"productId"
+	]	
 }

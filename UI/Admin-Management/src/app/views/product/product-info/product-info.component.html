@@ -1,13 +1,29 @@
 <c-col xs="12">
-    <c-card class="mb-4">
+    <c-card class="mb-4" *ngIf="!(editProductSpecs || editProductImages)">
         <c-card-header>
             <strong>{{"Product Info" | translate}}</strong>
+            <!-- <mat-slide-toggle [checked]="showCards" (change)="toggleShowcards()" matTooltip="Display as Cards"></mat-slide-toggle> -->
             <button *ngIf="edit" style="float: right;" cButton class="me-1" color="primary" variant="outline" size="sm"
                     (click)="toggleInfoModal()"> {{"Add Product Info" | translate | uppercase}}</button>
             <ng-container *ngTemplateOutlet="info"></ng-container>
         </c-card-header>
         <c-card-body class="mat-elevation-z8" style="overflow: auto;">
             <table mat-table [dataSource]="productInfos" multiTemplateDataRows>
+
+                <ng-container matColumnDef="thumbnail">
+                    <th mat-header-cell *matHeaderCellDef> {{"Thumbnail" | translate}}</th>
+                    <td mat-cell *matCellDef="let element">
+                        <!-- <lib-ngx-image-zoom
+                            [thumbImage]="element.image"
+                            [fullImage]="element.image"
+                            [magnification]="1"
+                            [enableScrollZoom]="true"
+                            [enableLens]="true"
+                            [lensWidth]="200"
+                        ></lib-ngx-image-zoom> -->
+                        <img [src]="element.image" class="zoom" style="height: 1rem" (click)="toggleEditProdImages($event)"/>
+                    </td>
+                </ng-container>
             
                 <!-- Size Column -->
                 <ng-container matColumnDef="size">
@@ -41,6 +57,7 @@
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef> {{"Actions" | translate}} </th>
                     <td mat-cell *matCellDef="let element">
+                        <mat-icon *ngIf="edit" color="primary" class="maticon" matTooltip= "edit product specifications" (click)="openEditProductSpecsPage(element)">description</mat-icon>
                         <mat-icon *ngIf="edit" color="primary" class="maticon" matTooltip= "update inventory" (click)="openInventoryModal(element.rootid)">store</mat-icon>
                         <ng-container *ngTemplateOutlet="inventory"></ng-container>
                         <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
@@ -61,7 +78,7 @@
                                     {{'Barcode' | translate | uppercase}}
                                 </th>
                                 <th>
-                                    {{'Available Quantity' | translate | uppercase}}
+                                    {{'Stock' | translate | uppercase}}
                                 </th>
                                 <th>
                                     {{'Expiry' | translate | uppercase}}
@@ -76,7 +93,7 @@
                                     {{inv.availablequantity}}
                                 </td>
                                 <td>
-                                    {{inv.expiry}}
+                                    {{getExpiryDate(inv.expiry)}}
                                 </td>
                             </tr>
                         </table>
@@ -90,6 +107,8 @@
             </table>
         </c-card-body>
     </c-card>
+    <app-edit-product-specifications *ngIf="editProductSpecs" (editProductSpecs)="toggleEditProdSpecs($event)" [product]="product" [productInfo]="selectedProductInfo"></app-edit-product-specifications>
+    <app-edit-product-images *ngIf="editProductImages" (editProductImages)="toggleEditProdImages($event)" [product]="product" [productInfo]="selectedProductInfo"></app-edit-product-images>
 </c-col>
 
 
@@ -153,12 +172,22 @@
                 <mat-error *ngIf="hasError(invFormGroup, 'barcode')">{{getError(invFormGroup,
                     'barcode')}}</mat-error>
             </mat-form-field>
-            <mat-form-field [formGroup]="invFormGroup" style="width: 100%;">
-                <mat-label>{{"Quantity" | translate }}</mat-label>
-                <input matInput name="quantity" placeholder="Product Quantity" formControlName="quantity" required>
-                <mat-error *ngIf="hasError(invFormGroup, 'quantity')">{{getError(invFormGroup,
-                    'quantity')}}</mat-error>
-            </mat-form-field>
+            <c-row>
+                <c-col>
+                    <mat-form-field [formGroup]="invFormGroup" style="width: 100%;">
+                        <mat-label>{{"Stock" | translate }}</mat-label>
+                        <input matInput name="quantity" placeholder="Product in Stock" formControlName="quantity" required>
+                        <mat-error *ngIf="hasError(invFormGroup, 'quantity')">{{getError(invFormGroup,
+                            'quantity')}}</mat-error>
+                    </mat-form-field>
+                </c-col>
+                <c-col>
+                    <mat-form-field [formGroup]="invFormGroup" style="width: 100%;">
+                        <input [hidden]="true" name="addOnStock" matInput> <!-- just to get rid of error as checkbox is not supported asc form field child -->
+                        <mat-checkbox matInput name="addstock" formControlName="addOnStock">{{"Add on stock" | translate}}</mat-checkbox>
+                    </mat-form-field>
+                </c-col>
+            </c-row>
             <mat-form-field [formGroup]="invFormGroup" style="width: 100%;">
                 <mat-label>{{"Expiry" | translate }}</mat-label>
                 <input matInput name="expiry" placeholder="Expiry" formControlName="expiry" required>

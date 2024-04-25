@@ -1,1 +1,58 @@
-<p>list-supplier works!</p>
+<app-spinner></app-spinner>
+<c-row ngPreserveWhitespaces>
+    <c-col xs="12">
+      <c-card class="mb-4">
+        <c-card-header>
+          <strong>{{"Suppliers" | translate}}</strong>
+        </c-card-header>
+        <c-card-body style="overflow: auto;">
+            <table mat-table [dataSource]="suppliers" class="mat-elevation-z8">
+      
+                <!-- Id Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef> {{"Supplier Id" | translate}} </th>
+                  <td mat-cell *matCellDef="let element"> {{element.uniquename}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> {{"Name" | translate}} </th>
+                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+              
+                <!-- Status -->
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef> {{"Status" | translate}} </th>
+                  <td mat-cell *matCellDef="let element">
+                    <mat-slide-toggle disabled="true"
+                      [checked]="element.active"
+                      (change)="toogleSupplierStatus(element.rootId)">
+                    </mat-slide-toggle>
+                  </td>
+                </ng-container>
+
+                <!-- EmailId Column -->
+                <ng-container matColumnDef="emailid">
+                    <th mat-header-cell *matHeaderCellDef> {{"Email Id" | translate}} </th>
+                    <td mat-cell *matCellDef="let element"> {{element.emailid}} </td>
+                </ng-container>
+
+                <!-- Primary Contact Column -->
+                <ng-container matColumnDef="contact">
+                    <th mat-header-cell *matHeaderCellDef> {{"Primary Contact" | translate}} </th>
+                    <td mat-cell *matCellDef="let element"> {{element.contact}} </td>
+                </ng-container>
+
+                <!-- Secondary Contact Column -->
+                <ng-container matColumnDef="secondarycontact">
+                    <th mat-header-cell *matHeaderCellDef> {{"Secondary Contact" | translate}} </th>
+                    <td mat-cell *matCellDef="let element"> {{element.secondarycontact}} </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedRolesColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedRolesColumns;"></tr>
+            </table>
+        </c-card-body>
+        </c-card>
+    </c-col>
+</c-row>

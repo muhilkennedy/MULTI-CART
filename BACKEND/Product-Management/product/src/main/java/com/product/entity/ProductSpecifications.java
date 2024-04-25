@@ -20,7 +20,7 @@ public class ProductSpecifications extends MultiTenantEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "PRODUCTINFOID")
-	private Long productInfoId;
+	private Long productinfoid;
 
 	@Column(name = "SPECIFICATIONS", length = 5000)
 	@Convert(converter = ProductSpecsConvertor.class)
@@ -31,11 +31,11 @@ public class ProductSpecifications extends MultiTenantEntity {
 	private ProductImages images;
 
 	public Long getProductInfoId() {
-		return productInfoId;
+		return productinfoid;
 	}
 
 	public void setProductInfoId(Long productInfoId) {
-		this.productInfoId = productInfoId;
+		this.productinfoid = productInfoId;
 	}
 
 	public ProductSpecs getSpecifications() {

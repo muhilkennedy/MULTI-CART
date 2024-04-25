@@ -57,6 +57,8 @@ import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 import { FacebookLoginProvider, GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { AutoFocus } from 'src/app/directives/autofocus/auto-focus.directive'
+import { NgxImageZoomModule } from 'ngx-image-zoom';
 // import { AngularFireModule, FirebaseApp } from '@angular/fire/compat';
 
 const APP_CONTAINERS = [
@@ -122,7 +124,7 @@ export function init_tenant(initializer: TenantInitializer) {
 }
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS, LoginComponent, ResetPasswordComponent],
+  declarations: [AppComponent, ...APP_CONTAINERS, LoginComponent, ResetPasswordComponent, AutoFocus],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -168,7 +170,8 @@ export function init_tenant(initializer: TenantInitializer) {
     AngularFireMessagingModule,
     SocialLoginModule,
     GoogleSigninButtonModule,
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+    NgxImageZoomModule
   ],
   exports: [
     

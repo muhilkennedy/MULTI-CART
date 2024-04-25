@@ -6,6 +6,8 @@ import { CommonUtil } from 'src/app/service/util/common-util.service';
 import { NotificationService, NotificationType } from 'src/app/service/util/notification.service';
 import { SpinnerService } from 'src/app/service/util/sipnner.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-info',
@@ -25,10 +27,11 @@ export class ProductInfoComponent implements OnInit {
   @Input('edit') edit: boolean = true;
   @Input('markBarcode') highlightBarcode: string = '';
 
-  displayedColumns = ['size', 'mrp', 'price', 'discount', 'actions'];
+  displayedColumns = ['thumbnail', 'size', 'mrp', 'price', 'discount', 'actions'];
   expandedElement: any | null;
   showInventoryModal = false;
   showInfoModal = false;
+  showCards = false;
 
   @Input('productInfos') productInfos: any[] = new Array();
   selectedPInfoId: number = -1;
@@ -45,11 +48,17 @@ export class ProductInfoComponent implements OnInit {
     infoId: ['', Validators.required],
     barcode: ['', Validators.required],
     expiry: ['NO EXPIRY'],
-    quantity: ['', Validators.required]
+    quantity: ['', Validators.required],
+    addOnStock: [true, Validators.required]
   });
 
+  editProductSpecs = false;
+  editProductImages = false;
+  selectedProductInfo: any;
+
   constructor(private translate: TranslatePipe, private _formBuilder: FormBuilder, private notification: NotificationService,
-    private spinner: SpinnerService, private productService: ProductService, private changeDetectorRefs: ChangeDetectorRef) {
+    private spinner: SpinnerService, private productService: ProductService, private datePipe: DatePipe,
+    private router: Router) {
 
   }
 
@@ -73,6 +82,10 @@ export class ProductInfoComponent implements OnInit {
         })
       });
     }
+  }
+
+  toggleShowcards(){
+    this.showCards = !this.showCards;
   }
 
   loadInventoryModal(productInfoId: any) {
@@ -106,6 +119,14 @@ export class ProductInfoComponent implements OnInit {
 
   onPictureSeclected(event: any) {
     this.selectedImage = event.target.files[0];
+  }
+
+  toggleEditProdSpecs(event: any){
+    this.editProductSpecs = !this.editProductSpecs;
+  }
+
+  toggleEditProdImages(event: any){
+    this.editProductImages = !this.editProductImages;
   }
 
   addProductInfo() {
@@ -175,6 +196,7 @@ export class ProductInfoComponent implements OnInit {
       barcode: this.invFormGroup.value.barcode,
       expiry: this.invFormGroup.value.expiry,
       availableQuantity: this.invFormGroup.value.quantity,
+      addOnExistingStock: this.invFormGroup.value.addOnStock
     }
     this.productService.createOrUpdateProductInventory(body)
         .subscribe({
@@ -200,6 +222,20 @@ export class ProductInfoComponent implements OnInit {
       return discount;
     }
     return null;
+  }
+
+  getExpiryDate(date: any)
+  {
+    let dt:Date = new Date(date);
+    if(dt.getFullYear() == 9999){
+      return "NO EXPIRY";
+    }
+    return this.datePipe.transform(date);
+  }
+
+  openEditProductSpecsPage(element : any){
+    this.editProductSpecs = true;
+    this.selectedProductInfo = element;
   }
 
 }

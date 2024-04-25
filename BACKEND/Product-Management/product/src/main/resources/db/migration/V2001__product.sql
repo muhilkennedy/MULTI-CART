@@ -1,0 +1,1 @@
+create table if not exists expiringproducts (rootid bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, tenantid bigint NOT NULL, timecreated bigint DEFAULT 0, timeupdated bigint DEFAULT 0, active BOOL DEFAULT TRUE, modifiedby bigint DEFAULT 0, createdby bigint DEFAULT 0, version bigint DEFAULT 0, productid bigint, CONSTRAINT FOREIGN KEY(productid) REFERENCES product(rootid));

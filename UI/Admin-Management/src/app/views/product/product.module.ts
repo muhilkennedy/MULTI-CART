@@ -40,7 +40,10 @@ import { EditProductComponent } from './edit-product/edit-product.component';
 import { ViewProductComponent } from './view-product/view-product.component';
 import { CategoryComponent } from './category/category.component';
 import { ProductInfoComponent } from './product-info/product-info.component';
-import { EditProductInfoComponent } from './edit-product-info/edit-product-info.component'
+import { EditProductInfoComponent } from './edit-product-info/edit-product-info.component';
+import { EditProductSpecificationsComponent } from './edit-product-specifications/edit-product-specifications.component'
+import { NgxImageZoomModule } from 'ngx-image-zoom';
+import { EditProductImagesComponent } from './edit-product-images/edit-product-images.component';
 
 @NgModule({
   imports: [
@@ -76,7 +79,8 @@ import { EditProductInfoComponent } from './edit-product-info/edit-product-info.
     MaterialModule,
     ComponentsModule,
     CalloutModule,
-    ModalModule
+    ModalModule,
+    NgxImageZoomModule
   ],
   declarations: [
     AddProductComponent,
@@ -84,7 +88,9 @@ import { EditProductInfoComponent } from './edit-product-info/edit-product-info.
     ViewProductComponent,
     CategoryComponent,
     ProductInfoComponent,
-    EditProductInfoComponent
+    EditProductInfoComponent,
+    EditProductSpecificationsComponent,
+    EditProductImagesComponent
   ],
 })
 export class ProductModule { }

@@ -5,6 +5,7 @@ import { EditProductComponent } from './edit-product/edit-product.component';
 import { ViewProductComponent } from './view-product/view-product.component';
 import { CategoryComponent } from './category/category.component';
 import { EditProductInfoComponent } from './edit-product-info/edit-product-info.component';
+import { EditProductSpecificationsComponent } from './edit-product-specifications/edit-product-specifications.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,13 @@ const routes: Routes = [
         component: CategoryComponent,
         data: {
           title: 'Category',
+        },
+      },
+      {
+        path: 'productspecs',
+        component: EditProductSpecificationsComponent,
+        data: {
+          title: 'Product Specifications',
         },
       },
     ],
