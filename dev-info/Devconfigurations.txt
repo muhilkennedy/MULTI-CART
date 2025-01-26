@@ -39,8 +39,8 @@ Redis-cli ping
 redis-cli KEYS '*' 
 
 Redis-cli -> login to redis terminal
-redis-cli config set requirepass devpassword (for default user)
-acl setuser devuser on >devpassword ~* &* +@all
+redis-cli config set requirepass devPassword (for default user)
+acl setuser devUser on >devPassword ~* &* +@all
 ACL list
 ACL save
 
